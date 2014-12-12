@@ -7,8 +7,11 @@
 //
 
 #import "XBPCViewController.h"
+#import <XBMobile.h>
+#import <XBPCMessageViewController.h>
+#import <XBPC_storageConversation.h>
 
-@interface XBPCViewController ()
+@interface XBPCViewController () <XBTableViewDelegate>
 
 @end
 
@@ -17,13 +20,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - XBTableViewDelegate
+
+- (void)xbTableView:(XBTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath forItem:(XBPC_storageConversation *)item
+{
+    XBPCMessageViewController *messageViewController = [[XBPCMessageViewController alloc] init];
+    if ([item.sender intValue] == [[XBPushChat sharedInstance] sender_id])
+    {
+        messageViewController.sender_id = [item.sender intValue];
+        messageViewController.receiver_id = [item.receiver intValue];
+    }
+    else
+    {
+        messageViewController.sender_id = [item.receiver intValue];
+        messageViewController.receiver_id = [item.sender intValue];
+    }
+    messageViewController.room = item.room;
+    messageViewController.senderDisplayName = [item.sender stringValue];
+    messageViewController.receiverDisplayName = [item.receiver stringValue];
+    [self.navigationController pushViewController:messageViewController animated:YES];
 }
 
 @end

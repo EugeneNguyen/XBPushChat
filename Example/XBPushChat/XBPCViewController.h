@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <XBPushChat/XBPCConversationTableView.h>
 
 @interface XBPCViewController : UIViewController
+{
+    IBOutlet XBPCConversationTableView *conversationView;
+}
 
 @end

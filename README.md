@@ -4,6 +4,7 @@
 [![Version](https://img.shields.io/cocoapods/v/XBPushChat.svg?style=flat)](http://cocoadocs.org/docsets/XBPushChat)
 [![License](https://img.shields.io/cocoapods/l/XBPushChat.svg?style=flat)](http://cocoadocs.org/docsets/XBPushChat)
 [![Platform](https://img.shields.io/cocoapods/p/XBPushChat.svg?style=flat)](http://cocoadocs.org/docsets/XBPushChat)
+[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y22J3LQZCAN2A "Donate once-off to this project using Paypal")
 
 ## Usage
 
@@ -21,6 +22,22 @@ it, simply add the following line to your Podfile:
 ## Author
 
 eugenenguyen, xuanbinh91@gmail.com
+
+## Contact
+
+Any question, request, suggest, please feel free to send to us. You're always welcome.
+
+[LIBRETeamStudio](https://twitter.com/LIBRETeamStudio)
+
+## License
+
+XBMobile is available under the MIT license. See the LICENSE file for more info.
+
+## Donation
+
+This is open-source project. If you want to support us to keep develop this, or just give me a beer, don't be shy :) i will always appreciate that.
+
+[![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y22J3LQZCAN2A "Donate once-off to this project using Paypal")
 
 ## License
 

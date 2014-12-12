@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>pathToContent</key>
+	<string></string>
+	<key>cells</key>
+	<array>
+		<dict>
+			<key>bundle</key>
+			<string>XBPushChat</string>
+			<key>cellIdentify</key>
+			<string>XBPCConversationCell</string>
+			<key>xibname</key>
+			<string>XBPCConversationCell</string>
+			<key>elements</key>
+			<array>
+				<dict>
+					<key>tag</key>
+					<integer>101</integer>
+					<key>path</key>
+					<string>lastmessage</string>
+				</dict>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14B25" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="XBPC_storageConversation" representedClassName="XBPC_storageConversation" syncable="YES">
+        <attribute name="lastmessage" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lasttime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="receiver" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="room" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sender" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <entity name="XBPC_storageFriendList" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="presence" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
+    <entity name="XBPC_storageMessage" representedClassName="XBPC_storageMessage" syncable="YES">
+        <attribute name="attach" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="createtime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="random" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="receiver" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="room" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sender" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="XBPC_storageConversation" positionX="-36" positionY="9" width="128" height="118"/>
+        <element name="XBPC_storageFriendList" positionX="-54" positionY="-9" width="128" height="88"/>
+        <element name="XBPC_storageMessage" positionX="-63" positionY="-18" width="128" height="180"/>
+    </elements>
+</model>
