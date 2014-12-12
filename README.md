@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # XBPushChat
 
 [![CI Status](http://img.shields.io/travis/eugenenguyen/XBPushChat.svg?style=flat)](https://travis-ci.org/eugenenguyen/XBPushChat)
@@ -43,3 +44,9 @@ This is open-source project. If you want to support us to keep develop this, or 
 
 XBPushChat is available under the MIT license. See the LICENSE file for more info.
 
+=======
+XBPushChat
+==========
+
+Simple 
+>>>>>>> 5f7c60da0912dab1acabc67447d5c4bf86f73696
