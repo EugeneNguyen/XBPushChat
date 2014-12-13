@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XBPushChat"
-  s.version          = "0.2.0"
+  s.version          = "0.2.2"
   s.summary          = "XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server"
   s.description      = <<-DESC
                        XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server
@@ -19,7 +19,7 @@ PushChat server code (which will be publish soon :D sorry about this)
                        * Markdown format.
                        * Don't worry about the indent, we strip it!
                        DESC
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/XBPushChat"
+  s.homepage         = "https://github.com/EugeneNguyen/XBPushChat"
   # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
   s.license          = 'MIT'
   s.author           = { "eugenenguyen" => "xuanbinh91@gmail.com" }

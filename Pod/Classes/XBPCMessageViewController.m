@@ -36,6 +36,7 @@
     
     [self loadDataToTable];
     self.senderId = [@(self.sender_id) stringValue];
+    [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id];
 }
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -116,7 +117,7 @@
          senderDisplayName:(NSString *)senderDisplayName
                       date:(NSDate *)date
 {
-    [[XBPushChat sharedInstance] sendMessage:text toID:[@(self.receiver_id) intValue]];
+    [[XBPushChat sharedInstance] sendMessage:text toID:[@(self.receiver_id) intValue] room:self.room];
     [self finishSendingMessage];
 }
 

@@ -20,6 +20,85 @@ it, simply add the following line to your Podfile:
 
     pod "XBPushChat"
 
+## How to use
+
+1. Install XBPushChat & PushChat + (a module of PlusIgniter)
+2. Config XBPushChat when app start:
+
+```objc
+[[XBPushChat sharedInstance] registerPush]; // register push notification, support all iOS
+[[XBPushChat sharedInstance] setHost:@"http://ciplustest.libre.com.vn"]; // setup host of PushChat+
+```
+
+and some bootstrap 
+
+```objc
+- (void)applicationWillResignActive:(UIApplication *)application
+{
+    [[XBPushChat sharedInstance] setPresence:0];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+    [[XBPushChat sharedInstance] setPresence:0];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    [[XBPushChat sharedInstance] setPresence:1];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+    [[XBPushChat sharedInstance] setPresence:1];
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application
+{
+    [[XBPushChat sharedInstance] setPresence:0 synchronous:YES];
+}
+
+#pragma mark - Push Delegate
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    [[XBPushChat sharedInstance] didReceiveToken:deviceToken];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    [[XBPushChat sharedInstance] didReceiveRemoteNotification:userInfo];
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    [[XBPushChat sharedInstance] didFailToRegisterForRemoteNotification:error];
+}
+```
+
+3. After get your userid (after login / register), you can start to chat:
+
+```objc
+[[XBPushChat sharedInstance] setSender_id:99]; // 99 is your userid
+```objc
+
+4. Fetch your history
+```objc
+[[XBPushChat sharedInstance] fetchAllRequest]; //get all history
+//or 
+[[XBPushChat sharedInstance] fetchRequestWith:100]; //get all message between you and user 100
+```
+
+5. Setup your presence
+```objc
+[[XBPushChat sharedInstance] setPresence:1]; //1 is online. 0 is offline
+```
+
+6. And show the chat view anytime you need
+```objc
+
+```
+
 ## Author
 
 eugenenguyen, xuanbinh91@gmail.com

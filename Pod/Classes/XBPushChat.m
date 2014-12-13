@@ -117,6 +117,7 @@ static XBPushChat *__sharedPushChat = nil;
     [request setPostValue:@(jid) forKey:@"send_to"];
     [request setPostValue:message forKey:@"message"];
     [request setPostValue:uuid forKey:@"random"];
+    [request setPostValue:room forKey:@"room"];
     [request setTag:eRequestSendMessage];
     [request setDelegate:self];
     [request startAsynchronous];
