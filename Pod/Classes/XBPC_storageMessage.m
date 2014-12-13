@@ -25,6 +25,11 @@
 
 + (void)addMessage:(NSDictionary *)item
 {
+    [XBPC_storageMessage addMessage:item save:YES];
+}
+
++ (void)addMessage:(NSDictionary *)item save:(BOOL)save
+{
     XBPC_storageMessage *message = nil;
     NSArray * matched;
     if (!item[@"id"])
@@ -65,9 +70,11 @@
                                                 @"receiver": message.receiver,
                                                 @"room": message.room,
                                                 @"lastmessage": message.message,
-                                                @"lasttime": message.createtime}];
-    
-    [[XBPushChat sharedInstance] saveContext];
+                                                @"lasttime": message.createtime} save:save];
+    if (save)
+    {
+        [[XBPushChat sharedInstance] saveContext];
+    }
 }
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument

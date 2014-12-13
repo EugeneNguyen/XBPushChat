@@ -27,6 +27,11 @@
     [self loadDataToTable];
 }
 
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    
+}
+
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self loadDataToTable];
@@ -62,7 +67,6 @@
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         [fetchRequest setEntity:entity];
         [fetchRequest setSortDescriptors:sortDescriptors];
-        [fetchRequest setFetchBatchSize:10];
         
         fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];
         [fetchedResultsController setDelegate:self];

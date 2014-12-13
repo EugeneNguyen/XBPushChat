@@ -23,5 +23,6 @@
 @property (nonatomic, retain) NSString * room;
 
 + (void)addMessage:(NSDictionary *)item;
++ (void)addMessage:(NSDictionary *)item save:(BOOL)save;
 
 @end

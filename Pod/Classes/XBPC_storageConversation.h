@@ -19,5 +19,6 @@
 @property (nonatomic, retain) NSDate * lasttime;
 
 + (void)addConversation:(NSDictionary *)item;
++ (void)addConversation:(NSDictionary *)item save:(BOOL)save;
 
 @end

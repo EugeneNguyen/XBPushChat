@@ -19,6 +19,11 @@
 
 + (void)addConversation:(NSDictionary *)item
 {
+    [XBPC_storageConversation addConversation:item save:YES];
+}
+
++ (void)addConversation:(NSDictionary *)item save:(BOOL)save
+{
     XBPC_storageConversation *conversation = nil;
     NSArray * matched = [XBPC_storageConversation getFormat:@"room=%@ and sender=%@ and receiver=%@" argument:@[item[@"room"], item[@"sender"], item[@"receiver"]]];
     if ([matched count] > 0)
@@ -38,7 +43,10 @@
         conversation.lastmessage = item[@"lastmessage"];
     }
     
-    [[XBPushChat sharedInstance] saveContext];
+    if (save)
+    {
+        [[XBPushChat sharedInstance] saveContext];
+    }
 }
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument

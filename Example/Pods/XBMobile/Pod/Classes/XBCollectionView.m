@@ -26,18 +26,12 @@
 @synthesize xbDelegate;
 @synthesize postParams;
 @synthesize datalist;
-@synthesize informations = _informations;
+@synthesize informations;
 @synthesize dataFetching;
 @synthesize isMultipleSection;
 @synthesize refreshControl;
 @synthesize backupWhenSearch;
 @synthesize pageControl;
-
-- (void)setInformations:(NSDictionary *)__informations
-{
-    _informations = __informations;
-    [self setupDelegate];
-}
 
 - (void)setupDelegate
 {
@@ -120,7 +114,7 @@
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)_collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([_informations[@"waterfall"][@"enable"] boolValue])
+    if ([informations[@"waterfall"][@"enable"] boolValue])
     {
         NSDictionary *item = [self cellInfoForPath:indexPath];
         UINib *nib = [UINib loadResourceWithInformation:item];
