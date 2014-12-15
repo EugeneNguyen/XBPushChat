@@ -56,7 +56,7 @@
         [fetchRequest setSortDescriptors:sortDescriptors];
         [fetchRequest setFetchBatchSize:10];
         
-        NSPredicate *p1 = [NSPredicate predicateWithFormat:@"(receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)" argumentArray:@[@(self.receiver_id), @(self.sender_id), @(self.sender_id), @(self.receiver_id)]];
+        NSPredicate *p1 = [NSPredicate predicateWithFormat:@"(receiver=%@ and sender=%@) or (receiver=%@ and sender=%@) room=%@" argumentArray:@[@(self.receiver_id), @(self.sender_id), @(self.sender_id), @(self.receiver_id), self.room]];
         [fetchRequest setPredicate:p1];
         
         fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:moc sectionNameKeyPath:nil cacheName:nil];

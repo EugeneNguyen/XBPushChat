@@ -154,17 +154,16 @@ static XBPushChat *__sharedPushChat = nil;
     NSDictionary *result = request.responseJSON;
     if (!result || [result[@"code"] intValue] != 200)
     {
-        NSLog(@"%@", request.responseString);
         return;
     }
-    NSLog(@"%@", result);
     switch (request.tag) {
         case eRequestGetHistory:
         {
             for (NSDictionary *item in result[@"data"])
             {
-                [XBPC_storageMessage addMessage:item];
+                [XBPC_storageMessage addMessage:item save:NO];
             }
+            [[XBPushChat sharedInstance] saveContext];
         }
             break;
             
