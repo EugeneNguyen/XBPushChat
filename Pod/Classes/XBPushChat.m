@@ -177,6 +177,16 @@ static XBPushChat *__sharedPushChat = nil;
     NSLog(@"%@", request.error);
 }
 
+- (NSInteger)badge
+{
+    return [[UIApplication sharedApplication] applicationIconBadgeNumber];
+}
+
+- (void)setBadge:(NSInteger)badge
+{
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
+}
+
 #pragma mark - Core Data stack
 
 @synthesize managedObjectContext = _managedObjectContext;
