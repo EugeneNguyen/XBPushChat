@@ -29,6 +29,13 @@
 
 #pragma mark - XBTableViewDelegate
 
+- (UITableViewCell *)xbTableView:(XBTableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath withPreparedCell:(UITableViewCell *)cell withItem:(XBPC_storageConversation *)item
+{
+    UILabel *label = (UILabel *)[cell viewWithTag:100];
+    label.text = [@([item numberOfUnreadMessage]) stringValue];
+    return cell;
+}
+
 - (void)xbTableView:(XBTableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath forItem:(XBPC_storageConversation *)item
 {
     XBPCMessageViewController *messageViewController = [[XBPCMessageViewController alloc] init];

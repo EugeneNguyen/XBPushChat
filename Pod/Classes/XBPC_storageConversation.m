@@ -16,6 +16,7 @@
 @dynamic receiver;
 @dynamic lasttime;
 @dynamic lastmessage;
+@dynamic lastvisit;
 
 + (void)addConversation:(NSDictionary *)item
 {
@@ -43,6 +44,16 @@
         conversation.lastmessage = item[@"lastmessage"];
     }
     
+    if (!conversation.lastvisit)
+    {
+        conversation.lastvisit = [NSDate dateWithTimeIntervalSince1970:0];
+    }
+    
+    if (item[@"lastvisit"])
+    {
+        conversation.lastvisit = [NSDate date];
+    }
+    
     if (save)
     {
         [[XBPushChat sharedInstance] saveContext];
@@ -63,6 +74,36 @@
     
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     return result;
+}
+
+- (void)visit
+{
+    self.lastvisit = [NSDate date];
+    [[XBPushChat sharedInstance] saveContext];
+}
+
+- (NSUInteger)numberOfUnreadMessage
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    NSPredicate *p1 = [NSPredicate predicateWithFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@ and %@<createtime" argumentArray:@[self.sender, self.receiver, self.receiver, self.sender, self.room, self.lastvisit]];
+    [fr setPredicate:p1];
+    
+    return [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
+}
+
++ (NSUInteger)numberOfUnreadConversation
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    NSPredicate *p1 = [NSPredicate predicateWithFormat:@"lastvisit<lasttime" argumentArray:@[]];
+    [fr setPredicate:p1];
+    
+    return [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
 }
 
 @end

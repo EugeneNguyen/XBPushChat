@@ -11,7 +11,7 @@
 #import "XBPushChat.h"
 #import "XBPC_storageConversation.h"
 
-@interface XBPCConversationTableView () <NSFetchedResultsControllerDelegate>
+@interface XBPCConversationTableView () <NSFetchedResultsControllerDelegate, XBTableViewDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
     NSMutableArray *conversation;

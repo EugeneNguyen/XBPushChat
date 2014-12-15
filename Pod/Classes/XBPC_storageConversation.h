@@ -17,8 +17,13 @@
 @property (nonatomic, retain) NSNumber * receiver;
 @property (nonatomic, retain) NSString * lastmessage;
 @property (nonatomic, retain) NSDate * lasttime;
+@property (nonatomic, retain) NSDate * lastvisit;
 
 + (void)addConversation:(NSDictionary *)item;
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save;
+
+- (void)visit;
+- (NSUInteger)numberOfUnreadMessage;
++ (NSUInteger)numberOfUnreadConversation;
 
 @end
