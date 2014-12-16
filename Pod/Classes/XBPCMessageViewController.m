@@ -39,9 +39,8 @@
     
     if (self.receiver_id == [[XBPushChat sharedInstance] sender_id])
     {
-        NSInteger a = self.receiver_id;
         self.receiver_id = self.sender_id;
-        self.sender_id = a;
+        self.sender_id = [[XBPushChat sharedInstance] sender_id];
     }
     
     self.senderId = [@(self.sender_id) stringValue];

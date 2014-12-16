@@ -26,7 +26,6 @@
     [[XBPushChat sharedInstance] registerPush];
     [[XBPushChat sharedInstance] setHost:@"http://ciplustest.libre.com.vn"];
     [[XBPushChat sharedInstance] setSender_id:99];
-    [[XBPushChat sharedInstance] sendMessage:@"hello" toID:99 room:@"abc"];
     [[XBPushChat sharedInstance] fetchAllRequest];
     [[XBPushChat sharedInstance] setPresence:1];
     return YES;

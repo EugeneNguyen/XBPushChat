@@ -26,8 +26,7 @@
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save
 {
     XBPC_storageConversation *conversation = nil;
-    
-    NSArray * matched = [XBPC_storageConversation getFormat:@"room=%@ and ((sender=%@ and receiver=%@) or (sender=%@ and receiver=%@))" argument:@[item[@"room"], item[@"sender"], item[@"receiver"], item[@"receiver"], item[@"sender"]]];
+    NSArray * matched = [XBPC_storageConversation getFormat:@"room=%@ and sender=%@ and receiver=%@" argument:@[item[@"room"], item[@"sender"], item[@"receiver"]]];
     if ([matched count] > 0)
     {
         conversation = [matched lastObject];
@@ -37,16 +36,8 @@
         conversation = [NSEntityDescription insertNewObjectForEntityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
     }
     conversation.room = item[@"room"];
-    if ([item[@"receiver"] intValue] == [[XBPushChat sharedInstance] sender_id])
-    {
-        conversation.sender = @([item[@"receiver"] intValue]);
-        conversation.receiver = @([item[@"sender"] intValue]);
-    }
-    else
-    {
-        conversation.sender = @([item[@"sender"] intValue]);
-        conversation.receiver = @([item[@"receiver"] intValue]);
-    }
+    conversation.sender = @([item[@"sender"] intValue]);
+    conversation.receiver = @([item[@"receiver"] intValue]);
     if (!conversation.lasttime || [conversation.lasttime timeIntervalSinceDate:item[@"lasttime"]] < 0)
     {
         conversation.lasttime = item[@"lasttime"];

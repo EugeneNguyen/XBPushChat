@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XBPushChat"
-  s.version          = "0.2.5.2"
+  s.version          = "0.2.5.3"
   s.summary          = "XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server"
   s.description      = <<-DESC
                        XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server
