@@ -35,8 +35,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self loadDataToTable];
+    
+    if (self.receiver_id == [[XBPushChat sharedInstance] sender_id])
+    {
+        NSInteger a = self.receiver_id;
+        self.receiver_id = self.sender_id;
+        self.sender_id = a;
+    }
+    
     self.senderId = [@(self.sender_id) stringValue];
     [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id];
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];

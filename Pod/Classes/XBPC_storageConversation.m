@@ -62,7 +62,8 @@
 
 + (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room
 {
-    return [[XBPC_storageConversation getFormat:@"(receiver=%@ or sender=%@) and room=%@" argument:@[@(receiver_id), @(receiver_id), room]] lastObject];
+    NSInteger sender = [[XBPushChat sharedInstance] sender_id];
+    return [[XBPC_storageConversation getFormat:@"(receiver=%@ and sender=%@) or (receiver=%@ and sender=%@) and room=%@" argument:@[@(receiver_id), @(sender), @(sender), @(receiver_id), room]] lastObject];
 }
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument
