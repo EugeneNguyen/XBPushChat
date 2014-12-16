@@ -105,6 +105,21 @@
     }
 }
 
+- (int)totalRows
+{
+    int count = 0;
+    for (NSDictionary *item in self.datalist)
+    {
+        count += [item[@"items"] count];
+    }
+    return count;
+}
+
+- (BOOL)ableToShowNoData
+{
+    return self.informations[@"NoDataCell"] && ([self totalRows] == 0);
+}
+
 #pragma mark - Data method & DataFetching Delegate
 
 - (void)requestData
@@ -147,7 +162,7 @@
 {
     if ([self.informations[@"isUsingAlert"] boolValue])
     {
-        [self alert:@"Error" message:[self.dataFetching.request.error description]];
+        [self alert:@"Error" message:[self.dataFetching.cache.request.error description]];
     }
     
     if ([self.informations[@"isUsingRefreshControl"] boolValue])

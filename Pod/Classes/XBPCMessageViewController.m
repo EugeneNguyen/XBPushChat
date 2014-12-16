@@ -12,6 +12,7 @@
 #import "JSQMessagesTimestampFormatter.h"
 #import "XBPCAvatarInformation.h"
 #import "XBPC_storageMessage.h"
+#import "XBPC_storageConversation.h"
 
 @interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate>
 {
@@ -28,6 +29,7 @@
 {
     _sender_id = sender_id;
     [self setSenderId:[@(sender_id) stringValue]];
+    
 }
 
 - (void)viewDidLoad
@@ -37,6 +39,13 @@
     [self loadDataToTable];
     self.senderId = [@(self.sender_id) stringValue];
     [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id];
+    [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
 }
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -123,13 +132,7 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-//    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Media messages"
-//                                                       delegate:self
-//                                              cancelButtonTitle:@"Cancel"
-//                                         destructiveButtonTitle:nil
-//                                              otherButtonTitles:@"Send photo", @"Send location", @"Send video", nil];
-//    
-//    [sheet showFromToolbar:self.inputToolbar];
+    
 }
 
 #pragma mark - JSQMessages CollectionView DataSource

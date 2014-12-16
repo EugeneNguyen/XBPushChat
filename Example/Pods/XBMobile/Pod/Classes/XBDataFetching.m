@@ -13,7 +13,10 @@
 #import "JSONKit.h"
 #import "XMLDictionary.h"
 
-@interface XBDataFetching () <ASIHTTPRequestDelegate>
+@interface XBDataFetching () <XBPostRequestCacheManager>
+{
+    
+}
 
 @end
 
@@ -21,8 +24,8 @@
 @synthesize datalist = _datalist;
 @synthesize info;
 @synthesize postParams = _postParams;
-@synthesize request;
 @synthesize isMultipleSection;
+@synthesize cache;
 
 - (void)setDatalist:(id)datalist
 {
@@ -35,12 +38,6 @@
     [self requestData];
 }
 
-- (void)dealloc
-{
-    self.request.delegate = nil;
-    [self.request cancel];
-}
-
 #pragma mark - ASIHTTPRequestDelegate
 
 - (void)requestData
@@ -51,14 +48,15 @@
     {
         url = [NSString stringWithFormat:@"%@/%@", [[NSUserDefaults standardUserDefaults] stringForKey:predefaultHost], url];
     }
-    request = [ASIFormDataRequest requestWithURL:[NSURL URLWithString:url]];
-    request.cachePolicy = ASIFallbackToCacheIfLoadFailsCachePolicy;
-    request.delegate = self;
-    for (NSString *key in [_postParams allKeys])
+    if (!_postParams)
     {
-        [request setPostValue:_postParams[key] forKey:key];
+        _postParams = @{};
     }
-    [request startAsynchronous];
+    cache = [[XBPostRequestCacheManager alloc] init];
+    cache.url = [NSURL URLWithString:url];
+    cache.dataPost = _postParams;
+    cache.delegate = self;
+    [cache start];
 
     if ([info[@"usingHUD"] boolValue])
     {
@@ -75,18 +73,18 @@
     }
 }
 
-- (void)requestFinished:(ASIHTTPRequest *)_request
+- (void)requestFinishedWithString:(NSString *)resultFromRequest
 {
-    DDLogVerbose(@"%@", _request.responseString);
+    DDLogVerbose(@"%@", resultFromRequest);
     [self hideHUD];
     NSDictionary *item;
     if ([info[@"isXML"] boolValue])
     {
-        item = [NSDictionary dictionaryWithXMLString:_request.responseString];
+        item = [NSDictionary dictionaryWithXMLString:resultFromRequest];
     }
     else
     {
-        item = _request.responseJSON;
+        item = [resultFromRequest objectFromJSONString];
     }
     DDLogVerbose(@"%@", item);
     if (item)

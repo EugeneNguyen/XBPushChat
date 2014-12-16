@@ -60,6 +60,11 @@
     }
 }
 
++ (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room
+{
+    return [[XBPC_storageConversation getFormat:@"(receiver=%@ or sender=%@) and room=%@" argument:@[@(receiver_id), @(receiver_id), room]] lastObject];
+}
+
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument
 {
     NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];

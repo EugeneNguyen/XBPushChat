@@ -46,4 +46,6 @@
 - (void)fetchAllRequest;
 - (void)fetchRequestWith:(NSUInteger)receiver_id;
 
+- (void)clearBadge;
+
 @end

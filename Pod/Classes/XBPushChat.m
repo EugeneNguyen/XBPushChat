@@ -13,6 +13,7 @@
 #import "XBPC_storageMessage.h"
 
 #define XBPC_Service(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushchatplus/%@", host, X]]]
+#define XBPC_PushService(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushplus/%@", host, X]]]
 
 typedef enum : NSUInteger {
     eRequestSendMessage = 100,
@@ -186,6 +187,14 @@ static XBPushChat *__sharedPushChat = nil;
 - (void)setBadge:(NSInteger)badge
 {
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
+}
+
+- (void)clearBadge
+{
+    self.badge = 0;
+    ASIFormDataRequest * request = XBPC_PushService(@"services/clear_badge");
+    [request setPostValue:@(self.sender_id) forKey:@"ownerid"];
+    [request startAsynchronous];
 }
 
 #pragma mark - Core Data stack
