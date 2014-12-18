@@ -118,7 +118,7 @@
     [[XBPushChat sharedInstance] saveContext];
 }
 
-- (NSUInteger)numberOfUnreadMessage
+- (NSString *)numberOfUnreadMessage
 {
     NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
     NSFetchRequest *fr = [[NSFetchRequest alloc] init];
@@ -127,7 +127,7 @@
     NSPredicate *p1 = [NSPredicate predicateWithFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@ and %@<createtime" argumentArray:@[self.sender, self.receiver, self.receiver, self.sender, self.room, self.lastvisit]];
     [fr setPredicate:p1];
     
-    return [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
+    return [@([[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil]) stringValue];
 }
 
 + (NSUInteger)numberOfUnreadConversation

@@ -33,7 +33,7 @@ static XBPushChat *__sharedPushChat = nil;
 @synthesize host, token;
 @synthesize avatarFormat, avatarPlaceHolder;
 
-+ (id)sharedInstance
++ (XBPushChat *)sharedInstance
 {
     if (!__sharedPushChat)
     {

@@ -16,20 +16,17 @@
     NSFetchedResultsController *fetchedResultsController;
     NSMutableArray *conversation;
 }
+@property (nonatomic, retain) NSFetchedResultsController *friendListFetchedResult;
 
 @end
 
 @implementation XBPCConversationTableView
+@synthesize friendListFetchedResult;
 
 - (void)awakeFromNib
 {
     [self loadInformations:[NSDictionary dictionaryWithContentsOfPlist:@"XBPCConversationTableViewConfig" bundleName:@"XBPushChat"]];
     [self loadDataToTable];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{
-    
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
@@ -76,6 +73,10 @@
         {
             NSLog(@"Error performing fetch: %@", error);
         }
+        
+        
+        friendListFetchedResult = [XBPC_storageFriendList fetchedResult];
+        friendListFetchedResult.delegate = self;
         
     }
     return fetchedResultsController;

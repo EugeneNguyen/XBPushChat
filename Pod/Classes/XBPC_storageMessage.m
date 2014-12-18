@@ -57,6 +57,9 @@
     message.room = item[@"room"];
     message.message = item[@"message"];
     
+    [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
+    [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
+    
     [XBPC_storageConversation addConversation:@{@"sender": message.sender,
                                                 @"receiver": message.receiver,
                                                 @"room": message.room,

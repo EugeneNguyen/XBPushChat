@@ -79,6 +79,20 @@
     return result;
 }
 
++ (NSFetchedResultsController *)fetchedResult
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageFriendList" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:YES];
+    [fr setSortDescriptors:@[sd2]];
+    
+    NSFetchedResultsController *controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fr managedObjectContext:[[XBPushChat sharedInstance] managedObjectContext] sectionNameKeyPath:nil cacheName:nil];
+    [controller performFetch:nil];
+    return controller;
+}
+
 + (void)clear
 {
     NSArray *array = [XBPC_storageFriendList getAll];

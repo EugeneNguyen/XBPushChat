@@ -17,9 +17,12 @@
 @property (nonatomic, retain) NSNumber * presence;
 
 + (void)addUser:(NSDictionary *)item;
++ (void)addUser:(NSDictionary *)item save:(BOOL)save;
 + (XBPC_storageFriendList *)userById:(int)uid;
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument;
 + (NSArray *)getAll;
+
++ (NSFetchedResultsController *)fetchedResult;
 
 @end

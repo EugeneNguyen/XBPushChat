@@ -40,7 +40,7 @@
 @property (nonatomic, retain) NSString * avatarFormat;
 @property (nonatomic, retain) UIImage * avatarPlaceHolder;
 
-+ (id)sharedInstance;
++ (XBPushChat *)sharedInstance;
 - (void)registerPush;
 
 - (void)didReceiveToken:(NSData *)deviceToken;

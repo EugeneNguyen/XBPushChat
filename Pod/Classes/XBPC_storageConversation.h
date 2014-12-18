@@ -26,7 +26,7 @@
 + (void)clear;
 
 - (void)visit;
-- (NSUInteger)numberOfUnreadMessage;
+- (NSString *)numberOfUnreadMessage;
 + (NSUInteger)numberOfUnreadConversation;
 
 - (NSString *)senderUsername;
