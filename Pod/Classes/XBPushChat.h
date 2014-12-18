@@ -9,6 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+#import "XBPC_storageMessage.h"
+#import "XBPC_storageConversation.h"
+#import "XBPC_storageFriendList.h"
+
+#import "XBPCConversationTableView.h"
+
+#import "XBPCAvatarInformation.h"
+#import "XBPCMessage.h"
+#import "XBPCMessageViewController.h"
+
 @interface XBPushChat : NSObject
 {
     
@@ -45,7 +55,11 @@
 
 - (void)fetchAllRequest;
 - (void)fetchRequestWith:(NSUInteger)receiver_id;
+- (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly;
+
+- (void)getFriendInformationRefresh:(BOOL)isRefresh;
 
 - (void)clearBadge;
+- (void)logout;
 
 @end

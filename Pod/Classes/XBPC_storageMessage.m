@@ -7,7 +7,6 @@
 //
 
 #import "XBPC_storageMessage.h"
-#import "XBPC_storageConversation.h"
 #import "XBPushChat.h"
 #import "XBExtension.h"
 
@@ -31,15 +30,7 @@
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save
 {
     XBPC_storageMessage *message = nil;
-    NSArray * matched;
-    if (!item[@"id"])
-    {
-        matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
-    }
-    else
-    {
-        matched = [XBPC_storageMessage getFormat:@"id=%@" argument:@[item[@"id"]]];
-    }
+    NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
     
     if ([matched count] > 0)
     {
@@ -94,4 +85,46 @@
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     return result;
 }
+
++ (NSArray *)getAll
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
+    return result;
+}
+
++ (void)clear
+{
+    NSArray *array = [XBPC_storageMessage getAll];
+    for (XBPC_storageMessage *message in array)
+    {
+        [[[XBPushChat sharedInstance] managedObjectContext] deleteObject:message];
+    }
+    [[XBPushChat sharedInstance] saveContext];
+}
+
++ (NSUInteger)lastIDWithUser:(NSUInteger)user_id
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    if (user_id != -1)
+    {
+        NSPredicate *p1 = [NSPredicate predicateWithFormat:@"sender=%@ or receiver=%@" argumentArray:@[@(user_id), @(user_id)]];
+        [fr setPredicate:p1];
+    }
+    
+    NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"id" ascending:NO];
+    [fr setSortDescriptors:@[sd2]];
+    [fr setFetchLimit:1];
+    
+    NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
+    XBPC_storageMessage *lastMessage = [result lastObject];
+    return [lastMessage.id integerValue];
+}
+
 @end

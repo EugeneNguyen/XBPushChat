@@ -44,8 +44,9 @@
     }
     
     self.senderId = [@(self.sender_id) stringValue];
-    [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id];
+    [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
+    [[XBPushChat sharedInstance] clearBadge];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

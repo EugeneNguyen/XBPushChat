@@ -128,14 +128,14 @@
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.5.1.
+// Version: 0.2.5.2.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.4.3.
+// Version: 0.2.5.3.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

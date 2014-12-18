@@ -24,5 +24,7 @@
 
 + (void)addMessage:(NSDictionary *)item;
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save;
++ (NSUInteger)lastIDWithUser:(NSUInteger)user_id;
++ (void)clear;
 
 @end

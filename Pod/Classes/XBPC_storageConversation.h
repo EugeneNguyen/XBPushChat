@@ -23,9 +23,13 @@
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save;
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument;
 + (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room;
++ (void)clear;
 
 - (void)visit;
 - (NSUInteger)numberOfUnreadMessage;
 + (NSUInteger)numberOfUnreadConversation;
+
+- (NSString *)senderUsername;
+- (NSString *)receiverUsername;
 
 @end

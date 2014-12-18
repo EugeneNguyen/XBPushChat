@@ -25,6 +25,16 @@
 
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save
 {
+    NSMutableDictionary *mutableItem = [item mutableCopy];
+    NSNumber *sender = mutableItem[@"sender"];
+    
+    if ([sender intValue] != [[XBPushChat sharedInstance] sender_id])
+    {
+        mutableItem[@"receiver"] = mutableItem[@"sender"];
+        mutableItem[@"sender"] = @([[XBPushChat sharedInstance] sender_id]);
+        item = mutableItem;
+    }
+    
     XBPC_storageConversation *conversation = nil;
     NSArray * matched = [XBPC_storageConversation getFormat:@"room=%@ and sender=%@ and receiver=%@" argument:@[item[@"room"], item[@"sender"], item[@"receiver"]]];
     if ([matched count] > 0)
@@ -63,7 +73,7 @@
 + (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room
 {
     NSInteger sender = [[XBPushChat sharedInstance] sender_id];
-    return [[XBPC_storageConversation getFormat:@"(receiver=%@ and sender=%@) or (receiver=%@ and sender=%@) and room=%@" argument:@[@(receiver_id), @(sender), @(sender), @(receiver_id), room]] lastObject];
+    return [[XBPC_storageConversation getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[@(receiver_id), @(sender), @(sender), @(receiver_id), room]] lastObject];
 }
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument
@@ -80,6 +90,26 @@
     
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     return result;
+}
+
++ (NSArray *)getAll
+{
+    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
+    [fr setEntity:ed];
+    
+    NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
+    return result;
+}
+
++ (void)clear
+{
+    NSArray *array = [XBPC_storageConversation getAll];
+    for (XBPC_storageConversation *conversation in array)
+    {
+        [[[XBPushChat sharedInstance] managedObjectContext] deleteObject:conversation];
+    }
+    [[XBPushChat sharedInstance] saveContext];
 }
 
 - (void)visit
@@ -110,6 +140,17 @@
     [fr setPredicate:p1];
     
     return [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
+}
+
+
+- (NSString *)senderUsername
+{
+    return [XBPC_storageFriendList userById:[self.sender intValue]].name;
+}
+
+- (NSString *)receiverUsername
+{
+    return [XBPC_storageFriendList userById:[self.receiver intValue]].name;
 }
 
 @end

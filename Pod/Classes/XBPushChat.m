@@ -10,14 +10,16 @@
 #import "XBPushChat.h"
 #import "ASIFormDataRequest.h"
 #import "XBExtension.h"
-#import "XBPC_storageMessage.h"
+#import "JSONKit.h"
 
 #define XBPC_Service(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushchatplus/%@", host, X]]]
 #define XBPC_PushService(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushplus/%@", host, X]]]
+#define XBPC_User(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", host, X]]]
 
 typedef enum : NSUInteger {
     eRequestSendMessage = 100,
     eRequestGetHistory,
+    eRequestGetFriendList
 } XBPCRequestType;
 
 static XBPushChat *__sharedPushChat = nil;
@@ -103,6 +105,13 @@ static XBPushChat *__sharedPushChat = nil;
     }
 }
 
+- (void)logout
+{
+    [self setPresence:0];
+    [XBPC_storageMessage clear];
+    [XBPC_storageConversation clear];
+}
+
 #pragma mark - Send Message
 
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid
@@ -131,6 +140,8 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"room" : room}];
 }
 
+#pragma mark Get History
+
 - (void)fetchAllRequest
 {
     [self fetchRequestWith:-1];
@@ -138,14 +149,53 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)fetchRequestWith:(NSUInteger)receiver_id
 {
+    [self fetchRequestWith:receiver_id newOnly:NO];
+}
+
+- (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly
+{
     ASIFormDataRequest * request = XBPC_Service(@"get_history");
     [request setPostValue:@(self.sender_id) forKey:@"user_id"];
     if (receiver_id != -1)
     {
         [request setPostValue:@(receiver_id) forKey:@"send_to"];
     }
+    if (newOnly)
+    {
+        [request setPostValue:@([XBPC_storageMessage lastIDWithUser:receiver_id]) forKey:@"offset"];
+    }
     [request setDelegate:self];
     [request setTag:eRequestGetHistory];
+    [request startAsynchronous];
+}
+
+#pragma mark Get Friend's information
+
+- (void)getFriendInformationRefresh:(BOOL)isRefresh
+{
+    NSArray *friendList = nil;
+    if (isRefresh)
+    {
+        friendList = [XBPC_storageFriendList getAll];
+    }
+    else
+    {
+        friendList = [XBPC_storageFriendList getFormat:@"name=%@" argument:@[@""]];
+    }
+    
+    NSMutableArray *userids = [@[] mutableCopy];
+    for (XBPC_storageFriendList *friend in friendList) {
+        [userids addObject:friend.id];
+    }
+    
+    if ([userids count] == 0)
+    {
+        return;
+    }
+    ASIFormDataRequest *request = XBPC_User(@"services/user/getnamebyids");
+    [request setPostValue:[userids JSONString] forKey:@"user_ids"];
+    [request setDelegate:self];
+    [request setTag:eRequestGetFriendList];
     [request startAsynchronous];
 }
 
@@ -166,8 +216,17 @@ static XBPushChat *__sharedPushChat = nil;
                 [XBPC_storageMessage addMessage:item save:NO];
             }
             [[XBPushChat sharedInstance] saveContext];
+            [self getFriendInformationRefresh:NO];
         }
             break;
+        case eRequestGetFriendList:
+        {
+            for (NSDictionary *item in result[@"data"])
+            {
+                [XBPC_storageFriendList addUser:@{@"id": item[@"user_id"],
+                                                  @"name": item[@"username"]}];
+            }
+        }
             
         default:
             break;
@@ -176,7 +235,7 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)requestFailed:(ASIHTTPRequest *)request
 {
-    NSLog(@"%@", request.error);
+    
 }
 
 - (NSInteger)badge
@@ -191,10 +250,13 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)clearBadge
 {
+    if (self.badge == 0 && self.sender_id > 0)
+    {
+        ASIFormDataRequest * request = XBPC_PushService(@"services/clear_badge");
+        [request setPostValue:@(self.sender_id) forKey:@"ownerid"];
+        [request startAsynchronous];
+    }
     self.badge = 0;
-    ASIFormDataRequest * request = XBPC_PushService(@"services/clear_badge");
-    [request setPostValue:@(self.sender_id) forKey:@"ownerid"];
-    [request startAsynchronous];
 }
 
 #pragma mark - Core Data stack
