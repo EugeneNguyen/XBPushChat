@@ -43,7 +43,7 @@ PODS:
     - SDWebImage-ProgressView
     - UIImage-Helpers
     - XMLDictionary
-  - XBPushChat (0.2.6):
+  - XBPushChat (0.2.6.1):
     - JSQMessagesViewController
     - XBMobile
   - XMLDictionary (1.4)
@@ -71,7 +71,7 @@ SPEC CHECKSUMS:
   SDWebImage-ProgressView: 5b094a93013b3f6ae9d622b58055c942c964b678
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
   XBMobile: f2afa82945eaccee020036a79d10ac6167db1df1
-  XBPushChat: 200cd626ba1da642e3d47aa7e103dba5a2668d35
+  XBPushChat: 836bcc3d56705cd02fb8e62234e866dcdeff37a1
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4

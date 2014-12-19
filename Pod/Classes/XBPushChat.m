@@ -180,7 +180,7 @@ static XBPushChat *__sharedPushChat = nil;
     }
     else
     {
-        friendList = [XBPC_storageFriendList getFormat:@"name=%@" argument:@[@""]];
+        friendList = [XBPC_storageFriendList getFormat:@"name=nil" argument:@[]];
     }
     
     NSMutableArray *userids = [@[] mutableCopy];
