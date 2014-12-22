@@ -21,6 +21,7 @@
 @property (nonatomic, retain) NSString * type;
 @property (nonatomic, retain) NSString * random;
 @property (nonatomic, retain) NSString * room;
+@property (nonatomic, retain) NSNumber * downloaded;
 
 + (void)addMessage:(NSDictionary *)item;
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save;

@@ -16,6 +16,7 @@
     <entity name="XBPC_storageMessage" representedClassName="XBPC_storageMessage" syncable="YES">
         <attribute name="attach" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="createtime" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="downloaded" optional="YES" attributeType="Integer 32" syncable="YES"/>
         <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="random" optional="YES" attributeType="String" syncable="YES"/>
@@ -27,6 +28,6 @@
     <elements>
         <element name="XBPC_storageConversation" positionX="-36" positionY="9" width="128" height="135"/>
         <element name="XBPC_storageFriendList" positionX="-54" positionY="-9" width="128" height="88"/>
-        <element name="XBPC_storageMessage" positionX="-63" positionY="-18" width="128" height="180"/>
+        <element name="XBPC_storageMessage" positionX="-63" positionY="-18" width="128" height="195"/>
     </elements>
 </model>

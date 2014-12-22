@@ -21,6 +21,7 @@
 @dynamic type;
 @dynamic random;
 @dynamic room;
+@dynamic downloaded;
 
 + (void)addMessage:(NSDictionary *)item
 {
@@ -39,6 +40,7 @@
     else
     {
         message  = [NSEntityDescription insertNewObjectForEntityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
+        message.downloaded = @(NO);
     }
     
     message.id = @([item[@"id"] intValue]);

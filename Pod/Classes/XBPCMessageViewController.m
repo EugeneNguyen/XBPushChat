@@ -14,10 +14,11 @@
 #import "XBPC_storageMessage.h"
 #import "XBPC_storageConversation.h"
 
-@interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate>
+@interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
     NSMutableArray *items;
+    JSQMessagesBubbleImageFactory *bubbleFactory;
 }
 
 @end
@@ -35,6 +36,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     [self loadDataToTable];
     
     if (self.receiver_id == [[XBPushChat sharedInstance] sender_id])
@@ -49,9 +51,9 @@
     [[XBPushChat sharedInstance] clearBadge];
 }
 
-- (void)viewDidDisappear:(BOOL)animated
+- (void)viewWillDisappear:(BOOL)animated
 {
-    [super viewDidDisappear:animated];
+    [super viewWillDisappear:animated];
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
 }
 
@@ -111,12 +113,7 @@
             [items addObject:message];
         }
     }
-    [self finishReceivingMessage];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
+    [self finishSendingMessage];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -134,12 +131,43 @@
                       date:(NSDate *)date
 {
     [[XBPushChat sharedInstance] sendMessage:text toID:[@(self.receiver_id) intValue] room:self.room];
-    [self finishSendingMessage];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
-    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Attach photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a photo", @"Select from gallery", nil];
+    [actionSheet showInView:self.view];
+}
+
+#pragma mark - ActionSheet
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == [actionSheet firstOtherButtonIndex])
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+    else if (buttonIndex == [actionSheet firstOtherButtonIndex] + 1)
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        picker.delegate = self;
+        [self presentViewController:picker animated:YES completion:nil];
+    }
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = info[UIImagePickerControllerEditedImage];
+    if (!image)
+    {
+        image = info[UIImagePickerControllerOriginalImage];
+    }
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    NSLog(@"%@", NSStringFromCGSize(image.size));
 }
 
 #pragma mark - JSQMessages CollectionView DataSource
@@ -152,8 +180,6 @@
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     XBPCMessage *message = items[indexPath.row];
-    
-    JSQMessagesBubbleImageFactory *bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     
     if (message.isOutgoing) {
         return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:224.0f/255.0f green:245.0f/255.0f blue:252.0f/255.0f alpha:1]];
@@ -178,37 +204,6 @@
     
     return nil;
 }
-
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
-    return nil;
-    XBPCMessage *message = items[indexPath.row];
-    
-    /**
-     *  iOS7-style sender name labels
-     */
-    if (!message.isOutgoing) {
-        return nil;
-    }
-    
-    if (indexPath.item - 1 > 0) {
-        XBPCMessage *previousMessage = items[indexPath.item - 1];
-        if (!previousMessage.isOutgoing) {
-            return nil;
-        }
-    }
-    
-    /**
-     *  Don't specify attributes to use the defaults.
-     */
-    return [[NSAttributedString alloc] initWithString:message.senderDisplayName];
-}
-
-- (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
-    return nil;
-}
-
 #pragma mark - UICollectionView DataSource
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
@@ -243,30 +238,6 @@
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     
-    return 0.0f;
-}
-
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForMessageBubbleTopLabelAtIndexPath:(NSIndexPath *)indexPath
-{
-    XBPCMessage *currentMessage = items[indexPath.row];
-    if ([[currentMessage senderId] isEqualToString:self.senderId]) {
-        return 0.0f;
-    }
-    
-    if (indexPath.item - 1 > 0) {
-        XBPCMessage *previousMessage = items[indexPath.row - 1];
-        if ([[previousMessage senderId] isEqualToString:[currentMessage senderId]]) {
-            return 0.0f;
-        }
-    }
-    
-    return kJSQMessagesCollectionViewCellLabelHeightDefault;
-}
-
-- (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
-                   layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellBottomLabelAtIndexPath:(NSIndexPath *)indexPath
-{
     return 0.0f;
 }
 
