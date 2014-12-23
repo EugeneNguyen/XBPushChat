@@ -85,7 +85,7 @@
 #define COCOAPODS_POD_AVAILABLE_JSQMessagesViewController
 #define COCOAPODS_VERSION_MAJOR_JSQMessagesViewController 6
 #define COCOAPODS_VERSION_MINOR_JSQMessagesViewController 1
-#define COCOAPODS_VERSION_PATCH_JSQMessagesViewController 0
+#define COCOAPODS_VERSION_PATCH_JSQMessagesViewController 1
 
 // JSQSystemSoundPlayer
 #define COCOAPODS_POD_AVAILABLE_JSQSystemSoundPlayer
@@ -134,14 +134,14 @@
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.5.2.
+// Version: 0.2.6.3.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.6.1.
+// Version: 0.2.6.2.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

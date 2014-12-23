@@ -16,7 +16,6 @@
 #import "XBPCConversationTableView.h"
 
 #import "XBPCAvatarInformation.h"
-#import "XBPCMessage.h"
 #import "XBPCMessageViewController.h"
 
 @interface XBPushChat : NSObject
@@ -52,10 +51,13 @@
 
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid;
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid room:(NSString *)room;
+- (void)sendImage:(UIImage *)image toID:(NSUInteger)jid room:(NSString *)room;
 
 - (void)fetchAllRequest;
 - (void)fetchRequestWith:(NSUInteger)receiver_id;
 - (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly;
+
+- (void)downloadImage:(int)imageID;
 
 - (void)getFriendInformationRefresh:(BOOL)isRefresh;
 

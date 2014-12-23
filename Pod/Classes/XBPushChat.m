@@ -11,6 +11,9 @@
 #import "ASIFormDataRequest.h"
 #import "XBExtension.h"
 #import "JSONKit.h"
+#import "SDImageCache.h"
+#import "SDWebImageDownloader.h"
+#import <UIImage+ImageCompress.h>
 
 #define XBPC_Service(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushchatplus/%@", host, X]]]
 #define XBPC_PushService(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushplus/%@", host, X]]]
@@ -138,6 +141,42 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"random": uuid,
                                       @"message": message,
                                       @"room" : room}];
+}
+
+- (void)sendImage:(UIImage *)image toID:(NSUInteger)jid room:(NSString *)room
+{
+    ASIFormDataRequest *request = XBPC_User(@"services/product/uploadimg");
+    [request addData:UIImageJPEGRepresentation([UIImage compressImage:image compressRatio:0.9], 0.9) forKey:@"uploadimg"];
+    [request startAsynchronous];
+    
+    __block ASIFormDataRequest *_request = request;
+    [request setCompletionBlock:^{
+        NSDictionary *item = _request.responseJSON;
+        if ([item[@"code"] intValue] == 200)
+        {
+            [self sendMessage:[NSString stringWithFormat:@"New image message (%@)", item[@"id"]] toID:jid room:room];
+        }
+    }];
+}
+
+- (void)downloadImage:(int)imageID
+{
+    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:[@(imageID) stringValue]])
+    {
+        return;
+    }
+    NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", self.host, imageID];
+    [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+        
+    } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
+        [[SDImageCache sharedImageCache] storeImage:image forKey:[@(imageID) stringValue]];
+        NSArray *messages = [XBPC_storageMessage getFormat:@"message=%@ and downloaded=%@" argument:@[[@(imageID) stringValue], @(1)]];
+        for (XBPC_storageMessage *message in messages)
+        {
+            message.downloaded = @(2);
+        }
+        [self saveContext];
+    }];
 }
 
 #pragma mark Get History

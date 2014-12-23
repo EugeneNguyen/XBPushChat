@@ -22,7 +22,7 @@ PODS:
     - CocoaLumberjack/Core
   - FBSnapshotTestCase (1.4)
   - JSONKit-NoWarning (1.2)
-  - JSQMessagesViewController (6.1.0):
+  - JSQMessagesViewController (6.1.1):
     - JSQSystemSoundPlayer (~> 2.0.0)
   - JSQSystemSoundPlayer (2.0.0)
   - MBProgressHUD (0.9)
@@ -33,7 +33,7 @@ PODS:
     - SDWebImage (~> 3.7.0)
   - SDWebImage/Core (3.7.1)
   - UIImage-Helpers (0.0.3)
-  - XBMobile (0.2.5.2):
+  - XBMobile (0.2.6.3):
     - ASIHTTPRequest
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
@@ -43,7 +43,7 @@ PODS:
     - SDWebImage-ProgressView
     - UIImage-Helpers
     - XMLDictionary
-  - XBPushChat (0.2.6.1):
+  - XBPushChat (0.2.6.2):
     - JSQMessagesViewController
     - XBMobile
   - XMLDictionary (1.4)
@@ -63,15 +63,15 @@ SPEC CHECKSUMS:
   CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
   FBSnapshotTestCase: f9f225b5ba11c8d8c09075590490df16314e4d62
   JSONKit-NoWarning: fc8d6dd8ec65e303867d1bd274632fc60a4a8ab9
-  JSQMessagesViewController: 8998c086bf6db5d6190376041903d5be2961f03f
+  JSQMessagesViewController: 84a5823a1f6a4f29ee6d4db0ea4b9d63876be4ee
   JSQSystemSoundPlayer: c98443b1cbb3b45db09d0d3d6c2355cf78294981
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   Reachability: 1ef8adf5c4e3d362f96515d4278f68dad3c26930
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
   SDWebImage-ProgressView: 5b094a93013b3f6ae9d622b58055c942c964b678
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
-  XBMobile: f2afa82945eaccee020036a79d10ac6167db1df1
-  XBPushChat: 836bcc3d56705cd02fb8e62234e866dcdeff37a1
+  XBMobile: 121f821ffda62f993ad05d2e0e78598142f43f8d
+  XBPushChat: 0dc169c1850b76568b5b61cc451ecf9d1695c76a
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4

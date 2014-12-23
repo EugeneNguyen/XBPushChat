@@ -7,7 +7,6 @@
 //
 
 #import "XBPCMessageViewController.h"
-#import "XBPCMessage.h"
 #import "JSQMessagesBubbleImageFactory.h"
 #import "JSQMessagesTimestampFormatter.h"
 #import "XBPCAvatarInformation.h"
@@ -17,14 +16,16 @@
 @interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
-    NSMutableArray *items;
     JSQMessagesBubbleImageFactory *bubbleFactory;
 }
+
+@property (nonatomic, retain) NSMutableArray *items;
 
 @end
 
 @implementation XBPCMessageViewController
 @synthesize receiver_id, sender_id = _sender_id, receiverDisplayName, room;
+@synthesize items;
 
 - (void)setSender_id:(NSInteger)sender_id
 {
@@ -46,6 +47,9 @@
     }
     
     self.senderId = [@(self.sender_id) stringValue];
+    self.senderDisplayName = self.senderId;
+    self.receiverDisplayName = [@(self.receiver_id) stringValue];
+    
     [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
     [[XBPushChat sharedInstance] clearBadge];
@@ -96,30 +100,34 @@
 
 - (void)loadDataToTable
 {
-    items = [@[] mutableCopy];
+    if (!items)
+    {
+        items = [@[] mutableCopy];
+    }
+    [items removeAllObjects];
     for (int sectionIndex = 0; sectionIndex < [[[self fetchedResultsController] sections] count]; sectionIndex ++)
     {
         id <NSFetchedResultsSectionInfo> sectionInfo = [[[self fetchedResultsController] sections] objectAtIndex:sectionIndex];
         for (int i = 0; i < [sectionInfo numberOfObjects]; i ++)
         {
             XBPC_storageMessage *item = [[self fetchedResultsController] objectAtIndexPath:[NSIndexPath indexPathForRow:i inSection:sectionIndex]];
-            XBPCMessage *message = [[XBPCMessage alloc] init];
-            message.text = item.message;
-            message.date = item.createtime;
-            message.senderId = [item.sender stringValue];
-            message.isOutgoing = [item.receiver intValue] == self.receiver_id;
-            message.senderId = [item.sender stringValue];
-            message.senderDisplayName = message.isOutgoing ? self.senderDisplayName : self.receiverDisplayName;
-            [items addObject:message];
+            //            XBPCMessage *message = [[XBPCMessage alloc] init];
+            //            message.text = item.message;
+            //            message.date = item.createtime;
+            //            message.senderId = [item.sender stringValue];
+            //            message.isOutgoing = [item.receiver intValue] == self.receiver_id;
+            //            message.senderId = [item.sender stringValue];
+            //            message.senderDisplayName = message.isOutgoing ? self.senderDisplayName : self.receiverDisplayName;
+            [items addObject:item];
         }
     }
-    [self finishSendingMessage];
+    [self finishReceivingMessage];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    self.collectionView.collectionViewLayout.springinessEnabled = NO;
+    //    self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
 
 #pragma mark - JSQMessagesViewController method overrides
@@ -131,6 +139,7 @@
                       date:(NSDate *)date
 {
     [[XBPushChat sharedInstance] sendMessage:text toID:[@(self.receiver_id) intValue] room:self.room];
+    [self finishSendingMessage];
 }
 
 - (void)didPressAccessoryButton:(UIButton *)sender
@@ -167,7 +176,8 @@
         image = info[UIImagePickerControllerOriginalImage];
     }
     [picker dismissViewControllerAnimated:YES completion:nil];
-    NSLog(@"%@", NSStringFromCGSize(image.size));
+    
+    [[XBPushChat sharedInstance] sendImage:image toID:self.receiver_id room:self.room];
 }
 
 #pragma mark - JSQMessages CollectionView DataSource
@@ -179,9 +189,9 @@
 
 - (id<JSQMessageBubbleImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView messageBubbleImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    XBPCMessage *message = items[indexPath.row];
+    XBPC_storageMessage *message = items[indexPath.row];
     
-    if (message.isOutgoing) {
+    if ([message.senderId isEqualToString:self.senderId]) {
         return [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor colorWithRed:224.0f/255.0f green:245.0f/255.0f blue:252.0f/255.0f alpha:1]];
     }
     
@@ -190,15 +200,15 @@
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    XBPCMessage *message = items[indexPath.row];
+    XBPC_storageMessage *message = items[indexPath.row];
     XBPCAvatarInformation *avatar = [XBPCAvatarInformation avatarObjectForUsername:message.senderId];
     return avatar;
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item % 3 == 0) {
-        XBPCMessage *message = items[indexPath.row];
+    if (indexPath.item % 5 == 0) {
+        XBPC_storageMessage *message = items[indexPath.row];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
     }
     
@@ -214,9 +224,9 @@
 - (UICollectionViewCell *)collectionView:(JSQMessagesCollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     JSQMessagesCollectionViewCell *cell = (JSQMessagesCollectionViewCell *)[super collectionView:collectionView cellForItemAtIndexPath:indexPath];
-    XBPCMessage *msg = items[indexPath.row];
+    XBPC_storageMessage *msg = items[indexPath.row];
     
-    if ([msg isKindOfClass:[XBPCMessage class]]) {
+    if (! msg.isMediaMessage) {
         
         cell.textView.textColor = [UIColor blackColor];
         cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
@@ -234,7 +244,7 @@
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.item % 3 == 0) {
+    if (indexPath.item % 5 == 0) {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }
     
