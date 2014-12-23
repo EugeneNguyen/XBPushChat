@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XBPushChat"
-  s.version          = "0.2.6.2"
+  s.version          = "0.2.7"
   s.summary          = "XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server"
   s.description      = <<-DESC
                        XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server
@@ -39,4 +39,5 @@ PushChat server code (which will be publish soon :D sorry about this)
   # s.dependency 'AFNetworking', '~> 2.3'
   s.dependency 'JSQMessagesViewController'
   s.dependency 'XBMobile'
+  s.dependency 'UIImage+ImageCompress'
 end

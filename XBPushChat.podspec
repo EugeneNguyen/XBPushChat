@@ -39,4 +39,5 @@ PushChat server code (which will be publish soon :D sorry about this)
   # s.dependency 'AFNetworking', '~> 2.3'
   s.dependency 'JSQMessagesViewController'
   s.dependency 'XBMobile'
+  s.dependency 'UIImage+ImageCompress'
 end
