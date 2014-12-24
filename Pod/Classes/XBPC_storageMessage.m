@@ -9,6 +9,7 @@
 #import "XBPC_storageMessage.h"
 #import "XBPushChat.h"
 #import "XBExtension.h"
+#import "SDImageCache.h"
 
 @implementation XBPC_storageMessage
 
@@ -57,7 +58,20 @@
     }
     message.type = @"message";
     message.room = item[@"room"];
-    message.message = item[@"message"];
+    if ([item[@"message"] rangeOfString:@"New image message"].location == NSNotFound)
+    {
+        message.message = item[@"message"];
+        message.downloaded = @(0);
+    }
+    else
+    {
+        message.message = [item[@"message"] substringWithRange:NSMakeRange(19, [item[@"message"] length] - 20)];
+        if ([message.downloaded intValue] == 0)
+        {
+            message.downloaded = @(1);
+        }
+        [[XBPushChat sharedInstance] downloadImage:[message.message intValue]];
+    }
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
     [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
@@ -130,6 +144,59 @@
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     XBPC_storageMessage *lastMessage = [result lastObject];
     return [lastMessage.id integerValue];
+}
+
+- (NSString *)senderId
+{
+    return  [self.sender stringValue];
+}
+
+- (NSString *)senderDisplayName;
+{
+    return [self.sender stringValue];
+}
+
+- (NSDate *)date
+{
+    return self.createtime;
+}
+
+- (BOOL)isMediaMessage
+{
+    return [self.downloaded intValue] > 0;
+}
+
+- (NSString *)text
+{
+    if ([self.downloaded intValue] == 0)
+    {
+        return self.message;
+    }
+    return nil;
+}
+
+- (id<JSQMessageMediaData>)media
+{
+    if ([self.downloaded intValue] == 0)
+    {
+        return nil;
+    }
+    else if ([self.downloaded intValue] == 1)
+    {
+        JSQPhotoMediaItem *photo = [[JSQPhotoMediaItem alloc] init];
+        return photo;
+    }
+    else
+    {
+        UIImage *img = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:self.message];
+        if (!img)
+        {
+            img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:self.message];
+        }
+        JSQPhotoMediaItem *photo = [[JSQPhotoMediaItem alloc] initWithImage:img];
+        photo.appliesMediaViewMaskAsOutgoing = [self.senderId intValue] == [[XBPushChat sharedInstance] sender_id];
+        return photo;
+    }
 }
 
 @end
