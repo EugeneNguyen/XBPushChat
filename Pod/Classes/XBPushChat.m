@@ -90,6 +90,14 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)setPresence:(int)presence synchronous:(BOOL)synchronous
 {
+    if (presence == 0)
+    {
+        [self stopPull];
+    }
+    else
+    {
+        [self startPull];
+    }
     if (token)
     {
         NSArray *presences = @[@"offline", @"online"];
@@ -206,6 +214,52 @@ static XBPushChat *__sharedPushChat = nil;
     [request setDelegate:self];
     [request setTag:eRequestGetHistory];
     [request startAsynchronous];
+}
+
+
+- (void)startPull
+{
+    pulling ++;
+    [self pull];
+}
+
+- (void)stopPull
+{
+    pulling --;
+    pulling = MAX(pulling, 0);
+}
+
+- (void)pull
+{
+    [ASIHTTPRequest setShouldUpdateNetworkActivityIndicator:NO];
+    
+    ASIFormDataRequest * request = XBPC_Service(@"get_history");
+    [request setPostValue:@(self.sender_id) forKey:@"user_id"];
+    [request setPostValue:@([XBPC_storageMessage lastIDWithUser:-1]) forKey:@"offset"];
+    [request startAsynchronous];
+    
+    __block ASIFormDataRequest *_request = request;
+    [request setCompletionBlock:^{
+        NSDictionary *result = _request.responseJSON;
+        if (!result || [result[@"code"] intValue] != 200 || !result[@"data"])
+        {
+            return;
+        }
+        for (NSDictionary *item in result[@"data"])
+        {
+            [XBPC_storageMessage addMessage:item save:NO];
+        }
+        [[XBPushChat sharedInstance] saveContext];
+        [self getFriendInformationRefresh:NO];
+        if (pulling == 1)
+        {
+            [self performSelector:@selector(pull) withObject:nil afterDelay:3];
+        }
+        else if (pulling > 1)
+        {
+            [self stopPull];
+        }
+    }];
 }
 
 #pragma mark Get Friend's information
@@ -380,3 +434,4 @@ static XBPushChat *__sharedPushChat = nil;
 }
 
 @end
+

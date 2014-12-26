@@ -20,8 +20,7 @@
 
 @interface XBPushChat : NSObject
 {
-    
-    
+    int pulling;
 }
 
 @property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -48,6 +47,9 @@
 
 - (void)setPresence:(int)presence;
 - (void)setPresence:(int)presence synchronous:(BOOL)synchronous;
+
+- (void)startPull;
+- (void)stopPull;
 
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid;
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid room:(NSString *)room;

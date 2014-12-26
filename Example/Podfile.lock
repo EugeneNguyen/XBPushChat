@@ -34,7 +34,7 @@ PODS:
   - SDWebImage/Core (3.7.1)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
-  - XBMobile (0.2.6.3):
+  - XBMobile (0.2.6.5):
     - ASIHTTPRequest
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
@@ -44,7 +44,7 @@ PODS:
     - SDWebImage-ProgressView
     - UIImage-Helpers
     - XMLDictionary
-  - XBPushChat (0.2.7):
+  - XBPushChat (0.2.8):
     - JSQMessagesViewController
     - UIImage+ImageCompress
     - XBMobile
@@ -73,8 +73,8 @@ SPEC CHECKSUMS:
   SDWebImage-ProgressView: 5b094a93013b3f6ae9d622b58055c942c964b678
   UIImage+ImageCompress: 170241cb980e3f5057d74122480a24c92d25d8a8
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
-  XBMobile: 121f821ffda62f993ad05d2e0e78598142f43f8d
-  XBPushChat: e7b853b9460f3b6dd9a225fd3e61c219437a66b7
+  XBMobile: 3491ba0cc4d34d7e1c84d6608b1ccd7061889793
+  XBPushChat: 18458c8457a4a3763282c87b7189390d402aef1c
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4
