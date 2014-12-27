@@ -169,7 +169,8 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)downloadImage:(int)imageID
 {
-    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:[@(imageID) stringValue]])
+    NSString *key = [NSString stringWithFormat:@"uploaded_%d", imageID];
+    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:key])
     {
         return;
     }
@@ -177,7 +178,7 @@ static XBPushChat *__sharedPushChat = nil;
     [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
     } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-        [[SDImageCache sharedImageCache] storeImage:image forKey:[@(imageID) stringValue]];
+        [[SDImageCache sharedImageCache] storeImage:image forKey:key];
         NSArray *messages = [XBPC_storageMessage getFormat:@"message=%@ and downloaded=%@" argument:@[[@(imageID) stringValue], @(1)]];
         for (XBPC_storageMessage *message in messages)
         {
@@ -240,6 +241,14 @@ static XBPushChat *__sharedPushChat = nil;
     
     __block ASIFormDataRequest *_request = request;
     [request setCompletionBlock:^{
+        if (pulling == 1)
+        {
+            [self performSelector:@selector(pull) withObject:nil afterDelay:5];
+        }
+        else if (pulling > 1)
+        {
+            [self stopPull];
+        }
         NSDictionary *result = _request.responseJSON;
         if (!result || [result[@"code"] intValue] != 200 || !result[@"data"])
         {
@@ -251,14 +260,6 @@ static XBPushChat *__sharedPushChat = nil;
         }
         [[XBPushChat sharedInstance] saveContext];
         [self getFriendInformationRefresh:NO];
-        if (pulling == 1)
-        {
-            [self performSelector:@selector(pull) withObject:nil afterDelay:3];
-        }
-        else if (pulling > 1)
-        {
-            [self stopPull];
-        }
     }];
 }
 

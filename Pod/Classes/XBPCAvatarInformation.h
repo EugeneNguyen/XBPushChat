@@ -16,6 +16,6 @@
 
 + (XBPCAvatarInformation *)avatarObjectForUsername:(NSString *)username;
 
-- (void)loadPath:(NSString *)path;
++ (void)loadPath:(NSString *)path;
 
 @end

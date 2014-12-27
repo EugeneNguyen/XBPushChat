@@ -30,33 +30,41 @@ static NSMutableDictionary *__sharedStoreAvatar = nil;
 {
     if ([[XBPushChat sharedInstance] avatarFormat])
     {
+        NSString *path = [NSString stringWithFormat:[[XBPushChat sharedInstance] avatarFormat], username];
+        UIImage *placeHolder = [JSQMessagesAvatarImageFactory circularAvatarImage:[[XBPushChat sharedInstance] avatarPlaceHolder] withDiameter:40];
         
-        if ([XBPCAvatarInformation sharedStore][username])
+        if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:path])
         {
-            UIImage *avatar = [JSQMessagesAvatarImageFactory circularAvatarImage:[XBPCAvatarInformation sharedStore][username] withDiameter:40];
-            XBPCAvatarInformation *message = [[XBPCAvatarInformation alloc] initWithAvatarImage:avatar highlightedImage:avatar placeholderImage:[JSQMessagesAvatarImageFactory circularAvatarImage:[[XBPushChat sharedInstance] avatarPlaceHolder] withDiameter:40]];
+            UIImage *img = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:path];
+            if (!img)
+            {
+                img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:path];
+            }
+            UIImage *avatar = [JSQMessagesAvatarImageFactory circularAvatarImage:img withDiameter:40];
+            XBPCAvatarInformation *message = [[XBPCAvatarInformation alloc] initWithAvatarImage:avatar highlightedImage:avatar placeholderImage:placeHolder];
             return message;
         }
         else
         {
-            XBPCAvatarInformation *message = [[XBPCAvatarInformation alloc] initWithAvatarImage:nil highlightedImage:nil placeholderImage:[JSQMessagesAvatarImageFactory circularAvatarImage:[[XBPushChat sharedInstance] avatarPlaceHolder] withDiameter:40]];
-            NSString *path = [NSString stringWithFormat:[[XBPushChat sharedInstance] avatarFormat], username];
-            [message loadPath:path];
-            message.username = username;
+            XBPCAvatarInformation *message = [[XBPCAvatarInformation alloc] initWithAvatarImage:nil highlightedImage:nil placeholderImage:placeHolder];
+            [XBPCAvatarInformation loadPath:path];
             return message;
         }
     }
     return nil;
 }
 
-- (void)loadPath:(NSString *)path
++ (void)loadPath:(NSString *)path
 {
-    [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:0 progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:path])
+    {
+        return;
+    }
+    
+    [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
     } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
-        [self setAvatarImage:[JSQMessagesAvatarImageFactory circularAvatarImage:image withDiameter:40]];
-        [self setAvatarHighlightedImage:[JSQMessagesAvatarImageFactory circularAvatarImage:image withDiameter:40]];
-        [[XBPCAvatarInformation sharedStore] setValue:[JSQMessagesAvatarImageFactory circularAvatarImage:image withDiameter:40] forKey:self.username];
+        [[SDImageCache sharedImageCache] storeImage:image forKey:path];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"XBChatModuleNewAvatar" object:nil];
     }];
 }

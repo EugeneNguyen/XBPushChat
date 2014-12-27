@@ -188,10 +188,11 @@
     }
     else
     {
-        UIImage *img = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:self.message];
+        NSString *key = [NSString stringWithFormat:@"uploaded_%@", self.message];
+        UIImage *img = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:key];
         if (!img)
         {
-            img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:self.message];
+            img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key];
         }
         JSQPhotoMediaItem *photo = [[JSQPhotoMediaItem alloc] initWithImage:img];
         photo.appliesMediaViewMaskAsOutgoing = [self.senderId intValue] == [[XBPushChat sharedInstance] sender_id];
