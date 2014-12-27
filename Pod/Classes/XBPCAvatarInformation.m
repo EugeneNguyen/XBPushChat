@@ -61,7 +61,7 @@ static NSMutableDictionary *__sharedStoreAvatar = nil;
         return;
     }
     
-    [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderContinueInBackground progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
     } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         [[SDImageCache sharedImageCache] storeImage:image forKey:path];
