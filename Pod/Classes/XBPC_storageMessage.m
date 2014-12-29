@@ -31,6 +31,10 @@
 
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save
 {
+    if ([item[@"user_id"] intValue] != [XBPushChat sharedInstance].sender_id && [item[@"send_to"] intValue] != [XBPushChat sharedInstance].sender_id)
+    {
+        return;
+    }
     XBPC_storageMessage *message = nil;
     NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
     
