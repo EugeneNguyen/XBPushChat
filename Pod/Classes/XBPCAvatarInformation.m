@@ -12,16 +12,17 @@
 #import "JSQMessagesAvatarImageFactory.h"
 #import "XBPushChat.h"
 
-static NSMutableDictionary *__sharedStoreAvatar = nil;
+static XBPCAvatarInformation *__sharedStoreAvatar = nil;
 
 @implementation XBPCAvatarInformation
 @synthesize username;
 
-+ (NSMutableDictionary *)sharedStore
++ (XBPCAvatarInformation *)sharedInstance
 {
     if (!__sharedStoreAvatar)
     {
-        __sharedStoreAvatar = [@{} mutableCopy];
+        UIImage *placeHolder = [JSQMessagesAvatarImageFactory circularAvatarImage:[[XBPushChat sharedInstance] avatarPlaceHolder] withDiameter:40];
+        __sharedStoreAvatar = [[XBPCAvatarInformation alloc] initWithAvatarImage:nil highlightedImage:nil placeholderImage:placeHolder];
     }
     return __sharedStoreAvatar;
 }
@@ -47,14 +48,14 @@ static NSMutableDictionary *__sharedStoreAvatar = nil;
         else
         {
             XBPCAvatarInformation *message = [[XBPCAvatarInformation alloc] initWithAvatarImage:nil highlightedImage:nil placeholderImage:placeHolder];
-            [XBPCAvatarInformation loadPath:path];
+            [[XBPCAvatarInformation sharedInstance] performSelectorOnMainThread:@selector(loadPath:) withObject:path waitUntilDone:YES];
             return message;
         }
     }
     return nil;
 }
 
-+ (void)loadPath:(NSString *)path
+- (void)loadPath:(NSString *)path
 {
     if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:path])
     {

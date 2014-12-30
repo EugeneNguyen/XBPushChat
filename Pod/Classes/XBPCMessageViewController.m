@@ -31,7 +31,6 @@
 {
     _sender_id = sender_id;
     [self setSenderId:[@(sender_id) stringValue]];
-    
 }
 
 - (void)viewDidLoad
@@ -111,13 +110,6 @@
         for (int i = 0; i < [sectionInfo numberOfObjects]; i ++)
         {
             XBPC_storageMessage *item = [[self fetchedResultsController] objectAtIndexPath:[NSIndexPath indexPathForRow:i inSection:sectionIndex]];
-            //            XBPCMessage *message = [[XBPCMessage alloc] init];
-            //            message.text = item.message;
-            //            message.date = item.createtime;
-            //            message.senderId = [item.sender stringValue];
-            //            message.isOutgoing = [item.receiver intValue] == self.receiver_id;
-            //            message.senderId = [item.sender stringValue];
-            //            message.senderDisplayName = message.isOutgoing ? self.senderDisplayName : self.receiverDisplayName;
             [items addObject:item];
         }
     }
@@ -127,7 +119,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //    self.collectionView.collectionViewLayout.springinessEnabled = NO;
 }
 
 #pragma mark - JSQMessagesViewController method overrides

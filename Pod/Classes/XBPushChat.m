@@ -167,19 +167,19 @@ static XBPushChat *__sharedPushChat = nil;
     }];
 }
 
-- (void)downloadImage:(int)imageID
+- (void)downloadImage:(NSNumber *)imageID
 {
-    NSString *key = [NSString stringWithFormat:@"uploaded_%d", imageID];
+    NSString *key = [NSString stringWithFormat:@"uploaded_%d", [imageID intValue]];
     if ([[SDImageCache sharedImageCache] diskImageExistsWithKey:key])
     {
         return;
     }
-    NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", self.host, imageID];
+    NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", self.host, [imageID intValue]];
     [[SDWebImageDownloader sharedDownloader] downloadImageWithURL:[NSURL URLWithString:path] options:SDWebImageDownloaderHighPriority progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
     } completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished) {
         [[SDImageCache sharedImageCache] storeImage:image forKey:key];
-        NSArray *messages = [XBPC_storageMessage getFormat:@"message=%@ and downloaded=%@" argument:@[[@(imageID) stringValue], @(1)]];
+        NSArray *messages = [XBPC_storageMessage getFormat:@"message=%@ and downloaded=%@" argument:@[[imageID stringValue], @(1)]];
         for (XBPC_storageMessage *message in messages)
         {
             message.downloaded = @(2);

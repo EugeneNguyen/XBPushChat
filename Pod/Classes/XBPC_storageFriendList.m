@@ -95,12 +95,19 @@
 
 + (void)clear
 {
-    NSArray *array = [XBPC_storageFriendList getAll];
-    for (XBPC_storageFriendList *friend in array)
-    {
-        [[[XBPushChat sharedInstance] managedObjectContext] deleteObject:friend];
+    NSManagedObjectContext *myContext = [XBPushChat sharedInstance].managedObjectContext;
+    NSFetchRequest * allCars = [[NSFetchRequest alloc] init];
+    [allCars setEntity:[NSEntityDescription entityForName:@"XBPC_storageFriendList" inManagedObjectContext:myContext]];
+    [allCars setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError * error = nil;
+    NSArray * cars = [myContext executeFetchRequest:allCars error:&error];
+    
+    for (NSManagedObject * car in cars) {
+        [myContext deleteObject:car];
     }
-    [[XBPushChat sharedInstance] saveContext];
+    NSError *saveError = nil;
+    [myContext save:&saveError];
 }
 
 @end

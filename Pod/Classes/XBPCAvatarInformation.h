@@ -12,10 +12,10 @@
 
 @property (nonatomic, retain) NSString *username;
 
-+ (NSMutableDictionary *)sharedStore;
++ (XBPCAvatarInformation *)sharedInstance;
 
 + (XBPCAvatarInformation *)avatarObjectForUsername:(NSString *)username;
 
-+ (void)loadPath:(NSString *)path;
+- (void)loadPath:(NSString *)path;
 
 @end

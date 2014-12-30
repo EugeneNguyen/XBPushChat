@@ -31,9 +31,24 @@
 
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save
 {
-    if ([item[@"user_id"] intValue] != [XBPushChat sharedInstance].sender_id && [item[@"send_to"] intValue] != [XBPushChat sharedInstance].sender_id)
+    long deviceSender = [XBPushChat sharedInstance].sender_id;
+    long sender = [item[@"user_id"] integerValue];
+    long receiver = [item[@"send_to"] integerValue];
+    if ((sender == deviceSender && receiver != deviceSender) || (sender != deviceSender && receiver == deviceSender))
+    {
+        NSLog(@"Add message:\n%@", item);
+    }
+    else
     {
         return;
+    }
+    
+    if (deviceSender == receiver && deviceSender != sender)
+    {
+        NSMutableDictionary *mutableItem = [item mutableCopy];
+        mutableItem[@"user_id"] = @(receiver);
+        mutableItem[@"send_to"] = @(sender);
+        item = [mutableItem copy];
     }
     XBPC_storageMessage *message = nil;
     NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
@@ -74,7 +89,7 @@
         {
             message.downloaded = @(1);
         }
-        [[XBPushChat sharedInstance] downloadImage:[message.message intValue]];
+        [[XBPushChat sharedInstance] performSelectorOnMainThread:@selector(downloadImage:) withObject:@([message.message intValue]) waitUntilDone:YES];
     }
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
@@ -121,12 +136,19 @@
 
 + (void)clear
 {
-    NSArray *array = [XBPC_storageMessage getAll];
-    for (XBPC_storageMessage *message in array)
-    {
-        [[[XBPushChat sharedInstance] managedObjectContext] deleteObject:message];
+    NSManagedObjectContext *myContext = [XBPushChat sharedInstance].managedObjectContext;
+    NSFetchRequest * allCars = [[NSFetchRequest alloc] init];
+    [allCars setEntity:[NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:myContext]];
+    [allCars setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError * error = nil;
+    NSArray * cars = [myContext executeFetchRequest:allCars error:&error];
+    
+    for (NSManagedObject * car in cars) {
+        [myContext deleteObject:car];
     }
-    [[XBPushChat sharedInstance] saveContext];
+    NSError *saveError = nil;
+    [myContext save:&saveError];
 }
 
 + (NSUInteger)lastIDWithUser:(NSUInteger)user_id

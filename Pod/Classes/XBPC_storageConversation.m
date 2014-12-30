@@ -104,12 +104,19 @@
 
 + (void)clear
 {
-    NSArray *array = [XBPC_storageConversation getAll];
-    for (XBPC_storageConversation *conversation in array)
-    {
-        [[[XBPushChat sharedInstance] managedObjectContext] deleteObject:conversation];
+    NSManagedObjectContext *myContext = [XBPushChat sharedInstance].managedObjectContext;
+    NSFetchRequest * allCars = [[NSFetchRequest alloc] init];
+    [allCars setEntity:[NSEntityDescription entityForName:@"XBPC_storageConversation" inManagedObjectContext:myContext]];
+    [allCars setIncludesPropertyValues:NO]; //only fetch the managedObjectID
+    
+    NSError * error = nil;
+    NSArray * cars = [myContext executeFetchRequest:allCars error:&error];
+    
+    for (NSManagedObject * car in cars) {
+        [myContext deleteObject:car];
     }
-    [[XBPushChat sharedInstance] saveContext];
+    NSError *saveError = nil;
+    [myContext save:&saveError];
 }
 
 - (void)visit
