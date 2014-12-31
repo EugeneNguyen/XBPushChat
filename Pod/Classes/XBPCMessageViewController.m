@@ -198,10 +198,15 @@
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 0)
+    {
+        XBPC_storageMessage *message = items[indexPath.row];
+        return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
+    }
     XBPC_storageMessage *lastItem = items[indexPath.row];
     XBPC_storageMessage *nearByItem = items[indexPath.row - 1];
     
-    if ([lastItem.createtime timeIntervalSinceDate:nearByItem.createtime] < 300)
+    if ([lastItem.createtime timeIntervalSinceDate:nearByItem.createtime] > 300)
     {
         XBPC_storageMessage *message = items[indexPath.row];
         return [[JSQMessagesTimestampFormatter sharedFormatter] attributedTimestampForDate:message.date];
@@ -239,10 +244,14 @@
 - (CGFloat)collectionView:(JSQMessagesCollectionView *)collectionView
                    layout:(JSQMessagesCollectionViewFlowLayout *)collectionViewLayout heightForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 0)
+    {
+        return kJSQMessagesCollectionViewCellLabelHeightDefault;
+    }
     XBPC_storageMessage *lastItem = items[indexPath.row];
     XBPC_storageMessage *nearByItem = items[indexPath.row - 1];
     
-    if ([lastItem.createtime timeIntervalSinceDate:nearByItem.createtime] < 300)
+    if ([lastItem.createtime timeIntervalSinceDate:nearByItem.createtime] > 300)
     {
         return kJSQMessagesCollectionViewCellLabelHeightDefault;
     }

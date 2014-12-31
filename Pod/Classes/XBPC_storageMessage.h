@@ -11,7 +11,7 @@
 #import "JSQPhotoMediaItem.h"
 #import "JSQMessageData.h"
 
-@interface XBPC_storageMessage : NSManagedObject <JSQMessageData>
+@interface XBPC_storageMessage : NSManagedObject <JSQMessageData, JSQMessageMediaData>
 
 @property (nonatomic, retain) NSString * attach;
 @property (nonatomic, retain) NSDate * createtime;

@@ -10,6 +10,8 @@
 #import "XBPushChat.h"
 #import "XBExtension.h"
 #import "SDImageCache.h"
+#import "UIImageView+WebCache.h"
+#import "JSQMessagesMediaViewBubbleImageMasker.h"
 
 @implementation XBPC_storageMessage
 
@@ -82,7 +84,6 @@
         {
             message.downloaded = @(1);
         }
-        [[XBPushChat sharedInstance] performSelectorOnMainThread:@selector(downloadImage:) withObject:@([message.message intValue]) waitUntilDone:YES];
     }
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
@@ -194,29 +195,44 @@
     return nil;
 }
 
-- (id<JSQMessageMediaData>)media
+- (UIView *)mediaView
 {
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200, 133)];
+    imgView.backgroundColor = [UIColor lightGrayColor];
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
     if ([self.downloaded intValue] == 0)
     {
         return nil;
     }
-    else if ([self.downloaded intValue] == 1)
-    {
-        JSQPhotoMediaItem *photo = [[JSQPhotoMediaItem alloc] init];
-        return photo;
-    }
     else
     {
-        NSString *key = [NSString stringWithFormat:@"uploaded_%@", self.message];
-        UIImage *img = [[SDImageCache sharedImageCache] imageFromMemoryCacheForKey:key];
-        if (!img)
-        {
-            img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key];
-        }
-        JSQPhotoMediaItem *photo = [[JSQPhotoMediaItem alloc] initWithImage:img];
-        photo.appliesMediaViewMaskAsOutgoing = [self.senderId intValue] == [[XBPushChat sharedInstance] sender_id];
-        return photo;
+        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", [XBPushChat sharedInstance].host, [self.message intValue]];
+        [imgView sd_setImageWithURL:[NSURL URLWithString:path]];
+        return imgView;
     }
+}
+
+- (CGSize)mediaViewDisplaySize
+{
+    return CGSizeMake(200, 133);
+}
+
+- (UIView *)mediaPlaceholderView
+{
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200, 133)];
+    imgView.backgroundColor = [UIColor lightGrayColor];
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
+    return imgView;
+}
+
+- (BOOL)isOutgoingMessage
+{
+    return [self.sender intValue] == [XBPushChat sharedInstance].sender_id;
+}
+
+- (id<JSQMessageMediaData>)media
+{
+    return self;
 }
 
 @end

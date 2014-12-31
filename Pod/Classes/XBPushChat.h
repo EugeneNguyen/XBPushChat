@@ -59,8 +59,6 @@
 - (void)fetchRequestWith:(NSUInteger)receiver_id;
 - (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly;
 
-- (void)downloadImage:(int)imageID;
-
 - (void)getFriendInformationRefresh:(BOOL)isRefresh;
 
 - (void)clearBadge;
