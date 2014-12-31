@@ -36,20 +36,13 @@
     long receiver = [item[@"send_to"] integerValue];
     if ((sender == deviceSender && receiver != deviceSender) || (sender != deviceSender && receiver == deviceSender))
     {
-        NSLog(@"Add message:\n%@", item);
+        
     }
     else
     {
         return;
     }
     
-    if (deviceSender == receiver && deviceSender != sender)
-    {
-        NSMutableDictionary *mutableItem = [item mutableCopy];
-        mutableItem[@"user_id"] = @(receiver);
-        mutableItem[@"send_to"] = @(sender);
-        item = [mutableItem copy];
-    }
     XBPC_storageMessage *message = nil;
     NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
     
@@ -60,7 +53,7 @@
     else
     {
         message  = [NSEntityDescription insertNewObjectForEntityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
-        message.downloaded = @(NO);
+        message.downloaded = @(0);
     }
     
     message.id = @([item[@"id"] intValue]);

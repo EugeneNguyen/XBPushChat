@@ -121,6 +121,7 @@ static XBPushChat *__sharedPushChat = nil;
     [self setPresence:0];
     [XBPC_storageMessage clear];
     [XBPC_storageConversation clear];
+    self.sender_id = -1;
 }
 
 #pragma mark - Send Message
@@ -233,6 +234,18 @@ static XBPushChat *__sharedPushChat = nil;
 - (void)pull
 {
     [ASIHTTPRequest setShouldUpdateNetworkActivityIndicator:NO];
+    
+    if (self.sender_id <= 0)
+    {
+        if (pulling == 1)
+        {
+            [self performSelector:@selector(pull) withObject:nil afterDelay:5];
+        }
+        else if (pulling > 1)
+        {
+            [self stopPull];
+        }
+    }
     
     ASIFormDataRequest * request = XBPC_Service(@"get_history");
     [request setPostValue:@(self.sender_id) forKey:@"user_id"];
