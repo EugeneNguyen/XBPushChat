@@ -12,6 +12,7 @@
 #import "XBPCAvatarInformation.h"
 #import "XBPC_storageMessage.h"
 #import "XBPC_storageConversation.h"
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 
 @interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
@@ -232,7 +233,10 @@
         cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
-    
+    NSString *path = [NSString stringWithFormat:[[XBPushChat sharedInstance] avatarFormat], msg.senderId];
+    [cell.avatarImageView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    cell.avatarImageView.layer.cornerRadius = cell.avatarImageView.frame.size.width / 2;
+    cell.avatarImageView.clipsToBounds = YES;
     return cell;
 }
 
