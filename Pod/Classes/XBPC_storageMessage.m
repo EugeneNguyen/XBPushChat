@@ -10,7 +10,7 @@
 #import "XBPushChat.h"
 #import "XBExtension.h"
 #import "SDImageCache.h"
-#import "UIImageView+WebCache.h"
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
 
 @implementation XBPC_storageMessage
@@ -197,7 +197,9 @@
 
 - (UIView *)mediaView
 {
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200, 133)];
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    CGFloat width = window.frame.size.width * 0.7;
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
     imgView.backgroundColor = [UIColor lightGrayColor];
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
     if ([self.downloaded intValue] == 0)
@@ -207,20 +209,28 @@
     else
     {
         NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", [XBPushChat sharedInstance].host, [self.message intValue]];
-        [imgView sd_setImageWithURL:[NSURL URLWithString:path]];
+        [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         return imgView;
     }
 }
 
 - (CGSize)mediaViewDisplaySize
 {
-    return CGSizeMake(200, 133);
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    CGFloat width = window.frame.size.width * 0.7;
+    return CGSizeMake(width, width * 3 / 4);
 }
 
 - (UIView *)mediaPlaceholderView
 {
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 200, 133)];
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    CGFloat width = window.frame.size.width * 0.7;
+    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
     imgView.backgroundColor = [UIColor lightGrayColor];
+    
+    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(imgView.frame.size.width / 2 - 15, imgView.frame.size.height / 2 - 15, 30, 30)];
+    [imgView addSubview:indicator];
+    
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
     return imgView;
 }

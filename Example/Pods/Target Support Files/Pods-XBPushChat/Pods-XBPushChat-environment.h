@@ -105,17 +105,17 @@
 #define COCOAPODS_VERSION_MINOR_SDWebImage 7
 #define COCOAPODS_VERSION_PATCH_SDWebImage 1
 
-// SDWebImage-ProgressView
-#define COCOAPODS_POD_AVAILABLE_SDWebImage_ProgressView
-#define COCOAPODS_VERSION_MAJOR_SDWebImage_ProgressView 0
-#define COCOAPODS_VERSION_MINOR_SDWebImage_ProgressView 4
-#define COCOAPODS_VERSION_PATCH_SDWebImage_ProgressView 0
-
 // SDWebImage/Core
 #define COCOAPODS_POD_AVAILABLE_SDWebImage_Core
 #define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
 #define COCOAPODS_VERSION_PATCH_SDWebImage_Core 1
+
+// UIActivityIndicator-for-SDWebImage
+#define COCOAPODS_POD_AVAILABLE_UIActivityIndicator_for_SDWebImage
+#define COCOAPODS_VERSION_MAJOR_UIActivityIndicator_for_SDWebImage 1
+#define COCOAPODS_VERSION_MINOR_UIActivityIndicator_for_SDWebImage 2
+#define COCOAPODS_VERSION_PATCH_UIActivityIndicator_for_SDWebImage 0
 
 // UIImage+ImageCompress
 #define COCOAPODS_POD_AVAILABLE_UIImage_ImageCompress
@@ -131,16 +131,17 @@
 
 // XBMobile
 #define COCOAPODS_POD_AVAILABLE_XBMobile
-#define COCOAPODS_VERSION_MAJOR_XBMobile 0
-#define COCOAPODS_VERSION_MINOR_XBMobile 2
-#define COCOAPODS_VERSION_PATCH_XBMobile 7
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.2.7.1.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.8.3.
+// Version: 0.2.8.5.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

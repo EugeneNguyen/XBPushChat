@@ -29,22 +29,22 @@ PODS:
   - Reachability (3.2)
   - SDWebImage (3.7.1):
     - SDWebImage/Core
-  - SDWebImage-ProgressView (0.4.0):
-    - SDWebImage (~> 3.7.0)
   - SDWebImage/Core (3.7.1)
+  - UIActivityIndicator-for-SDWebImage (1.2):
+    - SDWebImage (~> 3.7)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
-  - XBMobile (0.2.7):
+  - XBMobile (0.2.7.1):
     - ASIHTTPRequest
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
     - CocoaLumberjack (~> 1.6.2)
     - JSONKit-NoWarning
     - MBProgressHUD
-    - SDWebImage-ProgressView
+    - UIActivityIndicator-for-SDWebImage
     - UIImage-Helpers
     - XMLDictionary
-  - XBPushChat (0.2.8.3):
+  - XBPushChat (0.2.8.5):
     - JSQMessagesViewController
     - UIImage+ImageCompress
     - XBMobile
@@ -70,11 +70,11 @@ SPEC CHECKSUMS:
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
   Reachability: 1ef8adf5c4e3d362f96515d4278f68dad3c26930
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  SDWebImage-ProgressView: 5b094a93013b3f6ae9d622b58055c942c964b678
+  UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
   UIImage+ImageCompress: 170241cb980e3f5057d74122480a24c92d25d8a8
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
-  XBMobile: f1495bdebcfaba2ff4e9dfb519cab3e79a729906
-  XBPushChat: ac89ee813fdb70c100ea74816689e3eba017bbd9
+  XBMobile: 88b92cb3866b7c0cf2342f5bfb944a23630ea083
+  XBPushChat: 72b852c96527b2766d6799e8f927013021142ddc
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4
