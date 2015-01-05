@@ -203,7 +203,7 @@
     imgView.backgroundColor = [UIColor lightGrayColor];
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
-    if ([self.downloaded intValue] == 0)
+    if ([self.downloaded intValue] == 0 || [self.message intValue] == -1)
     {
         return nil;
     }
