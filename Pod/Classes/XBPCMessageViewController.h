@@ -17,4 +17,6 @@
 @property (nonatomic, retain) NSMutableArray *avatarInformation;
 @property (nonatomic, retain) NSString *receiverDisplayName;
 
+@property (nonatomic, retain) NSMutableArray *items;
+
 @end

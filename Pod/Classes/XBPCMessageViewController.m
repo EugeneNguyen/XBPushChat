@@ -20,8 +20,6 @@
     JSQMessagesBubbleImageFactory *bubbleFactory;
 }
 
-@property (nonatomic, retain) NSMutableArray *items;
-
 @end
 
 @implementation XBPCMessageViewController
