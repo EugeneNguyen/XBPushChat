@@ -32,4 +32,6 @@
 + (NSUInteger)lastIDWithUser:(NSUInteger)user_id;
 + (void)clear;
 
+- (NSString *)imageID;
+
 @end

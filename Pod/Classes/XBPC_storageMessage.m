@@ -72,19 +72,7 @@
     }
     message.type = @"message";
     message.room = item[@"room"];
-    if ([item[@"message"] rangeOfString:@"New image message"].location == NSNotFound)
-    {
-        message.message = item[@"message"];
-        message.downloaded = @(0);
-    }
-    else
-    {
-        message.message = [item[@"message"] substringWithRange:NSMakeRange(19, [item[@"message"] length] - 20)];
-        if ([message.downloaded intValue] == 0)
-        {
-            message.downloaded = @(1);
-        }
-    }
+    message.message = item[@"message"];
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
     [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
@@ -183,16 +171,34 @@
 
 - (BOOL)isMediaMessage
 {
-    return [self.downloaded intValue] > 0;
+    return ([self.message rangeOfString:@"New image message"].location != NSNotFound) || ([self.message rangeOfString:@"Sent image message"].location != NSNotFound);
 }
 
 - (NSString *)text
 {
-    if ([self.downloaded intValue] == 0)
+    if (![self isMediaMessage])
     {
         return self.message;
     }
     return nil;
+}
+
+- (NSString *)imageID
+{
+    if ([self.message rangeOfString:@"New image message"].location != NSNotFound)
+    {
+        return [self.message substringWithRange:NSMakeRange(19, [self.message length] - 20)];
+    }
+    if ([self.message rangeOfString:@"Sending image message"].location != NSNotFound)
+    {
+        return [self.message substringWithRange:NSMakeRange(22, [self.message length] - 23)];
+    }
+    return @"";
+}
+
+- (BOOL)isRemoteImage
+{
+    return [self.message rangeOfString:@"New image message"].location != NSNotFound;
 }
 
 - (UIView *)mediaView
@@ -203,14 +209,20 @@
     imgView.backgroundColor = [UIColor lightGrayColor];
     imgView.contentMode = UIViewContentModeScaleAspectFill;
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
-    if ([self.downloaded intValue] == 0 || [self.message intValue] == -1)
+    if (![self isMediaMessage])
     {
         return nil;
     }
+    else if ([self isRemoteImage])
+    {
+        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%@/0", [XBPushChat sharedInstance].host, [self imageID]];
+        [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        return imgView;
+    }
     else
     {
-        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%d/0", [XBPushChat sharedInstance].host, [self.message intValue]];
-        [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        NSString *key = [self imageID];
+        [imgView setImage:[[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key]];
         return imgView;
     }
 }
