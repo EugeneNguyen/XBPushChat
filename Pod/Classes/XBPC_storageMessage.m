@@ -201,6 +201,7 @@
     CGFloat width = window.frame.size.width * 0.7;
     UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
     imgView.backgroundColor = [UIColor lightGrayColor];
+    imgView.contentMode = UIViewContentModeScaleAspectFill;
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
     if ([self.downloaded intValue] == 0)
     {
