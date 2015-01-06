@@ -34,6 +34,7 @@ PODS:
     - SDWebImage (~> 3.7)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
+  - Vertigo (0.1)
   - XBMobile (0.2.7.1):
     - ASIHTTPRequest
     - AVHexColor
@@ -44,9 +45,10 @@ PODS:
     - UIActivityIndicator-for-SDWebImage
     - UIImage-Helpers
     - XMLDictionary
-  - XBPushChat (0.2.8.5):
+  - XBPushChat (0.2.8.6):
     - JSQMessagesViewController
     - UIImage+ImageCompress
+    - Vertigo
     - XBMobile
   - XMLDictionary (1.4)
 
@@ -73,8 +75,9 @@ SPEC CHECKSUMS:
   UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
   UIImage+ImageCompress: 170241cb980e3f5057d74122480a24c92d25d8a8
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
+  Vertigo: 606222b572b2f54d5a85329b7afe1436a4859e89
   XBMobile: 88b92cb3866b7c0cf2342f5bfb944a23630ea083
-  XBPushChat: 72b852c96527b2766d6799e8f927013021142ddc
+  XBPushChat: d96ecc66bd72494e53a2c3e4caa0a552fafb9eef
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4

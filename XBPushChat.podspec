@@ -43,4 +43,5 @@ PushChat server code (which will be publish soon :D sorry about this)
   s.dependency 'JSQMessagesViewController'
   s.dependency 'XBMobile'
   s.dependency 'UIImage+ImageCompress'
+  s.dependency 'Vertigo'
 end

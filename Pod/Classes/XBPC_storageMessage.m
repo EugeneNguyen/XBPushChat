@@ -171,7 +171,7 @@
 
 - (BOOL)isMediaMessage
 {
-    return ([self.message rangeOfString:@"New image message"].location != NSNotFound) || ([self.message rangeOfString:@"Sent image message"].location != NSNotFound);
+    return ([self.message rangeOfString:@"New image message"].location != NSNotFound) || ([self.message rangeOfString:@"Sending image message"].location != NSNotFound);
 }
 
 - (NSString *)text
@@ -216,13 +216,28 @@
     else if ([self isRemoteImage])
     {
         NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%@/0", [XBPushChat sharedInstance].host, [self imageID]];
-        [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        UIImage *img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:path];
+        if (img)
+        {
+            imgView.image = img;
+        }
+        else
+        {
+            [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        }
         return imgView;
     }
     else
     {
         NSString *key = [self imageID];
         [imgView setImage:[[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key]];
+        imgView.backgroundColor = [UIColor darkGrayColor];
+        imgView.alpha = 0.7;
+        
+        UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        indicator.center = CGPointMake(imgView.frame.size.width, imgView.frame.size.height);
+        [imgView addSubview:indicator];
+        [indicator startAnimating];
         return imgView;
     }
 }

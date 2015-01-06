@@ -13,18 +13,24 @@
 #import "XBPC_storageMessage.h"
 #import "XBPC_storageConversation.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+#import <Vertigo/TGRImageViewController.h>
+#import <Vertigo/TGRImageZoomAnimationController.h>
+#import <Vertigo/UIImage+AspectFit.h>
 
-@interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIViewControllerTransitioningDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
     JSQMessagesBubbleImageFactory *bubbleFactory;
 }
+
+@property (nonatomic, retain) UIImageView *selectedImageView;
 
 @end
 
 @implementation XBPCMessageViewController
 @synthesize receiver_id, sender_id = _sender_id, receiverDisplayName, room;
 @synthesize items;
+@synthesize selectedImageView;
 
 - (void)setSender_id:(NSInteger)sender_id
 {
@@ -276,12 +282,39 @@
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapMessageBubbleAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"Tapped message bubble!");
+    XBPC_storageMessage *message = self.items[indexPath.row];
+    if (message.isMediaMessage)
+    {
+        UIImageView *imgView = (UIImageView *)[message mediaView];
+        if (imgView.image)
+        {
+            selectedImageView = imgView;
+            TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithImage:imgView.image];
+            // Don't forget to set ourselves as the transition delegate
+            viewController.transitioningDelegate = self;
+            
+            [self presentViewController:viewController animated:YES completion:nil];
+        }
+    }
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
 {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+    if ([presented isKindOfClass:TGRImageViewController.class]) {
+        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:selectedImageView];
+    }
+    return nil;
+}
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    if ([dismissed isKindOfClass:TGRImageViewController.class]) {
+        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:selectedImageView];
+    }
+    return nil;
 }
 
 @end

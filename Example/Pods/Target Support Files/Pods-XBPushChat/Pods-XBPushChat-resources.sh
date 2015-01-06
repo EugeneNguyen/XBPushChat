@@ -65,6 +65,7 @@ install_resource()
                     install_resource "JSQMessagesViewController/JSQMessagesViewController/Views/JSQMessagesLoadEarlierHeaderView.xib"
                     install_resource "JSQMessagesViewController/JSQMessagesViewController/Views/JSQMessagesToolbarContentView.xib"
                     install_resource "JSQMessagesViewController/JSQMessagesViewController/Views/JSQMessagesTypingIndicatorFooterView.xib"
+                    install_resource "Vertigo/Vertigo/TGRImageViewController.xib"
                     install_resource "${BUILT_PRODUCTS_DIR}/XBMobile.bundle"
                     install_resource "${BUILT_PRODUCTS_DIR}/XBPushChat.bundle"
           

@@ -135,6 +135,12 @@
 #define COCOAPODS_VERSION_MINOR_UIImage_Helpers 0
 #define COCOAPODS_VERSION_PATCH_UIImage_Helpers 3
 
+// Vertigo
+#define COCOAPODS_POD_AVAILABLE_Vertigo
+#define COCOAPODS_VERSION_MAJOR_Vertigo 0
+#define COCOAPODS_VERSION_MINOR_Vertigo 1
+#define COCOAPODS_VERSION_PATCH_Vertigo 0
+
 // XBMobile
 #define COCOAPODS_POD_AVAILABLE_XBMobile
 // This library does not follow semantic-versioning,
@@ -147,7 +153,7 @@
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.2.8.5.
+// Version: 0.2.8.6.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

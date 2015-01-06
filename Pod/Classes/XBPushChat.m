@@ -156,7 +156,7 @@ static XBPushChat *__sharedPushChat = nil;
 {
     NSString *uuid = [NSString uuidString];
     NSString *message = [NSString stringWithFormat:@"Sending image message (%@)", uuid];
-    [[SDImageCache sharedImageCache] storeImage:image forKey:uuid toDisk:NO];
+    [[SDImageCache sharedImageCache] storeImage:image forKey:uuid];
     
     [XBPC_storageMessage addMessage:@{@"user_id": @(self.sender_id),
                                       @"send_to": @(jid),
