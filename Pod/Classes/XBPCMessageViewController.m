@@ -21,16 +21,14 @@
 {
     NSFetchedResultsController *fetchedResultsController;
     JSQMessagesBubbleImageFactory *bubbleFactory;
+    long selectedIndex;
 }
-
-@property (nonatomic, retain) UIImageView *selectedImageView;
 
 @end
 
 @implementation XBPCMessageViewController
 @synthesize receiver_id, sender_id = _sender_id, receiverDisplayName, room;
 @synthesize items;
-@synthesize selectedImageView;
 
 - (void)setSender_id:(NSInteger)sender_id
 {
@@ -288,7 +286,7 @@
         UIImageView *imgView = (UIImageView *)[message mediaView];
         if (imgView.image)
         {
-            selectedImageView = imgView;
+            selectedIndex = indexPath.row;
             TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithImage:imgView.image];
             // Don't forget to set ourselves as the transition delegate
             viewController.transitioningDelegate = self;
@@ -296,6 +294,7 @@
             [self presentViewController:viewController animated:YES completion:nil];
         }
     }
+    
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
@@ -305,14 +304,16 @@
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
     if ([presented isKindOfClass:TGRImageViewController.class]) {
-        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:selectedImageView];
+        XBPC_storageMessage *message = self.items[selectedIndex];
+        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:(UIImageView *)[message mediaView]];
     }
     return nil;
 }
 
 - (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
     if ([dismissed isKindOfClass:TGRImageViewController.class]) {
-        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:selectedImageView];
+        XBPC_storageMessage *message = self.items[selectedIndex];
+        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:(UIImageView *)[message mediaView]];
     }
     return nil;
 }

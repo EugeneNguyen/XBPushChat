@@ -13,6 +13,13 @@
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
 
+@interface XBPC_storageMessage()
+{
+    UIImageView *mediaView;
+}
+
+@end
+
 @implementation XBPC_storageMessage
 
 @dynamic attach;
@@ -205,10 +212,13 @@
 {
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     CGFloat width = window.frame.size.width * 0.7;
-    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
-    imgView.backgroundColor = [UIColor lightGrayColor];
-    imgView.contentMode = UIViewContentModeScaleAspectFill;
-    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:imgView isOutgoing:[self isOutgoingMessage]];
+    if (!mediaView)
+    {
+        mediaView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
+    }
+    mediaView.backgroundColor = [UIColor lightGrayColor];
+    mediaView.contentMode = UIViewContentModeScaleAspectFill;
+    [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:mediaView isOutgoing:[self isOutgoingMessage]];
     if (![self isMediaMessage])
     {
         return nil;
@@ -219,26 +229,26 @@
         UIImage *img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:path];
         if (img)
         {
-            imgView.image = img;
+            mediaView.image = img;
         }
         else
         {
-            [imgView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+            [mediaView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         }
-        return imgView;
+        return mediaView;
     }
     else
     {
         NSString *key = [self imageID];
-        [imgView setImage:[[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key]];
-        imgView.backgroundColor = [UIColor darkGrayColor];
-        imgView.alpha = 0.7;
+        [mediaView setImage:[[SDImageCache sharedImageCache] imageFromDiskCacheForKey:key]];
+        mediaView.backgroundColor = [UIColor darkGrayColor];
+        mediaView.alpha = 0.7;
         
         UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        indicator.center = CGPointMake(imgView.frame.size.width, imgView.frame.size.height);
-        [imgView addSubview:indicator];
+        indicator.center = CGPointMake(mediaView.frame.size.width, mediaView.frame.size.height);
+        [mediaView addSubview:indicator];
         [indicator startAnimating];
-        return imgView;
+        return mediaView;
     }
 }
 
