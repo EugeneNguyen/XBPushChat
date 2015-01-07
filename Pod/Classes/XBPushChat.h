@@ -59,6 +59,8 @@
 - (void)fetchRequestWith:(NSUInteger)receiver_id;
 - (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly;
 
+- (void)visit:(XBPC_storageConversation *)conversation;
+
 - (void)getFriendInformationRefresh:(BOOL)isRefresh;
 
 - (void)clearBadge;

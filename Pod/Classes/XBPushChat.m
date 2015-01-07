@@ -279,6 +279,15 @@ static XBPushChat *__sharedPushChat = nil;
     }];
 }
 
+- (void)visit:(XBPC_storageConversation *)conversation
+{
+    ASIFormDataRequest *request = XBPC_Service(@"mark_as_read");
+    [request setPostValue:conversation.sender forKey:@"sender"];
+    [request setPostValue:conversation.receiver forKey:@"receiver"];
+    [request setPostValue:conversation.room forKey:@"room"];
+    [request startAsynchronous];
+}
+
 #pragma mark Get Friend's information
 
 - (void)getFriendInformationRefresh:(BOOL)isRefresh

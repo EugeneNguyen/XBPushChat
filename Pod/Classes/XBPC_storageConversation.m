@@ -122,6 +122,12 @@
 - (void)visit
 {
     self.lastvisit = [NSDate date];
+    NSArray *appliedArray = [XBPC_storageMessage getFormat:@"(receiver=%@ and sender=%@) and room=%@ and read=%@" argument:@[self.sender, self.receiver, self.room, @(NO)]];
+    for (XBPC_storageMessage *message in appliedArray)
+    {
+        message.read = @(YES);
+    }
+    [[XBPushChat sharedInstance] visit:self];
     [[XBPushChat sharedInstance] saveContext];
 }
 
@@ -131,22 +137,26 @@
     NSFetchRequest *fr = [[NSFetchRequest alloc] init];
     [fr setEntity:ed];
     
-    NSPredicate *p1 = [NSPredicate predicateWithFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@ and %@<createtime" argumentArray:@[self.sender, self.receiver, self.receiver, self.sender, self.room, self.lastvisit]];
+    NSPredicate *p1 = [NSPredicate predicateWithFormat:@"(receiver=%@ and sender=%@) and room=%@ and read=%@" argumentArray:@[self.sender, self.receiver, self.room, @(NO)]];
     [fr setPredicate:p1];
     
-    return [@([[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil]) stringValue];
+    NSUInteger unread = [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
+    return [@(unread) stringValue];
 }
 
 + (NSUInteger)numberOfUnreadConversation
 {
-    NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
-    NSFetchRequest *fr = [[NSFetchRequest alloc] init];
-    [fr setEntity:ed];
+    NSArray *allConversation = [XBPC_storageConversation getAll];
+    int count = 0;
+    for (XBPC_storageConversation *conversation in allConversation)
+    {
+        if ([[conversation numberOfUnreadMessage] intValue] > 0)
+        {
+            count ++;
+        }
+    }
     
-    NSPredicate *p1 = [NSPredicate predicateWithFormat:@"lastvisit<lasttime" argumentArray:@[]];
-    [fr setPredicate:p1];
-    
-    return [[[XBPushChat sharedInstance] managedObjectContext] countForFetchRequest:fr error:nil];
+    return count;
 }
 
 

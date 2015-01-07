@@ -32,6 +32,7 @@
 @dynamic random;
 @dynamic room;
 @dynamic downloaded;
+@dynamic read;
 
 + (void)addMessage:(NSDictionary *)item
 {
@@ -80,6 +81,10 @@
     message.type = @"message";
     message.room = item[@"room"];
     message.message = item[@"message"];
+    if ([message.read intValue] == 0)
+    {
+        message.read = @([item[@"hasread"] boolValue]);
+    }
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
     [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
