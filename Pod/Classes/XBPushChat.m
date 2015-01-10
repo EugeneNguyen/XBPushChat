@@ -248,6 +248,7 @@ static XBPushChat *__sharedPushChat = nil;
         {
             [self stopPull];
         }
+        return;
     }
     
     ASIFormDataRequest * request = XBPC_Service(@"get_history");
