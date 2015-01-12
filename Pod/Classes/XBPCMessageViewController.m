@@ -288,7 +288,8 @@
         if (imgView.image)
         {
             selectedIndex = indexPath.row;
-            TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithImage:imgView.image];
+            NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"XBPushChat" ofType:@"bundle"]];
+            TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithNibName:@"XBPCImageViewController" bundle:bundle];
             // Don't forget to set ourselves as the transition delegate
             viewController.transitioningDelegate = self;
             

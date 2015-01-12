@@ -1506,6 +1506,7 @@
 		B454D1EAA8D3B147E2C028FF /* UIColor+JSQMessages.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIColor+JSQMessages.m"; path = "JSQMessagesViewController/Categories/UIColor+JSQMessages.m"; sourceTree = "<group>"; };
 		B505D75D6F7B612859ABC4BD /* JSQVideoMediaItem.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = JSQVideoMediaItem.m; path = JSQMessagesViewController/Model/JSQVideoMediaItem.m; sourceTree = "<group>"; };
 		B57AC49C3E81DD68011AB3FC /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "SDWebImage/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
+		B6C91B7C1A63F5BB00F8E879 /* XBPCImageViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = XBPCImageViewController.xib; path = Pod/Assets/XBPCImageViewController.xib; sourceTree = "<group>"; };
 		B6E31DD11598913274159AAD /* XBCacheRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = XBCacheRequest.h; path = Pod/Classes/XBCacheRequest.h; sourceTree = "<group>"; };
 		B720515D677B73A08F3E8CFA /* Pods-XBPushChat-ASIHTTPRequest-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "Pods-XBPushChat-ASIHTTPRequest-prefix.pch"; path = "../Pods-XBPushChat-ASIHTTPRequest/Pods-XBPushChat-ASIHTTPRequest-prefix.pch"; sourceTree = "<group>"; };
 		B7A73C3FB278752CFF3EE3C6 /* Pods-XBPushChat-XBMobile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XBPushChat-XBMobile.xcconfig"; path = "../Pods-XBPushChat-XBMobile/Pods-XBPushChat-XBMobile.xcconfig"; sourceTree = "<group>"; };
@@ -2035,6 +2036,7 @@
 				89EA9A0B120D68E5EC4ACD25 /* XBPCConversationCell.xib */,
 				620B1CB17154D3C25C5EC6DD /* XBPCConversationTableViewConfig.plist */,
 				DDB09FB5808F1EB0AC9F73F0 /* XBPushChat.xcdatamodeld */,
+				B6C91B7C1A63F5BB00F8E879 /* XBPCImageViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";

@@ -1,1 +1,0 @@
-../../../Vertigo/Vertigo/TGRImageViewController.h
