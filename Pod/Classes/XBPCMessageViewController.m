@@ -239,6 +239,7 @@
     [cell.avatarImageView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
     cell.avatarImageView.layer.cornerRadius = cell.avatarImageView.frame.size.width / 2;
     cell.avatarImageView.clipsToBounds = YES;
+    cell.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
     return cell;
 }
 
