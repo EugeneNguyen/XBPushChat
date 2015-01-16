@@ -67,7 +67,14 @@
         }
         if ([v isKindOfClass:[UILabel class]] || [v isKindOfClass:[UITextView class]])
         {
-            [(UILabel *)v setText:data];
+            if (element[@"screen"])
+            {
+                [(UILabel *)v setText:XBText(data, element[@"screen"])];
+            }
+            else
+            {
+                [(UILabel *)v setText:data];
+            }
         }
         else if ([v isKindOfClass:[UIImageView class]])
         {
@@ -145,8 +152,7 @@
                         CGSize s = image.size;
                         f.size.height = f.size.width / s.width * s.height;
                         v.frame = f;
-                        
-                        [self layoutSubviews];
+                        [self layoutIfNeeded];
                     }
                 }];
             }
@@ -156,7 +162,14 @@
             UIButton *btn = (UIButton *)v;
             if (element[@"path"] || element[@"format"])
             {
-                [btn setTitle:data forState:UIControlStateNormal];
+                if (element[@"screen"])
+                {
+                    [btn setTitle:XBText(data, element[@"screen"]) forState:UIControlStateNormal];
+                }
+                else
+                {
+                    [btn setTitle:data forState:UIControlStateNormal];
+                }
             }
             
             if (element[@"selector"] && [target respondsToSelector:NSSelectorFromString(element[@"selector"])])
@@ -224,9 +237,12 @@
         UIView *view = [[UIView alloc] initWithFrame:self.frame];
         view.tag = 999;
         view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-        view.userInteractionEnabled = NO;
+        view.userInteractionEnabled = YES;
         view.alpha = 0;
         [self.superview addSubview:view];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDim)];
+        [view addGestureRecognizer:tapGesture];
         
         [UIView animateKeyframesWithDuration:0.3 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
             view.alpha = 1;
@@ -236,12 +252,17 @@
     }
 }
 
+- (void)didTapDim
+{
+    [self undim];
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+}
+
 - (void)undim
 {
     UIView *view = [self.superview viewWithTag:999];
     if (view)
     {
-        
         [UIView animateKeyframesWithDuration:0.3 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
             view.alpha = 0;
         } completion:^(BOOL finished) {

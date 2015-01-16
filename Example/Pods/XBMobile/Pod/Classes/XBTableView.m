@@ -53,6 +53,25 @@
 
 #pragma mark - UITableViewDelegateAndDataSource
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance) {
+        [self scrolledToBottom];
+    }
+    if ([xbDelegate respondsToSelector:@selector(scrollViewDidScroll:)])
+    {
+        [xbDelegate scrollViewDidScroll:self];
+    }
+}
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if ([self ableToShowNoData]) return 1;
@@ -97,7 +116,7 @@
 {
     if ([self ableToShowNoData]) return 1;
     long count = [datalist[section][@"items"] count];
-    if ([_informations[@"loadMore"][@"enable"] boolValue] && (section == [datalist count] - 1))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (section == [datalist count] - 1))
     {
         count ++;
     }
@@ -113,7 +132,7 @@
         UITableViewCell *cell = [[nib instantiateWithOwner:nil options:nil] lastObject];
         return cell;
     }
-    if ([_informations[@"loadMore"][@"enable"] boolValue] && (indexPath.row == [[datalist lastObject][@"items"] count]) && (indexPath.section == ([datalist count] - 1)))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (indexPath.row == [[datalist lastObject][@"items"] count]) && (indexPath.section == ([datalist count] - 1)))
     {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:_informations[@"loadMore"][@"identify"] forIndexPath:indexPath];
         return cell;

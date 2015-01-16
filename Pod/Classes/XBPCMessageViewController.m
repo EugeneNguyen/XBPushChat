@@ -13,9 +13,7 @@
 #import "XBPC_storageMessage.h"
 #import "XBPC_storageConversation.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
-#import <Vertigo/TGRImageViewController.h>
-#import <Vertigo/TGRImageZoomAnimationController.h>
-#import <Vertigo/UIImage+AspectFit.h>
+#import "IDMPhotoBrowser.h"
 
 @interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIViewControllerTransitioningDelegate>
 {
@@ -288,12 +286,12 @@
         if (imgView.image)
         {
             selectedIndex = indexPath.row;
-            NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:@"XBPushChat" ofType:@"bundle"]];
-            TGRImageViewController *viewController = [[TGRImageViewController alloc] initWithNibName:@"XBPCImageViewController" bundle:bundle];
-            // Don't forget to set ourselves as the transition delegate
-            viewController.transitioningDelegate = self;
-            
-            [self presentViewController:viewController animated:YES completion:nil];
+            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[imgView.image] animatedFromView:[message mediaView]];
+            browser.displayCounterLabel = NO;
+            browser.displayArrowButton = NO;
+            browser.displayActionButton = NO;
+            browser.displayToolbar = NO;
+            [self presentViewController:browser animated:YES completion:nil];
         }
     }
     
@@ -302,22 +300,6 @@
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation
 {
     NSLog(@"Tapped cell at %@!", NSStringFromCGPoint(touchLocation));
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
-    if ([presented isKindOfClass:TGRImageViewController.class]) {
-        XBPC_storageMessage *message = self.items[selectedIndex];
-        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:(UIImageView *)[message mediaView]];
-    }
-    return nil;
-}
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    if ([dismissed isKindOfClass:TGRImageViewController.class]) {
-        XBPC_storageMessage *message = self.items[selectedIndex];
-        return [[TGRImageZoomAnimationController alloc] initWithReferenceImageView:(UIImageView *)[message mediaView]];
-    }
-    return nil;
 }
 
 @end

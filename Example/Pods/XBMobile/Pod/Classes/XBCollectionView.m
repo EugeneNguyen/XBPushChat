@@ -45,8 +45,8 @@
 {
     if (pageControl)
     {
-        pageControl.numberOfPages = self.contentSize.width / self.frame.size.width;
-        pageControl.currentPage = self.contentOffset.x / self.frame.size.width;
+        pageControl.numberOfPages = [self totalRows];
+        pageControl.currentPage = self.contentOffset.x / self.frame.size.width + 0.3;
     }
 }
 
@@ -92,6 +92,21 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    CGPoint offset = scrollView.contentOffset;
+    CGRect bounds = scrollView.bounds;
+    CGSize size = scrollView.contentSize;
+    UIEdgeInsets inset = scrollView.contentInset;
+    float y = offset.y + bounds.size.height - inset.bottom;
+    float h = size.height;
+    
+    float reload_distance = 10;
+    if(y > h + reload_distance) {
+        [self scrolledToBottom];
+    }
+    if ([xbDelegate respondsToSelector:@selector(scrollViewDidScroll:)])
+    {
+        [xbDelegate scrollViewDidScroll:self];
+    }
     if (pageControl && [self.collectionViewLayout isKindOfClass:[UICollectionViewFlowLayout class]])
     {
         [self reloadPageControl];
@@ -106,7 +121,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     long count = [self.datalist[section][@"items"] count];
-    if ([self.informations[@"loadMore"][@"enable"] boolValue] && (section == [self.datalist count] - 1))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (section == [self.datalist count] - 1))
     {
         count ++;
     }
@@ -161,7 +176,7 @@
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.informations[@"loadMore"][@"enable"] boolValue] && (indexPath.row == [[self.datalist lastObject][@"items"] count]) && (indexPath.section == ([self.datalist count] - 1)))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (indexPath.row == [[self.datalist lastObject][@"items"] count]) && (indexPath.section == ([self.datalist count] - 1)))
     {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.informations[@"loadMore"][@"identify"] forIndexPath:indexPath];
         return cell;
