@@ -237,6 +237,7 @@ static XBPushChat *__sharedPushChat = nil;
 - (void)pull
 {
     [ASIHTTPRequest setShouldUpdateNetworkActivityIndicator:NO];
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     if (self.sender_id <= 0)
     {
