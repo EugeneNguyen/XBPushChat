@@ -609,6 +609,7 @@
 		B50AD39BA53BAB6D8345DC4A /* POPAnimationEventInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = F1A738F8101DD59EB96FFC49 /* POPAnimationEventInternal.h */; };
 		B62484A5CC57C037BDE519C7 /* XBM_storageRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 60468AD50CF4A763401FA708 /* XBM_storageRequest.h */; };
 		B671D4EFDD31548DF96812BD /* JSQMessagesComposerTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = A49BFEAC16AD8CD025C7BE28 /* JSQMessagesComposerTextView.h */; };
+		B6A2B93A1A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.m in Sources */ = {isa = PBXBuildFile; fileRef = B6A2B9391A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.m */; };
 		B73CBA4D0D1C3993A0BEF29A /* JSONKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 8324D17AC2130D1AFD5D5EBB /* JSONKit.h */; };
 		B76FB34122CE43B81E57A285 /* TransformationMatrix.h in Headers */ = {isa = PBXBuildFile; fileRef = C8A83D9F71B321411A38E04E /* TransformationMatrix.h */; };
 		B773C969F8068C91C16F6313 /* SDWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = ED75F919721A3474BCA5BD29 /* SDWebImageOperation.h */; };
@@ -2019,6 +2020,8 @@
 		B5CAACBA20E24A52E705B67B /* Pods-Tests-XBPushChat-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Tests-XBPushChat-prefix.pch"; sourceTree = "<group>"; };
 		B5D5ED93D579958FB4E6CDE1 /* UIImageView+HighlightedWebCache.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImageView+HighlightedWebCache.m"; path = "SDWebImage/UIImageView+HighlightedWebCache.m"; sourceTree = "<group>"; };
 		B686FC6A0F2CC994B0D7C8E9 /* libPods-Tests-pop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Tests-pop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6A2B9381A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "IDMZoomingScrollView+XBPC_zoom.h"; sourceTree = "<group>"; };
+		B6A2B9391A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "IDMZoomingScrollView+XBPC_zoom.m"; sourceTree = "<group>"; };
 		B8199E6022967D724CDE0F9E /* UILabel+xblanguage.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UILabel+xblanguage.m"; path = "Pod/Classes/UILabel+xblanguage.m"; sourceTree = "<group>"; };
 		B8424376DA1165483B586E66 /* Pods-Tests-AVHexColor-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Tests-AVHexColor-dummy.m"; sourceTree = "<group>"; };
 		B85B4A91A5F2DE489649A087 /* Pods-Tests-CHTCollectionViewWaterfallLayout.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Tests-CHTCollectionViewWaterfallLayout.xcconfig"; sourceTree = "<group>"; };
@@ -3128,6 +3131,8 @@
 				5995DE88F05ACD5A96A60258 /* XBPushChat.m */,
 				3641E018F71304E3CAE3E835 /* Resources */,
 				2DE7F27D68B714417E812739 /* Support Files */,
+				B6A2B9381A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.h */,
+				B6A2B9391A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.m */,
 			);
 			name = XBPushChat;
 			path = ../..;
@@ -5917,6 +5922,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6A2B93A1A6E4D25003A9758 /* IDMZoomingScrollView+XBPC_zoom.m in Sources */,
 				29B254C07497E0ECFDA9E3F0 /* Pods-Tests-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
