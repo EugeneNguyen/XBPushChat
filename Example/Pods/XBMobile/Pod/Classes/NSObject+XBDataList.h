@@ -10,6 +10,14 @@
 #import "XBDataFetching.h"
 #import "ASIHTTPRequest.h"
 
+@protocol XBDataList;
+
+@protocol XBDataListSource <NSObject>
+
+- (id)modifiedDataFor:(id <XBDataList>)view andSource:(id)data;
+
+@end
+
 @protocol XBDataList
 
 @property (nonatomic, retain) NSDictionary *informations;
@@ -20,11 +28,13 @@
 
 @property (nonatomic, assign) BOOL isMultipleSection;
 
-@property (nonatomic, retain) XBDataFetching *dataFetching;
+@property (nonatomic, retain) IBOutlet XBDataFetching *dataFetching;
 
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 
 @property (nonatomic, assign) IBOutlet id <ASIHTTPRequestDelegate> requestDelegate;
+
+@property (nonatomic, assign) IBOutlet id <XBDataListSource> dataListSource;
 
 - (void)cleanup;
 

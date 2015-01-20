@@ -33,6 +33,7 @@
 @synthesize backupWhenSearch;
 @synthesize pageControl;
 @synthesize requestDelegate;
+@synthesize dataListSource;
 
 - (void)setupDelegate
 {
@@ -92,6 +93,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (scrollView.contentSize.height < scrollView.frame.size.height) return;
     CGPoint offset = scrollView.contentOffset;
     CGRect bounds = scrollView.bounds;
     CGSize size = scrollView.contentSize;
@@ -143,7 +145,13 @@
     }
     else
     {
+        
         NSDictionary *size = self.informations[@"size"];
+        NSDictionary *item = [self cellInfoForPath:indexPath];
+        if (item[@"size"])
+        {
+            size = item[@"size"];
+        }
         if ([size[@"autoResize"] boolValue])
         {
             NSDictionary *item = [self cellInfoForPath:indexPath];
@@ -160,7 +168,23 @@
             }
             else
             {
-                return CGSizeMake([size[@"width"] floatValue], [size[@"height"] floatValue]);
+                if ([size[@"percentage"] boolValue])
+                {
+                    return CGSizeMake([size[@"width"] floatValue] * self.frame.size.width, [size[@"height"] floatValue] * self.frame.size.width);
+                }
+                else
+                {
+                    UIScreen *screen = [UIScreen mainScreen];
+                    NSDictionary *info = @{@"height": @(screen.bounds.size.height),
+                                           @"width": @(screen.bounds.size.width)};
+                    
+                    NSExpression * widthExp = [NSExpression expressionWithFormat:[size[@"width"] applyData:info]];
+                    NSExpression * heightExp = [NSExpression expressionWithFormat:[size[@"height"] applyData:info]];
+                    
+                    
+                    return CGSizeMake([[widthExp expressionValueWithObject:nil context:nil] floatValue],
+                                      [[heightExp expressionValueWithObject:nil context:nil] floatValue]);
+                }
             }
         }
     }

@@ -307,7 +307,9 @@ static XBPushChat *__sharedPushChat = nil;
     NSMutableArray *userids = [@[] mutableCopy];
     for (XBPC_storageFriendList *friend in friendList) {
         [userids addObject:friend.id];
+        friend.name = @"";
     }
+    [[XBPushChat sharedInstance] saveContext];
     
     if ([userids count] == 0)
     {

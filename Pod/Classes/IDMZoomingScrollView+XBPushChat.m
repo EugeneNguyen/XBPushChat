@@ -1,14 +1,15 @@
 //
-//  IDMZoomingScrollView+XBPC_zoom.m
+//  IDMZoomingScrollView+XBPushChat.m
 //  Pods
 //
 //  Created by Binh Nguyen Xuan on 1/20/15.
 //
 //
 
-#import "IDMZoomingScrollView+XBPC_zoom.h"
+#import "IDMZoomingScrollView+XBPushChat.h"
 
-@implementation IDMZoomingScrollView (XBPC_zoom)
+@implementation IDMZoomingScrollView (XBPushChat)
+@dynamic photoImageView;
 
 - (void)setMaxMinZoomScalesForCurrentBounds {
     // Reset
@@ -38,9 +39,9 @@
     CGFloat maxScale = 4.0; // Allow double scale
     // on high resolution screens we have double the pixel density, so we will be seeing every pixel if we limit the
     // maximum zoom scale to 0.5.
-    //	if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
-    //		maxScale = maxScale / [[UIScreen mainScreen] scale];
-    //	}
+    if ([UIScreen instancesRespondToSelector:@selector(scale)]) {
+        maxScale = maxScale / [[UIScreen mainScreen] scale];
+    }
     
     // Set
     self.maximumZoomScale = maxScale;
@@ -49,7 +50,7 @@
     
     // Reset position
     self.photoImageView.frame = CGRectMake(0, 0, self.photoImageView.frame.size.width, self.photoImageView.frame.size.height);
-    [self setNeedsLayout];
+    [self setNeedsLayout];    
 }
 
 @end

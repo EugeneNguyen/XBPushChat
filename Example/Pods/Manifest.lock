@@ -61,10 +61,10 @@ PODS:
     - SDWebImage (~> 3.7)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
-  - XBLanguage (0.1.0):
+  - XBLanguage (0.2.3):
     - ASIHTTPRequest
     - JSONKit-NoWarning
-  - XBMobile (0.3.1):
+  - XBMobile (0.4.1.2):
     - ASIHTTPRequest
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
@@ -75,7 +75,7 @@ PODS:
     - UIImage-Helpers
     - XBLanguage
     - XMLDictionary
-  - XBPushChat (0.3):
+  - XBPushChat (0.3.3.2):
     - IDMPhotoBrowser
     - JSQMessagesViewController
     - UIImage+ImageCompress
@@ -109,9 +109,9 @@ SPEC CHECKSUMS:
   UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
   UIImage+ImageCompress: 170241cb980e3f5057d74122480a24c92d25d8a8
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
-  XBLanguage: 1da00778aef85e6ae2c4f7d428ba84b62256a93a
-  XBMobile: 04f4c044aed9232672ed4616751b6fc8a02de9c9
-  XBPushChat: 08a1888d28c524a8a58dd2f930fec6572e51dae1
+  XBLanguage: 8c195bdcc7d42f551176a2b38b3bdae97a39beaa
+  XBMobile: 624426e7860d299966d854d4c3f47755991a46ea
+  XBPushChat: 3af572de2562dc6e3ad2ba88ab6df09443cff486
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4

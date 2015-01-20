@@ -186,20 +186,22 @@
 // XBLanguage
 #define COCOAPODS_POD_AVAILABLE_XBLanguage
 #define COCOAPODS_VERSION_MAJOR_XBLanguage 0
-#define COCOAPODS_VERSION_MINOR_XBLanguage 1
-#define COCOAPODS_VERSION_PATCH_XBLanguage 0
+#define COCOAPODS_VERSION_MINOR_XBLanguage 2
+#define COCOAPODS_VERSION_PATCH_XBLanguage 3
 
 // XBMobile
 #define COCOAPODS_POD_AVAILABLE_XBMobile
-#define COCOAPODS_VERSION_MAJOR_XBMobile 0
-#define COCOAPODS_VERSION_MINOR_XBMobile 3
-#define COCOAPODS_VERSION_PATCH_XBMobile 1
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.4.1.2.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
-#define COCOAPODS_VERSION_MAJOR_XBPushChat 0
-#define COCOAPODS_VERSION_MINOR_XBPushChat 3
-#define COCOAPODS_VERSION_PATCH_XBPushChat 0
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.3.3.2.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

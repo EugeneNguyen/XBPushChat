@@ -32,6 +32,7 @@
 @synthesize refreshControl;
 @synthesize backupWhenSearch;
 @synthesize requestDelegate;
+@synthesize dataListSource;
 
 - (void)setupDelegate
 {
@@ -121,6 +122,17 @@
         count ++;
     }
     return count;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *item = [self cellInfoForPath:indexPath];
+    return [item[@"deletable"] boolValue];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
