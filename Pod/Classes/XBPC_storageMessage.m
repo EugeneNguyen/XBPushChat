@@ -257,6 +257,20 @@
     }
 }
 
+- (NSURL *)imagePath
+{
+    if ([self isRemoteImage])
+    {
+        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%@/0", [XBPushChat sharedInstance].host, [self imageID]];
+        return [NSURL URLWithString:path];
+    }
+    else
+    {
+        NSString *key = [self imageID];
+        return [NSURL URLWithString:[[SDImageCache sharedImageCache] defaultCachePathForKey:key]];
+    }
+}
+
 - (CGSize)mediaViewDisplaySize
 {
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];

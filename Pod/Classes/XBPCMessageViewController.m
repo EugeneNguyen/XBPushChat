@@ -282,19 +282,25 @@
     XBPC_storageMessage *message = self.items[indexPath.row];
     if (message.isMediaMessage)
     {
-        UIImageView *imgView = (UIImageView *)[message mediaView];
-        if (imgView.image)
+        NSMutableArray *urls = [NSMutableArray new];
+        NSInteger index = 0;
+        for (XBPC_storageMessage * m in items)
         {
-            selectedIndex = indexPath.row;
-            IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotos:@[imgView.image] animatedFromView:[message mediaView]];
-            browser.displayCounterLabel = NO;
-            browser.displayArrowButton = NO;
-            browser.displayActionButton = NO;
-            browser.displayToolbar = NO;
-            [self presentViewController:browser animated:YES completion:nil];
+            if (m.isMediaMessage)
+            {
+                if (m == message)
+                {
+                    index = [urls count];
+                }
+                [urls addObject:[m imagePath]];
+            }
         }
+        selectedIndex = indexPath.row;
+        IDMPhotoBrowser *browser = [[IDMPhotoBrowser alloc] initWithPhotoURLs:urls];
+        browser.displayActionButton = NO;
+        [browser setInitialPageIndex:index];
+        [self presentViewController:browser animated:YES completion:nil];
     }
-    
 }
 
 - (void)collectionView:(JSQMessagesCollectionView *)collectionView didTapCellAtIndexPath:(NSIndexPath *)indexPath touchLocation:(CGPoint)touchLocation

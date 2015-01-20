@@ -34,5 +34,6 @@
 + (void)clear;
 
 - (NSString *)imageID;
+- (NSURL *)imagePath;
 
 @end
