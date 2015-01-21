@@ -10,4 +10,6 @@
 
 @interface XBPCConversationTableView : XBTableView
 
+- (void)loadDataToTable;
+
 @end

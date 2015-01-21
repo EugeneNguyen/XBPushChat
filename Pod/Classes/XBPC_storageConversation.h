@@ -19,7 +19,8 @@
 @property (nonatomic, retain) NSDate * lasttime;
 @property (nonatomic, retain) NSDate * lastvisit;
 
-- (int)isHide;
+- (NSNumber *)isHide;
+- (void)hide;
 
 + (void)addConversation:(NSDictionary *)item;
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save;
