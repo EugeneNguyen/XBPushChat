@@ -130,8 +130,12 @@
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        if (xbDelegate && [xbDelegate respondsToSelector:@selector(xbTableView:didDeleteRowAtIndexPath:forItem:)])
+        {
+            [xbDelegate xbTableView:self didDeleteRowAtIndexPath:indexPath forItem:datalist[indexPath.section][@"items"][indexPath.row]];
+        }
     }
 }
 
@@ -149,7 +153,7 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:_informations[@"loadMore"][@"identify"] forIndexPath:indexPath];
         return cell;
     }
-
+    
     NSDictionary *item = [self cellInfoForPath:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:item[@"cellIdentify"] forIndexPath:indexPath];
     [cell applyTemplate:item[@"elements"] andInformation:datalist[indexPath.section][@"items"][indexPath.row] withTarget:self];

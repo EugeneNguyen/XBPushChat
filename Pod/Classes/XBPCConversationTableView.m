@@ -43,7 +43,10 @@
         for (int i = 0; i < [sectionInfo numberOfObjects]; i ++)
         {
             XBPC_storageConversation *item = [[self fetchedResultsController] objectAtIndexPath:[NSIndexPath indexPathForRow:i inSection:sectionIndex]];
-            [conversation addObject:item];
+            if (![item isHide])
+            {
+                [conversation addObject:item];
+            }
         }
     }
     [self loadData:conversation];
