@@ -80,7 +80,11 @@
     }
     message.type = @"message";
     message.room = item[@"room"];
-    message.message = item[@"message"];
+    message.message = [item[@"message"] emojiDecode];
+    if (message.message == nil)
+    {
+        message.message = @"";
+    }
     if ([message.read intValue] == 0)
     {
         message.read = @([item[@"hasread"] boolValue]);

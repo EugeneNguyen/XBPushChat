@@ -133,6 +133,7 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)sendMessage:(NSString *)message toID:(NSUInteger)jid room:(NSString *)room
 {
+    message = [message emojiEncode];
     NSString *uuid = [NSString uuidString];
     
     ASIFormDataRequest *request = XBPC_Service(@"send_message");

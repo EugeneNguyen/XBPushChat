@@ -1,1 +1,0 @@
-../../../XBMobile/Pod/Classes/XBCollectionView.h
