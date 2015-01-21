@@ -291,6 +291,15 @@ static XBPushChat *__sharedPushChat = nil;
     [request startAsynchronous];
 }
 
+- (void)hide:(XBPC_storageConversation *)conversation
+{
+    ASIFormDataRequest *request = XBPC_Service(@"hide_message");
+    [request setPostValue:conversation.sender forKey:@"sender"];
+    [request setPostValue:conversation.receiver forKey:@"receiver"];
+    [request setPostValue:conversation.room forKey:@"room"];
+    [request startAsynchronous];
+}
+
 #pragma mark Get Friend's information
 
 - (void)getFriendInformationRefresh:(BOOL)isRefresh

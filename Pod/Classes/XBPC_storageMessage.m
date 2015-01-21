@@ -85,10 +85,12 @@
     {
         message.message = @"";
     }
+    
     if ([message.read intValue] == 0)
     {
         message.read = @([item[@"hasread"] boolValue]);
     }
+    message.hidden = @([item[@"hide"] boolValue]);
     
     [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
     [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];

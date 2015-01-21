@@ -131,6 +131,24 @@
     [[XBPushChat sharedInstance] saveContext];
 }
 
+- (void)hide
+{
+    self.lastvisit = [NSDate date];
+    NSArray *appliedArray = [XBPC_storageMessage getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[self.sender, self.receiver, self.receiver, self.sender, self.room]];
+    for (XBPC_storageMessage *message in appliedArray)
+    {
+        message.hidden = @(YES);
+    }
+    [[XBPushChat sharedInstance] hide:self];
+}
+
+- (int)isHide
+{
+    NSArray *messages = [XBPC_storageMessage getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[self.sender, self.receiver, self.receiver, self.sender, self.room]];
+    XBPC_storageMessage *lastMessage = [messages lastObject];
+    return [lastMessage.hidden intValue];
+}
+
 - (NSString *)numberOfUnreadMessage
 {
     NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];

@@ -24,6 +24,7 @@
 @property (nonatomic, retain) NSString * room;
 @property (nonatomic, retain) NSNumber * read;
 @property (nonatomic, retain) NSNumber * downloaded;
+@property (nonatomic, retain) NSNumber * hidden;
 
 + (void)addMessage:(NSDictionary *)item;
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save;

@@ -4,6 +4,10 @@
 <dict>
 	<key>pathToContent</key>
 	<string></string>
+	<key>isMutipleType</key>
+	<true/>
+	<key>cellTypePath</key>
+	<string>isHide</string>
 	<key>cells</key>
 	<array>
 		<dict>
@@ -22,6 +26,16 @@
 					<string>lastmessage</string>
 				</dict>
 			</array>
+		</dict>
+		<dict>
+			<key>bundle</key>
+			<string>XBPushChat</string>
+			<key>cellIdentify</key>
+			<string>XBPCConversationHiddenCell</string>
+			<key>xibname</key>
+			<string>XBPCConversationHiddenCell</string>
+			<key>elements</key>
+			<array/>
 		</dict>
 	</array>
 </dict>
