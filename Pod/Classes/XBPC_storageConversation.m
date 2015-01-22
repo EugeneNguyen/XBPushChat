@@ -133,7 +133,7 @@
 
 - (void)hide
 {
-    NSArray *appliedArray = [XBPC_storageMessage getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[self.sender, self.receiver, self.receiver, self.sender, self.room]];
+    NSArray *appliedArray = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[self.receiver, self.sender, self.room]];
     for (XBPC_storageMessage *message in appliedArray)
     {
         message.hidden = @(YES);
@@ -144,9 +144,9 @@
 
 - (NSNumber *)isHide
 {
-    NSArray *messages = [XBPC_storageMessage getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[self.sender, self.receiver, self.receiver, self.sender, self.room]];
-    XBPC_storageMessage *lastMessage = [messages lastObject];
-    return @([lastMessage.hidden intValue]);
+    NSArray *hiddenMessage = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@ and hidden=%@" argument:@[self.receiver, self.sender, self.room, @(YES)]];
+    NSArray *allMessage = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[self.receiver, self.sender, self.room]];
+    return @([allMessage count] == [hiddenMessage count]);
 }
 
 - (NSString *)numberOfUnreadMessage
