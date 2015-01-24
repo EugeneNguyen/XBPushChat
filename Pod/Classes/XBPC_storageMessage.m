@@ -90,16 +90,18 @@
     {
         message.read = @([item[@"hasread"] boolValue]);
     }
-    message.hidden = @([item[@"hide"] boolValue]);
+    if ([matched count] == 0)
+    {
+        [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
+        [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
+        
+        [XBPC_storageConversation addConversation:@{@"sender": message.sender,
+                                                    @"receiver": message.receiver,
+                                                    @"room": message.room,
+                                                    @"lastmessage": message.message,
+                                                    @"lasttime": message.createtime} save:save];
+    }
     
-    [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
-    [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
-    
-    [XBPC_storageConversation addConversation:@{@"sender": message.sender,
-                                                @"receiver": message.receiver,
-                                                @"room": message.room,
-                                                @"lastmessage": message.message,
-                                                @"lasttime": message.createtime} save:save];
     if (save)
     {
         [[XBPushChat sharedInstance] saveContext];

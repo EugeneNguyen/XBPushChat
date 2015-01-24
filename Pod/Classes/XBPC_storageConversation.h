@@ -15,16 +15,15 @@
 @property (nonatomic, retain) NSString * room;
 @property (nonatomic, retain) NSNumber * sender;
 @property (nonatomic, retain) NSNumber * receiver;
+@property (nonatomic, retain) NSNumber * hidden;
 @property (nonatomic, retain) NSString * lastmessage;
 @property (nonatomic, retain) NSDate * lasttime;
 @property (nonatomic, retain) NSDate * lastvisit;
 
-- (NSNumber *)isHide;
-- (void)hide;
-
 + (void)addConversation:(NSDictionary *)item;
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save;
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument;
++ (NSArray *)getAll;
 + (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room;
 + (void)clear;
 

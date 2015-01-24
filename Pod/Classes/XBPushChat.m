@@ -151,6 +151,10 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"random": uuid,
                                       @"message": message,
                                       @"room" : room}];
+    
+    [request setCompletionBlock:^{
+        NSLog(@"request: %@", request.responseString);
+    }];
 }
 
 - (void)sendImage:(UIImage *)image toID:(NSUInteger)jid room:(NSString *)room
@@ -293,10 +297,47 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)hide:(XBPC_storageConversation *)conversation
 {
-    ASIFormDataRequest *request = XBPC_Service(@"hide_message");
+    ASIFormDataRequest *request = XBPC_Service(@"hide_conversation");
     [request setPostValue:conversation.sender forKey:@"sender"];
     [request setPostValue:conversation.receiver forKey:@"receiver"];
     [request setPostValue:conversation.room forKey:@"room"];
+    [request startAsynchronous];
+    
+    conversation.hidden = @(YES);
+    [[XBPushChat sharedInstance] saveContext];
+}
+
+- (void)updateHiddenConversation
+{
+    ASIFormDataRequest *request = XBPC_Service(@"get_hidden_record");
+    [request setPostValue:@(self.sender_id) forKey:@"id"];
+    
+    __block ASIFormDataRequest *_request = request;
+    
+    [request setCompletionBlock:^{
+        NSDictionary *result = _request.responseJSON;
+        
+        NSLog(@"%@", result);
+        NSArray *allConversation = [XBPC_storageConversation getAll];
+        for (XBPC_storageConversation *conversation in allConversation)
+        {
+            conversation.hidden = @(NO);
+        }
+        [[XBPushChat sharedInstance] saveContext];
+        if (([result[@"code"] intValue] == 200) && (result[@"data"]))
+        {
+            for (NSDictionary *item in result[@"data"])
+            {
+                NSArray *array = [XBPC_storageConversation getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[item[@"sender"], item[@"receiver"], item[@"room"]]];
+                if ([array count] > 0)
+                {
+                    XBPC_storageConversation *conversation = [array lastObject];
+                    conversation.hidden = @(YES);
+                }
+            }
+        }
+        [[XBPushChat sharedInstance] saveContext];
+    }];
     [request startAsynchronous];
 }
 
@@ -350,6 +391,7 @@ static XBPushChat *__sharedPushChat = nil;
             }
             [[XBPushChat sharedInstance] saveContext];
             [self getFriendInformationRefresh:NO];
+            [self updateHiddenConversation];
         }
             break;
         case eRequestGetFriendList:

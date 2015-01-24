@@ -17,6 +17,7 @@
 @dynamic lasttime;
 @dynamic lastmessage;
 @dynamic lastvisit;
+@dynamic hidden;
 
 + (void)addConversation:(NSDictionary *)item
 {
@@ -58,6 +59,7 @@
     {
         conversation.lastvisit = [NSDate dateWithTimeIntervalSince1970:0];
     }
+    conversation.hidden = @(NO);
     
     if (item[@"lastvisit"])
     {
@@ -131,24 +133,6 @@
     [[XBPushChat sharedInstance] saveContext];
 }
 
-- (void)hide
-{
-    NSArray *appliedArray = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[self.receiver, self.sender, self.room]];
-    for (XBPC_storageMessage *message in appliedArray)
-    {
-        message.hidden = @(YES);
-    }
-    [[XBPushChat sharedInstance] saveContext];
-    [[XBPushChat sharedInstance] hide:self];
-}
-
-- (NSNumber *)isHide
-{
-    NSArray *hiddenMessage = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@ and hidden=%@" argument:@[self.receiver, self.sender, self.room, @(YES)]];
-    NSArray *allMessage = [XBPC_storageMessage getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[self.receiver, self.sender, self.room]];
-    return @([allMessage count] == [hiddenMessage count]);
-}
-
 - (NSString *)numberOfUnreadMessage
 {
     NSEntityDescription *ed = [NSEntityDescription entityForName:@"XBPC_storageMessage" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
@@ -173,7 +157,6 @@
             count ++;
         }
     }
-    
     return count;
 }
 
