@@ -151,10 +151,6 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"random": uuid,
                                       @"message": message,
                                       @"room" : room}];
-    
-    [request setCompletionBlock:^{
-        NSLog(@"request: %@", request.responseString);
-    }];
 }
 
 - (void)sendImage:(UIImage *)image toID:(NSUInteger)jid room:(NSString *)room
@@ -425,10 +421,10 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)clearBadge
 {
-    if (self.badge == 0 && self.sender_id > 0)
+    if (self.sender_id > 0)
     {
-        ASIFormDataRequest * request = XBPC_PushService(@"services/clear_badge");
-        [request setPostValue:@(self.sender_id) forKey:@"ownerid"];
+        ASIFormDataRequest * request = XBPC_PushService(@"clear_badge");
+        [request setPostValue:@(self.sender_id) forKey:@"user_id"];
         [request startAsynchronous];
     }
     self.badge = 0;
