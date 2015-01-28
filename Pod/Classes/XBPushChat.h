@@ -64,7 +64,7 @@
 
 - (void)getFriendInformationRefresh:(BOOL)isRefresh;
 
-- (void)clearBadge;
+- (void)updateBadge;
 - (void)logout;
 
 @end

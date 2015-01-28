@@ -419,6 +419,20 @@ static XBPushChat *__sharedPushChat = nil;
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
 }
 
+- (void)updateBadge
+{
+    NSArray *allConversation = [XBPC_storageConversation getAll];
+    int count = 0;
+    for (XBPC_storageConversation *conversation in allConversation)
+    {
+        if (![[conversation hidden] boolValue] && [[conversation numberOfUnreadMessage] intValue] > 0)
+        {
+            count += [[conversation numberOfUnreadMessage] intValue];
+        }
+    }
+    self.badge = count;
+}
+
 - (void)clearBadge
 {
     if (self.sender_id > 0)

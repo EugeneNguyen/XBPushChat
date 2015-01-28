@@ -152,7 +152,7 @@
     int count = 0;
     for (XBPC_storageConversation *conversation in allConversation)
     {
-        if ([[conversation numberOfUnreadMessage] intValue] > 0)
+        if (![[conversation hidden] boolValue] && [[conversation numberOfUnreadMessage] intValue] > 0)
         {
             count ++;
         }
