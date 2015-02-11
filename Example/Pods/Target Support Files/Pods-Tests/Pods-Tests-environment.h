@@ -10,43 +10,43 @@
 #define COCOAPODS_POD_AVAILABLE_AFNetworking
 #define COCOAPODS_VERSION_MAJOR_AFNetworking 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking 1
 
 // AFNetworking/NSURLConnection
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_NSURLConnection
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_NSURLConnection 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_NSURLConnection 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_NSURLConnection 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_NSURLConnection 1
 
 // AFNetworking/NSURLSession
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_NSURLSession
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_NSURLSession 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_NSURLSession 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_NSURLSession 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_NSURLSession 1
 
 // AFNetworking/Reachability
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_Reachability
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_Reachability 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_Reachability 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_Reachability 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_Reachability 1
 
 // AFNetworking/Security
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_Security
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_Security 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_Security 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_Security 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_Security 1
 
 // AFNetworking/Serialization
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_Serialization
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_Serialization 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_Serialization 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_Serialization 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_Serialization 1
 
 // AFNetworking/UIKit
 #define COCOAPODS_POD_AVAILABLE_AFNetworking_UIKit
 #define COCOAPODS_VERSION_MAJOR_AFNetworking_UIKit 2
 #define COCOAPODS_VERSION_MINOR_AFNetworking_UIKit 5
-#define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 0
+#define COCOAPODS_VERSION_PATCH_AFNetworking_UIKit 1
 
 // ASIHTTPRequest
 #define COCOAPODS_POD_AVAILABLE_ASIHTTPRequest
@@ -120,7 +120,7 @@
 // FBSnapshotTestCase
 #define COCOAPODS_POD_AVAILABLE_FBSnapshotTestCase
 #define COCOAPODS_VERSION_MAJOR_FBSnapshotTestCase 1
-#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase 4
+#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase 5
 #define COCOAPODS_VERSION_PATCH_FBSnapshotTestCase 0
 
 // IDMPhotoBrowser
@@ -152,6 +152,12 @@
 #define COCOAPODS_VERSION_MAJOR_MBProgressHUD 0
 #define COCOAPODS_VERSION_MINOR_MBProgressHUD 9
 #define COCOAPODS_VERSION_PATCH_MBProgressHUD 0
+
+// NSDate+TimeAgo
+#define COCOAPODS_POD_AVAILABLE_NSDate_TimeAgo
+#define COCOAPODS_VERSION_MAJOR_NSDate_TimeAgo 1
+#define COCOAPODS_VERSION_MINOR_NSDate_TimeAgo 0
+#define COCOAPODS_VERSION_PATCH_NSDate_TimeAgo 3
 
 // Reachability
 #define COCOAPODS_POD_AVAILABLE_Reachability
@@ -189,24 +195,32 @@
 #define COCOAPODS_VERSION_MINOR_UIImage_Helpers 0
 #define COCOAPODS_VERSION_PATCH_UIImage_Helpers 3
 
+// XBGallery
+#define COCOAPODS_POD_AVAILABLE_XBGallery
+#define COCOAPODS_VERSION_MAJOR_XBGallery 0
+#define COCOAPODS_VERSION_MINOR_XBGallery 2
+#define COCOAPODS_VERSION_PATCH_XBGallery 0
+
 // XBLanguage
 #define COCOAPODS_POD_AVAILABLE_XBLanguage
-#define COCOAPODS_VERSION_MAJOR_XBLanguage 0
-#define COCOAPODS_VERSION_MINOR_XBLanguage 2
-#define COCOAPODS_VERSION_PATCH_XBLanguage 3
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.3.0.1.
 
 // XBMobile
 #define COCOAPODS_POD_AVAILABLE_XBMobile
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.4.2.2.
+// Version: 0.4.6.1.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
-#define COCOAPODS_VERSION_MAJOR_XBPushChat 0
-#define COCOAPODS_VERSION_MINOR_XBPushChat 4
-#define COCOAPODS_VERSION_PATCH_XBPushChat 1
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.4.3.3.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary

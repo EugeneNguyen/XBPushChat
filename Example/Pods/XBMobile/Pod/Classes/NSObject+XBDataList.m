@@ -18,6 +18,7 @@
 @dynamic dataFetching;
 @dynamic refreshControl;
 @dynamic requestDelegate;
+@dynamic dataListSource;
 
 #pragma mark - Loading Information
 
@@ -41,7 +42,7 @@
 - (void)loadInformationFromPlist:(NSString *)plist
 {
     NSString *path = [[NSBundle mainBundle] pathForResource:plist ofType:@"plist"];
-    NSDictionary *info = [NSDictionary dictionaryWithContentsOfFile:path];
+    NSMutableDictionary *info = [NSMutableDictionary dictionaryWithContentsOfFile:path];
     [self loadInformations:info];
 }
 
@@ -66,11 +67,17 @@
 - (void)loadInformations:(NSDictionary *)info withReload:(BOOL)withReload
 {
     [self setupDelegate];
+    
     self.informations = info;
     
     if (info[@"section"])
     {
         self.isMultipleSection = YES;
+    }
+    
+    if ([self respondsToSelector:@selector(setupWaterFall)] && [self.informations[@"waterfall"][@"enable"] boolValue])
+    {
+        [self setupWaterFall];
     }
     
     [self requestDataWithReload:withReload];
@@ -90,9 +97,9 @@
         [self registerNib:[UINib nibWithNibName:self.informations[@"loadMore"][@"xib"] bundle:nil] forCellReuseIdentifier:self.informations[@"loadMore"][@"identify"]];
     }
     
-    if ([self respondsToSelector:@selector(setupWaterFall)] && [self.informations[@"waterfall"][@"enable"] boolValue])
+    if (self.informations[@"NoDataCell"] && self.informations[@"NoDataCell"][@"cellIdentify"] && self.informations[@"NoDataCell"][@"xibname"])
     {
-        [self setupWaterFall];
+        [self registerNib:[UINib nibWithNibName:self.informations[@"NoDataCell"][@"xibname"] bundle:nil] forCellReuseIdentifier:self.informations[@"NoDataCell"][@"cellIdentify"]];
     }
 }
 
@@ -118,7 +125,7 @@
 
 - (BOOL)ableToShowNoData
 {
-    return self.informations[@"NoDataCell"] && ([self totalRows] == 0);
+    return self.informations[@"NoDataCell"] && [self.informations[@"NoDataCell"][@"enable"] boolValue] && ([self totalRows] == 0);
 }
 
 - (void)scrolledToBottom
@@ -127,6 +134,17 @@
     {
         [self.dataFetching fetchMore];
     }
+}
+
+#pragma mark - Personal Modification
+
+- (void)setEnableNoDataCell:(BOOL)isNoData
+{
+    if (self.informations[@"NoDataCell"])
+    {
+        self.informations[@"NoDataCell"][@"enable"] = @(isNoData);
+    }
+    [self reloadData];
 }
 
 #pragma mark - Data method & DataFetching Delegate
@@ -140,6 +158,7 @@
 {
     if ([self.informations[@"isRemoteData"] boolValue])
     {
+        [self setEnableNoDataCell:NO];
         if (!self.datalist)
         {
             self.datalist = [NSMutableArray new];
@@ -151,7 +170,14 @@
         self.dataFetching.delegate = self;
         self.dataFetching.postParams = self.postParams;
         self.dataFetching.disableCache = [self.informations[@"disableCache"] boolValue];
-        [self.dataFetching startFetchingData];
+        if ([self.informations[@"loadMore"][@"enable"] boolValue])
+        {
+            [self.dataFetching fetchMore];
+        }
+        else
+        {
+            [self.dataFetching startFetchingData];
+        }
     }
     else
     {
@@ -161,6 +187,7 @@
 
 - (void)requestDidFinish:(XBDataFetching *)_dataFetching
 {
+    [self setEnableNoDataCell:YES];
     if (self.dataListSource && [self.dataListSource respondsToSelector:@selector(modifiedDataFor:andSource:)])
     {
         self.datalist = [self.dataListSource modifiedDataFor:self andSource:self.datalist];
@@ -178,6 +205,7 @@
 
 - (void)requestDidFailed:(XBDataFetching *)_dataFetching
 {
+    [self setEnableNoDataCell:YES];
     if ([self.informations[@"isUsingAlert"] boolValue])
     {
         [self alert:@"Error" message:[self.dataFetching.cacheRequest.error description]];

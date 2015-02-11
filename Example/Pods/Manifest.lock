@@ -1,23 +1,23 @@
 PODS:
-  - AFNetworking (2.5.0):
+  - AFNetworking (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
     - AFNetworking/UIKit
-  - AFNetworking/NSURLConnection (2.5.0):
+  - AFNetworking/NSURLConnection (2.5.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.0):
+  - AFNetworking/NSURLSession (2.5.1):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.0)
-  - AFNetworking/Security (2.5.0)
-  - AFNetworking/Serialization (2.5.0)
-  - AFNetworking/UIKit (2.5.0):
+  - AFNetworking/Reachability (2.5.1)
+  - AFNetworking/Security (2.5.1)
+  - AFNetworking/Serialization (2.5.1)
+  - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - ASIHTTPRequest (1.8.2):
@@ -42,7 +42,7 @@ PODS:
   - CocoaLumberjack/Extensions (1.6.5.1):
     - CocoaLumberjack/Core
   - DACircularProgress (2.2.0)
-  - FBSnapshotTestCase (1.4)
+  - FBSnapshotTestCase (1.5)
   - IDMPhotoBrowser (1.5.2):
     - AFNetworking
     - DACircularProgress
@@ -52,6 +52,7 @@ PODS:
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - MBProgressHUD (0.9)
+  - NSDate+TimeAgo (1.0.3)
   - pop (1.0.7)
   - Reachability (3.2)
   - SDWebImage (3.7.1):
@@ -61,24 +62,30 @@ PODS:
     - SDWebImage (~> 3.7)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
-  - XBLanguage (0.2.3):
+  - XBGallery (0.2.0):
+    - ASIHTTPRequest
+    - XBMobile
+  - XBLanguage (0.3.0.1):
     - ASIHTTPRequest
     - JSONKit-NoWarning
-  - XBMobile (0.4.2.2):
+  - XBMobile (0.4.6.1):
     - ASIHTTPRequest
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
     - CocoaLumberjack (~> 1.6.2)
     - JSONKit-NoWarning
     - MBProgressHUD
+    - NSDate+TimeAgo
     - UIActivityIndicator-for-SDWebImage
     - UIImage-Helpers
     - XBLanguage
     - XMLDictionary
-  - XBPushChat (0.4.1):
+  - XBPushChat (0.4.3.3):
     - IDMPhotoBrowser
     - JSQMessagesViewController
     - UIImage+ImageCompress
+    - XBGallery
+    - XBLanguage
     - XBMobile
   - XMLDictionary (1.4)
 
@@ -91,27 +98,29 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  AFNetworking: 0f54cb5d16ce38c1b76948faffb8d5fb705021c7
+  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
   ASIHTTPRequest: 2c8335b49410c0e2ad42829c438e74d454b77590
   AVHexColor: b47099552819a98dc58d7931f0f43eb6e2308342
   CHTCollectionViewWaterfallLayout: 14b7950cbe45ae9297e7759148d69b022bac047d
   CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
   DACircularProgress: 3b41941891a56dc6aa17971f5322a9a38a6f446e
-  FBSnapshotTestCase: f9f225b5ba11c8d8c09075590490df16314e4d62
+  FBSnapshotTestCase: e2914fbaabccea1dcc773d6a16b1c24540642488
   IDMPhotoBrowser: 9639f7c57bdf942dc4e214ff9d8108e08ebd3f27
   JSONKit-NoWarning: fc8d6dd8ec65e303867d1bd274632fc60a4a8ab9
   JSQMessagesViewController: e93a288a9662d4519c95a28a8c0eec10beae1bfc
   JSQSystemSoundPlayer: 55528c699a283aae2220d3ae7b8b527d2ecef4b4
   MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
+  NSDate+TimeAgo: f3533e0198fab05b716368b19f8c2185d53d6f3b
   pop: 2f14a1ea61339767af9e66741b418c831b3844df
   Reachability: 1ef8adf5c4e3d362f96515d4278f68dad3c26930
   SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
   UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
   UIImage+ImageCompress: 170241cb980e3f5057d74122480a24c92d25d8a8
   UIImage-Helpers: 176819cd1a4cb5beaee859f5b92470fb04be92af
-  XBLanguage: 8c195bdcc7d42f551176a2b38b3bdae97a39beaa
-  XBMobile: 3a0a64c79a8456fbc1c89663794b8738571416ac
-  XBPushChat: 9533e554316545c5e435bd6179818c41934744e0
+  XBGallery: f5b70dcc898707f32bcc1ad94bda7bd45fc47f5d
+  XBLanguage: fd420d44bccdda083571c48dfffea7d1f450fa57
+  XBMobile: a5b820a9df02d1545d307abbda5131edbc19c20c
+  XBPushChat: d6b84e87c7b856921221a4f39e3ab4fc206173f0
   XMLDictionary: 735e81b9a043e220b0d24e9d4f16719606f2e0fc
 
 COCOAPODS: 0.34.4

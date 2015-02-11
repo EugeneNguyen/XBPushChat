@@ -12,6 +12,8 @@
 #import "SDImageCache.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
+#import "XBLanguage.h"
+#import "XBGallery.h"
 
 @interface XBPC_storageMessage()
 {
@@ -95,11 +97,33 @@
         [XBPC_storageFriendList addUser:@{@"id": message.sender} save:NO];
         [XBPC_storageFriendList addUser:@{@"id": message.receiver} save:NO];
         
-        [XBPC_storageConversation addConversation:@{@"sender": message.sender,
-                                                    @"receiver": message.receiver,
-                                                    @"room": message.room,
-                                                    @"lastmessage": message.message,
-                                                    @"lasttime": message.createtime} save:save];
+        if (message.isMediaMessage)
+        {
+            if ([message.sender integerValue] == [XBPushChat sharedInstance].sender_id)
+            {
+                [XBPC_storageConversation addConversation:@{@"sender": message.sender,
+                                                            @"receiver": message.receiver,
+                                                            @"room": message.room,
+                                                            @"lastmessage": XBText(@"You sent a new image message!", @"XBPushChat"),
+                                                            @"lasttime": message.createtime} save:save];
+            }
+            else
+            {
+                [XBPC_storageConversation addConversation:@{@"sender": message.sender,
+                                                            @"receiver": message.receiver,
+                                                            @"room": message.room,
+                                                            @"lastmessage": XBText(@"You received a new image message!", @"XBPushChat"),
+                                                            @"lasttime": message.createtime} save:save];
+            }
+        }
+        else
+        {
+            [XBPC_storageConversation addConversation:@{@"sender": message.sender,
+                                                        @"receiver": message.receiver,
+                                                        @"room": message.room,
+                                                        @"lastmessage": message.message,
+                                                        @"lasttime": message.createtime} save:save];
+        }
     }
     
     if (save)
@@ -238,16 +262,7 @@
     }
     else if ([self isRemoteImage])
     {
-        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%@/0", [XBPushChat sharedInstance].host, [self imageID]];
-        UIImage *img = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:path];
-        if (img)
-        {
-            mediaView.image = img;
-        }
-        else
-        {
-            [mediaView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-        }
+        [mediaView setImageWithURL:[[XBGallery sharedInstance] urlForID:[[self imageID] intValue] isThumbnail:NO] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
         return mediaView;
     }
     else
@@ -269,8 +284,7 @@
 {
     if ([self isRemoteImage])
     {
-        NSString *path = [NSString stringWithFormat:@"%@/services/user/getInfoPhoto/%@/0", [XBPushChat sharedInstance].host, [self imageID]];
-        return [NSURL URLWithString:path];
+        return [[XBGallery sharedInstance] urlForID:[[self imageID] intValue] isThumbnail:NO];
     }
     else
     {

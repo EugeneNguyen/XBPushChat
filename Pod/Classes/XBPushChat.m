@@ -14,10 +14,11 @@
 #import "SDImageCache.h"
 #import "SDWebImageDownloader.h"
 #import <UIImage+ImageCompress.h>
+#import "XBGallery.h"
 
-#define XBPC_Service(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushchatplus/%@", host, X]]]
-#define XBPC_PushService(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushplus/%@", host, X]]]
-#define XBPC_User(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", host, X]]]
+#define XBPC_Service(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushchatplus/%@", _host, X]]]
+#define XBPC_PushService(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/pushplus/%@", _host, X]]]
+#define XBPC_User(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/%@", _host, X]]]
 
 typedef enum : NSUInteger {
     eRequestSendMessage = 100,
@@ -33,7 +34,7 @@ static XBPushChat *__sharedPushChat = nil;
 
 @implementation XBPushChat
 @synthesize deviceToken;
-@synthesize host, token;
+@synthesize host = _host, token;
 @synthesize avatarFormat, avatarPlaceHolder;
 
 + (XBPushChat *)sharedInstance
@@ -43,6 +44,12 @@ static XBPushChat *__sharedPushChat = nil;
         __sharedPushChat = [[XBPushChat alloc] init];
     }
     return __sharedPushChat;
+}
+
+- (void)setHost:(NSString *)host
+{
+    _host = host;
+    [[XBGallery sharedInstance] setHost:host];
 }
 
 #pragma mark - Token Management
@@ -165,31 +172,22 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"message": message,
                                       @"room" : room}];
     
-    ASIFormDataRequest *request = XBPC_User(@"services/product/uploadimg");
-    [request addData:UIImageJPEGRepresentation([UIImage compressImage:image compressRatio:0.9], 0.9) forKey:@"uploadimg"];
-    [request startAsynchronous];
-    
-    __block ASIFormDataRequest *_request = request;
-    [request setCompletionBlock:^{
-        NSDictionary *item = _request.responseJSON;
-        if ([item[@"code"] intValue] == 200)
-        {
-            ASIFormDataRequest *request = XBPC_Service(@"send_message");
-            [request setPostValue:@(self.sender_id) forKey:@"user_id"];
-            [request setPostValue:@(jid) forKey:@"send_to"];
-            [request setPostValue:[NSString stringWithFormat:@"New image message (%@)", item[@"id"]] forKey:@"message"];
-            [request setPostValue:uuid forKey:@"random"];
-            [request setPostValue:room forKey:@"room"];
-            [request setTag:eRequestSendMessage];
-            [request setDelegate:self];
-            [request startAsynchronous];
-            
-            [XBPC_storageMessage addMessage:@{@"user_id": @(self.sender_id),
-                                              @"send_to": @(jid),
-                                              @"random": uuid,
-                                              @"message": message,
-                                              @"room" : room}];
-        }
+    [[XBGallery sharedInstance] uploadImage:image withCompletion:^(NSDictionary *responseData) {
+        ASIFormDataRequest *request = XBPC_Service(@"send_message");
+        [request setPostValue:@(self.sender_id) forKey:@"user_id"];
+        [request setPostValue:@(jid) forKey:@"send_to"];
+        [request setPostValue:[NSString stringWithFormat:@"New image message (%@)", responseData[@"photo_id"]] forKey:@"message"];
+        [request setPostValue:uuid forKey:@"random"];
+        [request setPostValue:room forKey:@"room"];
+        [request setTag:eRequestSendMessage];
+        [request setDelegate:self];
+        [request startAsynchronous];
+        
+        [XBPC_storageMessage addMessage:@{@"user_id": @(self.sender_id),
+                                          @"send_to": @(jid),
+                                          @"random": uuid,
+                                          @"message": message,
+                                          @"room" : room}];
     }];
 }
 

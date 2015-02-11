@@ -14,6 +14,7 @@
 #import <AVHexColor.h>
 #import <UIImage-Helpers.h>
 #import "XBMobile.h"
+#import <NSDate+TimeAgo.h>
 
 @implementation UIView (extension)
 @dynamic bottomMargin;
@@ -65,16 +66,38 @@
                 }
             }
         }
-        if ([v isKindOfClass:[UILabel class]] || [v isKindOfClass:[UITextView class]])
+        
+        if (element[@"screen"])
         {
-            if (element[@"screen"])
+            data = XBText(data, element[@"screen"]);
+        }
+        
+        if (element[@"dateFormat"])
+        {
+            NSDate *date;
+            if ([data isKindOfClass:[NSDate class]])
             {
-                [(UILabel *)v setText:XBText(data, element[@"screen"])];
+                date = data;
             }
             else
             {
-                [(UILabel *)v setText:data];
+                date = [data mysqlDate];
             }
+            
+            if ([element[@"dateFormat"] isEqualToString:@"fuzzy"])
+            {
+                data = [date timeAgoWithLimit:5184000];
+            }
+            else
+            {
+                NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                [df setDateFormat:element[@"dateFormat"]];
+                data = [df stringFromDate:date];
+            }
+        }
+        if ([v isKindOfClass:[UILabel class]] || [v isKindOfClass:[UITextView class]])
+        {
+            [(UILabel *)v setText:data];
         }
         else if ([v isKindOfClass:[UIImageView class]])
         {
@@ -143,6 +166,7 @@
                 __block BOOL noPrevImage = [(UIImageView *)v image] == NULL;
                 [imgView sd_setImageWithURL:[NSURL URLWithString:data] placeholderImage:placeHolderImage options:option completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                     
+                    if (error) return;
                     if (noPrevImage && [element[@"fadein"] boolValue])
                     {
                         [UIView transitionWithView:imgView
