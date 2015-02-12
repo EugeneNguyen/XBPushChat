@@ -36,6 +36,12 @@
 @dynamic downloaded;
 @dynamic read;
 
+
++ (void)changeMessage:(NSDictionary *)item
+{
+    
+}
+
 + (void)addMessage:(NSDictionary *)item
 {
     [XBPC_storageMessage addMessage:item save:YES];

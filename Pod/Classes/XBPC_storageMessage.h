@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSNumber * read;
 @property (nonatomic, retain) NSNumber * downloaded;
 
++ (void)changeMessage:(NSDictionary *)item;
 + (void)addMessage:(NSDictionary *)item;
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save;
 
