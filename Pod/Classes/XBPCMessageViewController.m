@@ -191,9 +191,7 @@
 
 - (id<JSQMessageAvatarImageDataSource>)collectionView:(JSQMessagesCollectionView *)collectionView avatarImageDataForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    XBPC_storageMessage *message = items[indexPath.row];
-    XBPCAvatarInformation *avatar = [XBPCAvatarInformation avatarObjectForUsername:message.senderId];
-    return avatar;
+    return nil;
 }
 
 - (NSAttributedString *)collectionView:(JSQMessagesCollectionView *)collectionView attributedTextForCellTopLabelAtIndexPath:(NSIndexPath *)indexPath
