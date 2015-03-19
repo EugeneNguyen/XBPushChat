@@ -36,5 +36,6 @@
 
 - (NSString *)imageID;
 - (NSURL *)imagePath;
+- (NSUInteger)messageHash;
 
 @end

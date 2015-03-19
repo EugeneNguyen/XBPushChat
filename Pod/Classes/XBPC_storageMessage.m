@@ -330,4 +330,9 @@
     return self;
 }
 
+- (NSUInteger)messageHash
+{
+    return [self hash];
+}
+
 @end
