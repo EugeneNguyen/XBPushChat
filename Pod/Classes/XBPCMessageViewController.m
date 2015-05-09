@@ -230,11 +230,13 @@
         cell.textView.linkTextAttributes = @{ NSForegroundColorAttributeName : cell.textView.textColor,
                                               NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle | NSUnderlinePatternSolid) };
     }
+    
     NSString *path = [NSString stringWithFormat:[[XBPushChat sharedInstance] avatarFormat], msg.senderId];
     [cell.avatarImageView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
-    cell.avatarImageView.layer.cornerRadius = cell.avatarImageView.frame.size.width / 2;
     cell.avatarImageView.clipsToBounds = YES;
     cell.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+    
+    NSLog(@"%@", NSStringFromCGRect(cell.avatarImageView.frame));
     return cell;
 }
 

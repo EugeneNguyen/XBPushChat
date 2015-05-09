@@ -259,6 +259,7 @@
     {
         mediaView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, width, width * 3 / 4)];
     }
+    mediaView.contentMode = UIViewContentModeScaleAspectFill;
     mediaView.backgroundColor = [UIColor lightGrayColor];
     mediaView.contentMode = UIViewContentModeScaleAspectFill;
     [JSQMessagesMediaViewBubbleImageMasker applyBubbleImageMaskToMediaView:mediaView isOutgoing:[self isOutgoingMessage]];
@@ -269,6 +270,13 @@
     else if ([self isRemoteImage])
     {
         [mediaView setImageWithURL:[[XBGallery sharedInstance] urlForID:[[self imageID] intValue] isThumbnail:NO] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        if (mediaView.image)
+        {
+            UIImage *img = mediaView.image;
+            CGSize s = img.size;
+            CGFloat h = s.height / s.width * width;
+            mediaView.frame = CGRectMake(0, 0, width, h);
+        }
         return mediaView;
     }
     else
@@ -303,6 +311,13 @@
 {
     UIWindow *window = [[UIApplication sharedApplication] keyWindow];
     CGFloat width = window.frame.size.width * 0.7;
+    if (mediaView.image)
+    {
+        UIImage *img = mediaView.image;
+        CGSize s = img.size;
+        CGFloat h = s.height / s.width * width;
+        return CGSizeMake(width, h);
+    }
     return CGSizeMake(width, width * 3 / 4);
 }
 
