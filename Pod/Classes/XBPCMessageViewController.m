@@ -36,7 +36,6 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
     bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     [self loadDataToTable];
     
@@ -50,8 +49,9 @@
     self.senderDisplayName = self.senderId;
     self.receiverDisplayName = [@(self.receiver_id) stringValue];
     
-    [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
+    [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
+    [super viewDidLoad];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -232,11 +232,11 @@
     }
     
     NSString *path = [NSString stringWithFormat:[[XBPushChat sharedInstance] avatarFormat], msg.senderId];
-    [cell.avatarImageView setImageWithURL:[NSURL URLWithString:path] usingActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+    [cell.avatarImageView sd_setImageWithURL:[NSURL URLWithString:path] placeholderImage:nil options:SDWebImageCacheMemoryOnly];
     cell.avatarImageView.clipsToBounds = YES;
+    cell.avatarImageView.layer.cornerRadius = cell.avatarImageView.frame.size.width / 2;
     cell.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
     
-    NSLog(@"%@", NSStringFromCGRect(cell.avatarImageView.frame));
     return cell;
 }
 
