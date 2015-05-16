@@ -36,6 +36,7 @@
 
 - (void)viewDidLoad
 {
+    [super viewDidLoad];
     bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
     [self loadDataToTable];
     
@@ -51,7 +52,6 @@
     
     [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
     [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
-    [super viewDidLoad];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
