@@ -40,7 +40,7 @@ PushChat server code (which will be publish soon :D sorry about this)
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
-  s.dependency 'JSQMessagesViewController', , '7.0.0'
+  s.dependency 'JSQMessagesViewController', '7.0.0'
   s.dependency 'XBMobile'
   s.dependency 'UIImage+ImageCompress'
   s.dependency 'IDMPhotoBrowser'
