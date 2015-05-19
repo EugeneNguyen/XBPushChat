@@ -7,16 +7,17 @@
 //
 
 #import "XBCollectionView.h"
-#import "ASIFormDataRequest.h"
 #import "XBExtension.h"
 #import "JSONKit.h"
 #import "UIImageView+WebCache.h"
 #import "XBDataFetching.h"
 #import "CHTCollectionViewWaterfallLayout.h"
+#import "XBMobile.h"
 
 @interface XBCollectionView() <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, XBDataFetchingDelegate, CHTCollectionViewDelegateWaterfallLayout>
 {
     
+    IBOutlet UITextField *searchField;
 }
 
 @end
@@ -32,8 +33,16 @@
 @synthesize refreshControl;
 @synthesize backupWhenSearch;
 @synthesize pageControl;
-@synthesize requestDelegate;
 @synthesize dataListSource;
+@synthesize searchField;
+@synthesize xbTarget;
+@synthesize XBID;
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    [self loadFromXBID];
+}
 
 - (void)setupDelegate
 {
@@ -85,19 +94,29 @@
 {
     if ([self.informations[@"isFullTable"] boolValue])
     {
-        self.translatesAutoresizingMaskIntoConstraints = YES;
-        CGRect f = self.frame;
-        if ([(UICollectionViewFlowLayout *)self.collectionViewLayout scrollDirection] == UICollectionViewScrollDirectionVertical)
+        for (NSLayoutConstraint *constraint in self.constraints)
         {
-            CGSize s = self.contentSize;
-            f.size.height = s.height;
+            if (constraint.firstAttribute == NSLayoutAttributeHeight)
+            {
+                [self removeConstraint:constraint];
+            }
         }
-        else if ([self.datalist count] == 0)
+        float height = self.contentSize.height;
+        if ([(UICollectionViewFlowLayout *)self.collectionViewLayout scrollDirection] == UICollectionViewScrollDirectionHorizontal && [self totalRows] == 0)
         {
-            f.size.height = 0;
+            height = 0;
         }
-        self.frame = f;
-        [self.superview setNeedsUpdateConstraints];
+        
+        [self addConstraint:[NSLayoutConstraint constraintWithItem:self
+                                                         attribute:NSLayoutAttributeHeight
+                                                         relatedBy:NSLayoutRelationEqual
+                                                            toItem:nil
+                                                         attribute:NSLayoutAttributeNotAnAttribute
+                                                        multiplier:1.0
+                                                          constant:height]];
+        
+        [self.superview layoutSubviews];
+        [self.superview setNeedsDisplay];
     }
 }
 
@@ -137,7 +156,7 @@
 {
     if ([self ableToShowNoData]) return 1;
     long count = [self.datalist[section][@"items"] count];
-    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (section == [self.datalist count] - 1))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"cellIdentify"] && self.informations[@"loadMore"][@"xibname"] && (section == [self.datalist count] - 1))
     {
         count ++;
     }
@@ -226,14 +245,14 @@
         [cell setNeedsDisplay];
         return cell;
     }
-    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"] && (indexPath.row == [[self.datalist lastObject][@"items"] count]) && (indexPath.section == ([self.datalist count] - 1)))
+    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"cellIdentify"] && self.informations[@"loadMore"][@"xibname"] && (indexPath.row == [[self.datalist lastObject][@"items"] count]) && (indexPath.section == ([self.datalist count] - 1)))
     {
-        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.informations[@"loadMore"][@"identify"] forIndexPath:indexPath];
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:self.informations[@"loadMore"][@"cellIdentify"] forIndexPath:indexPath];
         return cell;
     }
     NSDictionary *item = [self cellInfoForPath:indexPath];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:item[@"cellIdentify"] forIndexPath:indexPath];
-    [cell applyTemplate:item[@"elements"] andInformation:self.datalist[indexPath.section][@"items"][indexPath.row] withTarget:self];
+    [cell applyTemplate:item[@"elements"] andInformation:self.datalist[indexPath.section][@"items"][indexPath.row] withTarget:xbDelegate listTarget:self];
     
     if ([xbDelegate respondsToSelector:@selector(xbCollectionView:cellForRowAtIndexPath:withPreparedCell:withItem:)])
     {

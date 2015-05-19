@@ -8,12 +8,12 @@
 
 #import "XBPC_storageMessage.h"
 #import "XBPushChat.h"
-#import "XBExtension.h"
 #import "SDImageCache.h"
 #import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 #import "JSQMessagesMediaViewBubbleImageMasker.h"
 #import "XBLanguage.h"
 #import "XBGallery.h"
+#import "XBMobile.h"
 
 @interface XBPC_storageMessage()
 {

@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "NSObject+XBGallery.h"
+#import "UIImageView+XBGallery.h"
+#import "UIImage+XBGallery.h"
+
 typedef void (^XBGImageUploaded)(NSDictionary * responseData);
 typedef void (^XBGImageGetInformation)(NSDictionary * responseData);
 
@@ -25,6 +29,7 @@ typedef void (^XBGImageGetInformation)(NSDictionary * responseData);
 - (void)uploadImageURL:(NSString *)url withCompletion:(XBGImageUploaded)completeBlock;
 
 - (NSURL *)urlForID:(int)imageid isThumbnail:(BOOL)isThumbnail;
+- (NSURL *)urlForID:(int)imageid size:(CGSize)size;
 - (void)infomationForID:(int)imageid withCompletion:(XBGImageGetInformation)completeBlock;
 
 @end

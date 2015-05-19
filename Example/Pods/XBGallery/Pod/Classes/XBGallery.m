@@ -7,10 +7,7 @@
 //
 
 #import "XBGallery.h"
-#import "ASIFormDataRequest.h"
-#import "XBMobile.h"
-
-#define service_gallery(X) [ASIFormDataRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@/plusgallery/services/%@", host, X]]]
+#import "XBCacheRequest.h"
 
 static XBGallery *__sharedXBGallery = nil;
 
@@ -28,40 +25,46 @@ static XBGallery *__sharedXBGallery = nil;
 
 - (void)uploadImage:(UIImage *)image withCompletion:(XBGImageUploaded)completeBlock
 {
-    ASIFormDataRequest *request = service_gallery(@"addphoto");
-    [request addData:UIImageJPEGRepresentation(image, 0.7) withFileName:@"image.jpeg" andContentType:@"image/jpeg" forKey:@"uploadimg"];
-    [request startAsynchronous];
-    __block ASIFormDataRequest *_request = request;
-    [request setCompletionBlock:^{
-        completeBlock(_request.responseJSON);
+    NSString *url = [NSString stringWithFormat:@"%@/plusgallery/services/addphoto", host];
+    XBCacheRequest *request = XBCacheRequest(url);
+    [request addFileWithData:UIImageJPEGRepresentation([[image fixOrientation] resized], 0.9) key:@"uploadimg" fileName:@"image.jpeg" mimeType:@"image/jpeg"];
+    request.disableCache = YES;
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        completeBlock(object);
     }];
 }
 
 - (void)uploadImageURL:(NSString *)url withCompletion:(XBGImageUploaded)completeBlock
 {
-    ASIFormDataRequest *request = service_gallery(@"addphoto");
-    [request setPostValue:url forKey:@"url"];
-    [request startAsynchronous];
-    __block ASIFormDataRequest *_request = request;
-    [request setCompletionBlock:^{
-        completeBlock(_request.responseJSON);
+    NSString *urlRequest = [NSString stringWithFormat:@"%@/plusgallery/services/addphoto", host];
+    XBCacheRequest *request = XBCacheRequest(urlRequest);
+    [request setDataPost:[@{@"url": url} mutableCopy]];
+    request.disableCache = YES;
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        completeBlock(object);
     }];
 }
 
 - (NSURL *)urlForID:(int)imageid isThumbnail:(BOOL)isThumbnail
 {
-    NSString *path = [NSString stringWithFormat:@"%@/plusgallery/services/showbyid/%d/0/%d", self.host, imageid, isThumbnail];
+    NSString *path = [NSString stringWithFormat:@"%@/plusgallery/services/showbyid?id=%d&origin=%d", self.host, imageid, !isThumbnail];
+    return [NSURL URLWithString:path];
+}
+
+- (NSURL *)urlForID:(int)imageid size:(CGSize)size
+{
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
+    NSString *path = [NSString stringWithFormat:@"%@/plusgallery/services/showbyid?id=%d&width=%f&height=%f", self.host, imageid, size.width * screenScale, size.height * screenScale];
     return [NSURL URLWithString:path];
 }
 
 - (void)infomationForID:(int)imageid withCompletion:(XBGImageGetInformation)completeBlock
 {
-    NSString *path = [NSString stringWithFormat:@"showbyid/%d/1/1", imageid];
-    ASIFormDataRequest *request = service_gallery(path);
-    [request startAsynchronous];
-    __block ASIFormDataRequest *_request = request;
-    [request setCompletionBlock:^{
-        completeBlock(_request.responseJSON);
+    NSString *path = [NSString stringWithFormat:@"%@/plusgallery/services/showbyid/%d/1/1", host, imageid];
+    XBCacheRequest *request = XBCacheRequest(path);
+    request.disableCache = YES;
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        completeBlock(object);
     }];
 }
 

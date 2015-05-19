@@ -191,6 +191,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 		{
 			self.modalPresentationStyle = UIModalPresentationCustom;
 			self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+            self.modalPresentationCapturesStatusBarAppearance = YES;
 		}
 		else
 		{
@@ -460,7 +461,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
         [resizableImageView removeFromSuperview];
         
         [self prepareForClosePhotoBrowser];
-        [self dismissPhotoBrowserAnimated:YES];
+        [self dismissPhotoBrowserAnimated:NO];
     };
     
     [UIView animateWithDuration:_animationDuration animations:^{
@@ -498,12 +499,15 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 
 - (void)dismissPhotoBrowserAnimated:(BOOL)animated {
     self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+
+    if ([_delegate respondsToSelector:@selector(photoBrowser:willDismissAtPageIndex:)])
+        [_delegate photoBrowser:self willDismissAtPageIndex:_currentPageIndex];
     
     [self dismissViewControllerAnimated:animated completion:^{
         if ([_delegate respondsToSelector:@selector(photoBrowser:didDismissAtPageIndex:)])
             [_delegate photoBrowser:self didDismissAtPageIndex:_currentPageIndex];
 		
-		if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"7.0"))
+		if (SYSTEM_VERSION_LESS_THAN(@"8.0"))
 		{
 			_applicationTopViewController.modalPresentationStyle = _previousModalPresentationStyle;
 		}
@@ -1124,7 +1128,7 @@ NSLocalizedStringFromTableInBundle((key), nil, [NSBundle bundleWithPath:[[NSBund
 - (void)updateToolbar {
     // Counter
 	if ([self numberOfPhotos] > 1) {
-		_counterLabel.text = [NSString stringWithFormat:@"%u %@ %lu", _currentPageIndex+1, IDMPhotoBrowserLocalizedStrings(@"of"), (unsigned long)[self numberOfPhotos]];
+		_counterLabel.text = [NSString stringWithFormat:@"%lu %@ %lu", (unsigned long)(_currentPageIndex+1), IDMPhotoBrowserLocalizedStrings(@"of"), (unsigned long)[self numberOfPhotos]];
 	} else {
 		_counterLabel.text = nil;
 	}

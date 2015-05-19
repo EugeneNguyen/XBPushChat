@@ -15,6 +15,7 @@
 
 - (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info;
 - (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target;
+- (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target listTarget:(id)listTarget;
 
 + (id)viewWithXib:(NSString *)xibName templatePlist:(NSString *)tempString information:(NSDictionary *)information;
 + (id)viewWithXib:(NSString *)xibName templatePlist:(NSString *)tempString information:(NSDictionary *)information withTarget:(id)target;
@@ -27,5 +28,9 @@
 
 - (UIViewController *) firstAvailableUIViewController;
 - (id) traverseResponderChainForUIViewController;
+- (UITableViewCell *)firstAvailabelTableViewCell;
+- (UICollectionViewCell *)firstAvailabelCollectionViewCell;
+
+- (void)roundCircle:(BOOL)isRoundCircle;
 
 @end

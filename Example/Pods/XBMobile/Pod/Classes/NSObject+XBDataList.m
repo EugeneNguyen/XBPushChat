@@ -7,8 +7,9 @@
 //
 
 #import "NSObject+XBDataList.h"
-#import "ASIFormDataRequest.h"
 #import "XBExtension.h"
+#import "XBMobile.h"
+#import "XBDatabase_plist.h"
 
 @implementation NSObject (XBDataList)
 @dynamic informations;
@@ -17,8 +18,8 @@
 @dynamic isMultipleSection;
 @dynamic dataFetching;
 @dynamic refreshControl;
-@dynamic requestDelegate;
 @dynamic dataListSource;
+@dynamic XBID;
 
 #pragma mark - Loading Information
 
@@ -32,6 +33,35 @@
 - (void)setPlist:(NSString *)plist
 {
     [self loadInformationFromPlist:plist];
+}
+
+- (void)loadFromXBID
+{
+    if (!self.XBID || self.informations)
+    {
+        return;
+    }
+    NSDictionary *item = [XBDatabase_plist plistForKey:self.XBID];
+    if (item)
+    {
+        [self loadInformations:item];
+    }
+    else
+    {
+        NSString *path = [NSString stringWithFormat:@"servicemanagement/download_service_xml?table=%@", self.XBID];
+        XBCacheRequest *request = XBCacheRequest(path);
+        request.responseType = XBCacheRequestTypePlain;
+        [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+            NSMutableDictionary *item =[NSPropertyListSerialization propertyListFromData:[request.responseString dataUsingEncoding:NSUTF8StringEncoding]
+                                                                        mutabilityOption:NSPropertyListMutableContainersAndLeaves
+                                                                                  format:nil
+                                                                        errorDescription:nil];
+            if (item)
+            {
+                [self loadInformations:item];
+            }
+        }];
+    }
 }
 
 - (void)setPlistData:(NSString *)plistdata
@@ -70,16 +100,12 @@
     
     self.informations = info;
     
-    if (info[@"section"])
-    {
-        self.isMultipleSection = YES;
-    }
+    self.isMultipleSection = [info[@"section"] boolValue];
     
     if ([self respondsToSelector:@selector(setupWaterFall)] && [self.informations[@"waterfall"][@"enable"] boolValue])
     {
         [self setupWaterFall];
     }
-    
     [self requestDataWithReload:withReload];
     for (NSDictionary *item in self.informations[@"cells"])
     {
@@ -92,15 +118,16 @@
         [self initRefreshControl];
     }
     
-    if ([self.informations[@"loadMore"][@"enable"] boolValue] && self.informations[@"loadMore"][@"identify"] && self.informations[@"loadMore"][@"xib"])
+    if (self.informations[@"loadMore"][@"cellIdentify"] && self.informations[@"loadMore"][@"xibname"])
     {
-        [self registerNib:[UINib nibWithNibName:self.informations[@"loadMore"][@"xib"] bundle:nil] forCellReuseIdentifier:self.informations[@"loadMore"][@"identify"]];
+        [self registerNib:[UINib nibWithNibName:self.informations[@"loadMore"][@"xibname"] bundle:nil] forCellReuseIdentifier:self.informations[@"loadMore"][@"cellIdentify"]];
     }
     
-    if (self.informations[@"NoDataCell"] && self.informations[@"NoDataCell"][@"cellIdentify"] && self.informations[@"NoDataCell"][@"xibname"])
+    if (self.informations[@"NoDataCell"][@"cellIdentify"] && self.informations[@"NoDataCell"][@"xibname"])
     {
         [self registerNib:[UINib nibWithNibName:self.informations[@"NoDataCell"][@"xibname"] bundle:nil] forCellReuseIdentifier:self.informations[@"NoDataCell"][@"cellIdentify"]];
     }
+    [self reloadData];
 }
 
 - (void)initRefreshControl
@@ -125,6 +152,17 @@
 
 - (BOOL)ableToShowNoData
 {
+    if (self.informations[@"NoDataCell"] && [self.informations[@"NoDataCell"][@"enable"] boolValue])
+    {
+        if (self.totalRows == 0)
+        {
+            [self setScrollEnabled:![self.informations[@"NoDataCell"][@"disableScrolling"] boolValue]];
+        }
+        else
+        {
+            [self setScrollEnabled:YES];
+        }
+    }
     return self.informations[@"NoDataCell"] && [self.informations[@"NoDataCell"][@"enable"] boolValue] && ([self totalRows] == 0);
 }
 
@@ -181,6 +219,7 @@
     }
     else
     {
+        [self reloadData];
         [self configHeightAfterFillData];
     }
 }
@@ -192,14 +231,11 @@
     {
         self.datalist = [self.dataListSource modifiedDataFor:self andSource:self.datalist];
     }
+    [self reloadData];
     [self configHeightAfterFillData];
     if ([self.informations[@"isUsingRefreshControl"] boolValue])
     {
         [self.refreshControl endRefreshing];
-    }
-    if ([self.requestDelegate respondsToSelector:@selector(requestFinished:)])
-    {
-        [self.requestDelegate requestFinished:_dataFetching.cacheRequest];
     }
 }
 
@@ -214,10 +250,6 @@
     if ([self.informations[@"isUsingRefreshControl"] boolValue])
     {
         [self.refreshControl endRefreshing];
-    }
-    if ([self.requestDelegate respondsToSelector:@selector(requestFailed:)])
-    {
-        [self.requestDelegate requestFailed:_dataFetching.cacheRequest];
     }
 }
 
@@ -255,7 +287,7 @@
                 for (NSString *field in self.informations[@"searchOptions"][@"fields"])
                 {
                     [predicateFormat appendFormat:@"%@ ", field];
-                    [predicateFormat appendString:@"CONTAINS %@"];
+                    [predicateFormat appendString:@"CONTAINS[cd] %@"];
                     if ([self.informations[@"searchOptions"][@"fields"] indexOfObject:field] != [self.informations[@"searchOptions"][@"fields"] count] - 1)
                     {
                         [predicateFormat appendString:@" OR "];
@@ -298,7 +330,18 @@
         }
         return self.informations[@"cells"][[[self.datalist[indexPath.section][@"items"][indexPath.row] objectForPath:path] intValue]];
     }
-    return self.informations[@"cells"][0];
+    if ([self.informations[@"cells"] count] > 0)
+    {
+        return self.informations[@"cells"][0];
+    }
+    return nil;
+}
+
+#pragma mark - SearchField
+
+- (IBAction)searchFieldDidChange:(UITextField *)_searchField
+{
+    [self applySearch:_searchField.text];
 }
 
 @end

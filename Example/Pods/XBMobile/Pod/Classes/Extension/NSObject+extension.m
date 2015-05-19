@@ -8,29 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "NSObject+extension.h"
-#import "MBProgressHUD.h"
 #import <CoreData/CoreData.h>
 
 @implementation NSObject (extension)
-
-- (void)alert:(NSString *)title message:(NSString *)message
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"Close" otherButtonTitles: nil];
-    [alert show];
-}
-
-- (void)showHUD:(NSString *)string
-{
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
-    hud.labelText = string;
-}
-
-- (void)hideHUD
-{
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    [MBProgressHUD hideAllHUDsForView:window animated:YES];
-}
 
 - (id)objectForPath:(NSString *)string
 {
@@ -44,7 +24,14 @@
         }
         else if ([obj isKindOfClass:[NSDictionary class]])
         {
-            obj = obj[s];
+            if (obj[s])
+            {
+                obj = obj[s];
+            }
+            else
+            {
+                return @"";
+            }
         }
         else if ([obj isKindOfClass:[NSArray class]])
         {
@@ -83,40 +70,6 @@
         }
     }
     return obj;
-}
-
-@end
-
-@implementation NSArray (loadPlist)
-
-+ (NSArray *)arrayWithContentsOfPlist:(NSString *)plistname
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:plistname ofType:@"plist"];
-    return [NSArray arrayWithContentsOfFile:path];
-}
-
-+ (NSArray *)arrayWithContentsOfPlist:(NSString *)plistname bundleName:(NSString *)name
-{
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:name ofType:@"bundle"]];
-    NSString *path = [bundle pathForResource:plistname ofType:@"plist"];
-    return [NSArray arrayWithContentsOfFile:path];
-}
-
-@end
-
-@implementation NSDictionary (loadPlist)
-
-+ (NSDictionary *)dictionaryWithContentsOfPlist:(NSString *)plistname
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:plistname ofType:@"plist"];
-    return [NSDictionary dictionaryWithContentsOfFile:path];
-}
-
-+ (NSDictionary *)dictionaryWithContentsOfPlist:(NSString *)plistname bundleName:(NSString *)name
-{
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:name ofType:@"bundle"]];
-    NSString *path = [bundle pathForResource:plistname ofType:@"plist"];
-    return [NSDictionary dictionaryWithContentsOfFile:path];
 }
 
 @end

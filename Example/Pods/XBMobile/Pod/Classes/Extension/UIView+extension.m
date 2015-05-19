@@ -15,6 +15,7 @@
 #import <UIImage-Helpers.h>
 #import "XBMobile.h"
 #import <NSDate+TimeAgo.h>
+#import <XBExtension.h>
 
 @implementation UIView (extension)
 @dynamic bottomMargin;
@@ -27,9 +28,14 @@
 
 - (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target
 {
+    [self applyTemplate:temp andInformation:info withTarget:target listTarget:nil];
+}
+
+- (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target listTarget:(id)listTarget
+{
     if ([self isKindOfClass:[UITableViewCell class]])
     {
-        [(UITableViewCell *)self contentView].bounds = CGRectMake(0, 0, 99999, 99999);
+//        [(UITableViewCell *)self contentView].bounds = CGRectMake(0, 0, 99999, 99999);
     }
     for (NSDictionary *element in temp)
     {
@@ -40,7 +46,7 @@
             NSString *backgroundColorString = [info objectForPath:element[@"backgroundColor"]];
             if (backgroundColorString && [backgroundColorString length] >= 6)
             {
-                v.backgroundColor = [AVHexColor colorWithHexString:backgroundColorString];
+                v.backgroundColor = (backgroundColorString);
             }
         }
         
@@ -117,11 +123,11 @@
                 SDWebImageOptions option;
                 if ([element[@"disableCache"] boolValue])
                 {
-                    option = SDWebImageRefreshCached;
+                    option = SDWebImageCacheMemoryOnly;
                 }
                 else
                 {
-                    option = 0;
+                    option = SDWebImageContinueInBackground;
                 }
                 
                 UIImage *placeHolderImage = nil;
@@ -179,7 +185,7 @@
                     }
                     else
                     {
-                        imgView.image = image;
+                        [imgView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:YES];
                     }
                     
                     if ([element[@"autoHeight"] boolValue] && !(element[@"widthPath"] && element[@"heightPath"]))
@@ -214,10 +220,10 @@
                 [btn addTarget:target action:NSSelectorFromString(element[@"selector"]) forControlEvents:UIControlEventTouchUpInside];
             }
             
-            if ([target respondsToSelector:NSSelectorFromString(@"didPressButton:")])
+            if ([listTarget respondsToSelector:NSSelectorFromString(@"didPressButton:")])
             {
-                [btn removeTarget:target action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
-                [btn addTarget:target action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
+                [btn removeTarget:listTarget action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
+                [btn addTarget:listTarget action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
             }
         }
         else if ([v isKindOfClass:[XBTableView class]])
@@ -231,6 +237,10 @@
             XBCollectionView *tableview = (XBCollectionView *)v;
             [tableview loadData:data];
             [tableview loadInformations:element withReload:YES];
+        }
+        else if (element[@"setter"])
+        {
+            [v performSelector:NSSelectorFromString(element[@"setter"]) withObject:data];
         }
     }
     
@@ -323,53 +333,38 @@
     }
 }
 
-//- (void)setBottomMargin:(float)bottomMargin
-//{
-//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-//    [nc addObserver:self selector:@selector(keyboardChangedStatus:) name:UIKeyboardWillShowNotification object:nil];
-//    [nc addObserver:self selector:@selector(keyboardChangedStatus:) name:UIKeyboardWillHideNotification object:nil];
-//}
-//
-//- (void)keyboardChangedStatus:(NSNotification*)notification {
-//    //get the size!
-//    CGRect keyboardRect;
-//    [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&keyboardRect];
-//    float keyboardHeight = keyboardRect.size.height;
-//    //move your view to the top, to display the textfield..
-//    [self moveView:notification keyboardHeight:keyboardHeight];
-//}
-//
-//- (void)moveView:(NSNotification *) notification keyboardHeight:(int)height{
-//    [UIView beginAnimations:nil context:NULL];
-//    [UIView setAnimationDuration:0.3];
-//    [UIView setAnimationBeginsFromCurrentState:YES];
-//    
-//    CGRect rect = self.frame;
-//    
-//    CGRect superRect = [self convertRect:rect toView:self.window];
-//    
-//    if ([[notification name] isEqual:UIKeyboardWillHideNotification])
-//    {
-//        rect.origin.y = self.originalHeight;
-//    }
-//    else
-//    {
-//        NSDictionary *info = [notification userInfo];
-//        CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//        self.originalHeight = rect.size.height;
-//        rect.size.height = self.window.frame.size.height - superRect.origin.y - keyboardSize.height - height;
-//    }
-//    
-//    self.frame = rect;
-//    
-//    [UIView commitAnimations];
-//}
-//
-//- (void)dealloc
-//{
-//    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-//    [nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-//    [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-//}
+- (UITableViewCell *)firstAvailabelTableViewCell
+{
+    UIView *view = self.superview;
+    if (!view)
+    {
+        return nil;
+    }
+    if ([view isKindOfClass:[UITableViewCell class]])
+    {
+        return (UITableViewCell *)view;
+    }
+    else
+    {
+        return [view firstAvailabelTableViewCell];
+    }
+}
+
+- (UICollectionViewCell *)firstAvailabelCollectionViewCell
+{
+    UIView *view = self.superview;
+    if (!view)
+    {
+        return nil;
+    }
+    if ([view isKindOfClass:[UICollectionViewCell class]])
+    {
+        return (UICollectionViewCell *)view;
+    }
+    else
+    {
+        return [view firstAvailabelCollectionViewCell];
+    }
+}
 
 @end

@@ -7,8 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "XBDataFetching.h"
-#import "ASIHTTPRequest.h"
 
 @protocol XBDataList;
 
@@ -28,13 +28,17 @@
 
 @property (nonatomic, assign) BOOL isMultipleSection;
 
-@property (nonatomic, retain) IBOutlet XBDataFetching *dataFetching;
+@property (nonatomic, retain) XBDataFetching *dataFetching;
 
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 
-@property (nonatomic, assign) IBOutlet id <ASIHTTPRequestDelegate> requestDelegate;
-
 @property (nonatomic, assign) IBOutlet id <XBDataListSource> dataListSource;
+
+@property (nonatomic, retain) IBOutlet UITextField *searchField;
+
+@property (nonatomic, retain) NSString * XBID;
+
+- (void)loadFromXBID;
 
 - (void)cleanup;
 
@@ -62,11 +66,15 @@
 
 - (void)scrolledToBottom;
 
+- (void)setScrollEnabled:(BOOL)scrollable;
+
 // no data cell
 
 - (void)setEnableNoDataCell:(BOOL)isNoData;
 
 @optional
+
+- (IBAction)searchFieldDidChange:(UITextField *)_searchField;
 
 @property (nonatomic, retain) NSMutableArray *backupWhenSearch;
 

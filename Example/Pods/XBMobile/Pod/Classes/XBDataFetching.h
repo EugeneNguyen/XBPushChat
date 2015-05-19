@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "XBExtension.h"
+#import "XBCacheRequest.h"
 
 @class XBDataFetching;
 @class ASIFormDataRequest;
@@ -21,7 +22,7 @@
 
 @interface XBDataFetching : NSObject
 {
-
+    
 }
 
 @property (nonatomic, retain) id datalist;
@@ -42,8 +43,13 @@
 
 @property (nonatomic, assign) BOOL isEndOfData;
 
+@property (nonatomic, retain) NSDate *startDate;
+
 - (void)startFetchingData;
 - (void)fetchMore;
 - (void)requestDataWithMore:(BOOL)isMore;
+
+- (void)reloadData;
+- (void)loadMore;
 
 @end

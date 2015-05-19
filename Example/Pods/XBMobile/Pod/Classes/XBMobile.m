@@ -22,15 +22,20 @@ static XBMobile *__sharedXBMobileInstance = nil;
 @end
 
 @implementation XBMobile
-@synthesize host;
+@synthesize host = _host;
 
-+ (id)sharedInstance
++ (XBMobile *)sharedInstance
 {
     if (!__sharedXBMobileInstance)
     {
         __sharedXBMobileInstance = [[XBMobile alloc] init];
     }
     return __sharedXBMobileInstance;
+}
+
+- (void)setHost:(NSString *)host
+{
+    _host = host;
 }
 
 - (void)activeLog

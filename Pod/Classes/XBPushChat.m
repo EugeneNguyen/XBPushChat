@@ -8,8 +8,7 @@
 //
 
 #import "XBPushChat.h"
-#import "ASIFormDataRequest.h"
-#import "XBExtension.h"
+#import "XBMobile.h"
 #import "JSONKit.h"
 #import "SDImageCache.h"
 #import "SDWebImageDownloader.h"
@@ -28,7 +27,7 @@ typedef enum : NSUInteger {
 
 static XBPushChat *__sharedPushChat = nil;
 
-@interface XBPushChat () <ASIHTTPRequestDelegate>
+@interface XBPushChat ()
 
 @end
 
@@ -108,18 +107,15 @@ static XBPushChat *__sharedPushChat = nil;
     if (token)
     {
         NSArray *presences = @[@"offline", @"online"];
-        ASIFormDataRequest *request = XBPC_Service(@"set_presence");
-        [request setValue:self.token forKey:@"token"];
-        [request setValue:presences[presence] forKey:@"presence"];
-        [request setValue:self.deviceToken forKey:@"device_token"];
-        if (synchronous)
-        {
-            [request startSynchronous];
-        }
-        else
-        {
-            [request startAsynchronous];
-        }
+        XBCacheRequest *request = XBCacheRequest(@"pushchatplus/set_presence");
+        request.postParams = [@{@"token": self.token,
+                                @"presence": presences[presence],
+                                @"device_token": self.deviceToken} mutableCopy];
+        request.disableCache = YES;
+        request.disableIndicator = YES;
+        [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+            
+        }];
     }
 }
 
@@ -143,15 +139,18 @@ static XBPushChat *__sharedPushChat = nil;
     message = [message emojiEncode];
     NSString *uuid = [NSString uuidString];
     
-    ASIFormDataRequest *request = XBPC_Service(@"send_message");
-    [request setPostValue:@(self.sender_id) forKey:@"user_id"];
-    [request setPostValue:@(jid) forKey:@"send_to"];
-    [request setPostValue:message forKey:@"message"];
-    [request setPostValue:uuid forKey:@"random"];
-    [request setPostValue:room forKey:@"room"];
-    [request setTag:eRequestSendMessage];
-    [request setDelegate:self];
-    [request startAsynchronous];
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/send_message");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"user_id": @(self.sender_id),
+                          @"send_to": @(jid),
+                          @"message": message,
+                          @"random": uuid,
+                          @"room": room} mutableCopy];
+    
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        
+    }];
     
     [XBPC_storageMessage addMessage:@{@"user_id": @(self.sender_id),
                                       @"send_to": @(jid),
@@ -173,15 +172,16 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"room" : room}];
     
     [[XBGallery sharedInstance] uploadImage:image withCompletion:^(NSDictionary *responseData) {
-        ASIFormDataRequest *request = XBPC_Service(@"send_message");
-        [request setPostValue:@(self.sender_id) forKey:@"user_id"];
-        [request setPostValue:@(jid) forKey:@"send_to"];
-        [request setPostValue:[NSString stringWithFormat:@"New image message (%@)", responseData[@"photo_id"]] forKey:@"message"];
-        [request setPostValue:uuid forKey:@"random"];
-        [request setPostValue:room forKey:@"room"];
-        [request setTag:eRequestSendMessage];
-        [request setDelegate:self];
-        [request startAsynchronous];
+        
+        XBCacheRequest *request = XBCacheRequest(@"pushchatplus/send_message");
+        request.dataPost = [@{@"user_id": @(self.sender_id),
+                              @"send_to": @(jid),
+                              @"message": [NSString stringWithFormat:@"New image message (%@)", responseData[@"photo_id"]],
+                              @"random": uuid,
+                              @"room": room} mutableCopy];
+        [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+            
+        }];
         
         [XBPC_storageMessage addMessage:@{@"user_id": @(self.sender_id),
                                           @"send_to": @(jid),
@@ -205,19 +205,27 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)fetchRequestWith:(NSUInteger)receiver_id newOnly:(BOOL)newOnly
 {
-    ASIFormDataRequest * request = XBPC_Service(@"get_history");
-    [request setPostValue:@(self.sender_id) forKey:@"user_id"];
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/get_history");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost[@"user_id"] = @(self.sender_id);
     if (receiver_id != -1)
     {
-        [request setPostValue:@(receiver_id) forKey:@"send_to"];
+        request.dataPost[@"send_to"] = @(receiver_id);
     }
     if (newOnly)
     {
-        [request setPostValue:@([XBPC_storageMessage lastIDWithUser:receiver_id]) forKey:@"offset"];
+        request.dataPost[@"offset"] = @([XBPC_storageMessage lastIDWithUser:receiver_id]);
     }
-    [request setDelegate:self];
-    [request setTag:eRequestGetHistory];
-    [request startAsynchronous];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        for (NSDictionary *item in object[@"data"])
+        {
+            [XBPC_storageMessage addMessage:item save:NO];
+        }
+        [[XBPushChat sharedInstance] saveContext];
+        [self getFriendInformationRefresh:NO];
+        [self updateHiddenConversation];
+    }];
 }
 
 
@@ -235,7 +243,6 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)pull
 {
-    [ASIHTTPRequest setShouldUpdateNetworkActivityIndicator:NO];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
     
     if (self.sender_id <= 0)
@@ -251,13 +258,12 @@ static XBPushChat *__sharedPushChat = nil;
         return;
     }
     
-    ASIFormDataRequest * request = XBPC_Service(@"get_history");
-    [request setPostValue:@(self.sender_id) forKey:@"user_id"];
-    [request setPostValue:@([XBPC_storageMessage lastIDWithUser:-1]) forKey:@"offset"];
-    [request startAsynchronous];
-    
-    __block ASIFormDataRequest *_request = request;
-    [request setCompletionBlock:^{
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/get_history");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"user_id": @(self.sender_id),
+                          @"offset": @([XBPC_storageMessage lastIDWithUser:-1])} mutableCopy];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
         if (pulling == 1)
         {
             [self performSelector:@selector(pull) withObject:nil afterDelay:5];
@@ -266,7 +272,6 @@ static XBPushChat *__sharedPushChat = nil;
         {
             [self stopPull];
         }
-        NSDictionary *result = _request.responseJSON;
         if (!result || [result[@"code"] intValue] != 200 || !result[@"data"])
         {
             return;
@@ -282,20 +287,28 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)visit:(XBPC_storageConversation *)conversation
 {
-    ASIFormDataRequest *request = XBPC_Service(@"mark_as_read");
-    [request setPostValue:conversation.sender forKey:@"sender"];
-    [request setPostValue:conversation.receiver forKey:@"receiver"];
-    [request setPostValue:conversation.room forKey:@"room"];
-    [request startAsynchronous];
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/mark_as_read");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"sender": conversation.sender,
+                          @"receiver": conversation.receiver,
+                          @"room": conversation.room} mutableCopy];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        
+    }];
 }
 
 - (void)hide:(XBPC_storageConversation *)conversation
 {
-    ASIFormDataRequest *request = XBPC_Service(@"hide_conversation");
-    [request setPostValue:conversation.sender forKey:@"sender"];
-    [request setPostValue:conversation.receiver forKey:@"receiver"];
-    [request setPostValue:conversation.room forKey:@"room"];
-    [request startAsynchronous];
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/mark_as_read");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"sender": conversation.sender,
+                          @"receiver": conversation.receiver,
+                          @"room": conversation.room} mutableCopy];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+        
+    }];
     
     conversation.hidden = @(YES);
     [[XBPushChat sharedInstance] saveContext];
@@ -303,14 +316,11 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)updateHiddenConversation
 {
-    ASIFormDataRequest *request = XBPC_Service(@"get_hidden_record");
-    [request setPostValue:@(self.sender_id) forKey:@"id"];
-    
-    __block ASIFormDataRequest *_request = request;
-    
-    [request setCompletionBlock:^{
-        NSDictionary *result = _request.responseJSON;
-        
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/get_hidden_record");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"id": @(self.sender_id)} mutableCopy];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
         NSLog(@"%@", result);
         NSArray *allConversation = [XBPC_storageConversation getAll];
         for (XBPC_storageConversation *conversation in allConversation)
@@ -332,7 +342,6 @@ static XBPushChat *__sharedPushChat = nil;
         }
         [[XBPushChat sharedInstance] saveContext];
     }];
-    [request startAsynchronous];
 }
 
 #pragma mark Get Friend's information
@@ -360,51 +369,18 @@ static XBPushChat *__sharedPushChat = nil;
     {
         return;
     }
-    ASIFormDataRequest *request = XBPC_User(@"services/user/getnamebyids");
-    [request setPostValue:[userids JSONString] forKey:@"user_ids"];
-    [request setDelegate:self];
-    [request setTag:eRequestGetFriendList];
-    [request startAsynchronous];
-}
-
-#pragma mark - ASIHTTPRequest Delegate
-
-- (void)requestFinished:(ASIHTTPRequest *)request
-{
-    NSDictionary *result = request.responseJSON;
-    if (!result || [result[@"code"] intValue] != 200)
-    {
-        return;
-    }
-    switch (request.tag) {
-        case eRequestGetHistory:
-        {
-            for (NSDictionary *item in result[@"data"])
-            {
-                [XBPC_storageMessage addMessage:item save:NO];
-            }
-            [[XBPushChat sharedInstance] saveContext];
-            [self getFriendInformationRefresh:NO];
-            [self updateHiddenConversation];
-        }
-            break;
-        case eRequestGetFriendList:
-        {
-            for (NSDictionary *item in result[@"data"])
-            {
-                [XBPC_storageFriendList addUser:@{@"id": item[@"user_id"],
-                                                  @"name": item[@"username"]}];
-            }
-        }
-            
-        default:
-            break;
-    }
-}
-
-- (void)requestFailed:(ASIHTTPRequest *)request
-{
     
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/get_hidden_record");
+    request.disableCache = YES;
+    request.disableIndicator = YES;
+    request.dataPost = [@{@"user_ids": [userids JSONString]} mutableCopy];
+    [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
+        for (NSDictionary *item in result[@"data"])
+        {
+            [XBPC_storageFriendList addUser:@{@"id": item[@"user_id"],
+                                              @"name": item[@"username"]}];
+        }
+    }];
 }
 
 - (NSInteger)badge
@@ -435,9 +411,13 @@ static XBPushChat *__sharedPushChat = nil;
 {
     if (self.sender_id > 0)
     {
-        ASIFormDataRequest * request = XBPC_PushService(@"clear_badge");
-        [request setPostValue:@(self.sender_id) forKey:@"user_id"];
-        [request startAsynchronous];
+        XBCacheRequest *request = XBCacheRequest(@"pushplus/clear_badge");
+        request.disableCache = YES;
+        request.disableIndicator = YES;
+        request.dataPost = [@{@"user_id": @(self.sender_id)} mutableCopy];
+        [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
+            
+        }];
     }
     self.badge = 0;
 }
