@@ -300,7 +300,7 @@ static XBPushChat *__sharedPushChat = nil;
 
 - (void)hide:(XBPC_storageConversation *)conversation
 {
-    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/mark_as_read");
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/hide_conversation");
     request.disableCache = YES;
     request.disableIndicator = YES;
     request.dataPost = [@{@"sender": conversation.sender,
@@ -355,13 +355,12 @@ static XBPushChat *__sharedPushChat = nil;
     }
     else
     {
-        friendList = [XBPC_storageFriendList getFormat:@"name=nil" argument:@[]];
+        friendList = [XBPC_storageFriendList getFormat:@"name=nil or name=%@" argument:@[@""]];
     }
     
     NSMutableArray *userids = [@[] mutableCopy];
     for (XBPC_storageFriendList *friend in friendList) {
         [userids addObject:friend.id];
-        friend.name = @"";
     }
     [[XBPushChat sharedInstance] saveContext];
     
@@ -370,14 +369,14 @@ static XBPushChat *__sharedPushChat = nil;
         return;
     }
     
-    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/get_hidden_record");
+    XBCacheRequest *request = XBCacheRequest(@"pushchatplus/getnamebyids");
     request.disableCache = YES;
     request.disableIndicator = YES;
     request.dataPost = [@{@"user_ids": [userids JSONString]} mutableCopy];
     [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
         for (NSDictionary *item in result[@"data"])
         {
-            [XBPC_storageFriendList addUser:@{@"id": item[@"user_id"],
+            [XBPC_storageFriendList addUser:@{@"id": item[@"id"],
                                               @"name": item[@"username"]}];
         }
     }];

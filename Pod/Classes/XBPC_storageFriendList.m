@@ -23,6 +23,7 @@
 
 + (void)addUser:(NSDictionary *)item save:(BOOL)save
 {
+    NSLog(@"add: %@", item);
     XBPC_storageFriendList *friend = nil;
     NSArray * matched = [XBPC_storageFriendList getFormat:@"id=%@" argument:@[item[@"id"]]];
     
