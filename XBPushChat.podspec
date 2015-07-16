@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "XBPushChat"
-  s.version          = "0.5.3.1"
+  s.version          = "0.5.3.3"
   s.summary          = "XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server"
   s.description      = <<-DESC
                        XBPushChat is a part of XBMobile family, which support you build up a chat application with minimum config & requirement of server
@@ -29,7 +29,7 @@ PushChat server code (which will be publish soon :D sorry about this)
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = 'Pod/Classes'
+  s.source_files = 'Pod/Classes/**'
   s.resource_bundles = {
     'XBPushChat' => ['Pod/Assets/*']
   }

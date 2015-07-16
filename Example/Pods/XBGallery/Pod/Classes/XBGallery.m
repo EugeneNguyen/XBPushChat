@@ -23,26 +23,63 @@ static XBGallery *__sharedXBGallery = nil;
     return __sharedXBGallery;
 }
 
-- (void)uploadImage:(UIImage *)image withCompletion:(XBGImageUploaded)completeBlock
+- (XBCacheRequest *)uploadImage:(UIImage *)image withCompletion:(XBGImageUploaded)completeBlock
 {
     NSString *url = [NSString stringWithFormat:@"%@/plusgallery/services/addphoto", host];
     XBCacheRequest *request = XBCacheRequest(url);
-    [request addFileWithData:UIImageJPEGRepresentation([[image fixOrientation] resized], 0.9) key:@"uploadimg" fileName:@"image.jpeg" mimeType:@"image/jpeg"];
+    [request addFileWithData:UIImageJPEGRepresentation([[image fixOrientation] resized], 0.7) key:@"uploadimg" fileName:@"image.jpeg" mimeType:@"image/jpeg"];
     request.disableCache = YES;
     [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
-        completeBlock(object);
+        completeBlock(object, [object[@"photo_id"] intValue]);
     }];
+    return request;
 }
 
-- (void)uploadImageURL:(NSString *)url withCompletion:(XBGImageUploaded)completeBlock
+- (XBCacheRequest *)uploadImageURL:(NSString *)url withCompletion:(XBGImageUploaded)completeBlock
 {
     NSString *urlRequest = [NSString stringWithFormat:@"%@/plusgallery/services/addphoto", host];
     XBCacheRequest *request = XBCacheRequest(urlRequest);
     [request setDataPost:[@{@"url": url} mutableCopy]];
     request.disableCache = YES;
     [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
-        completeBlock(object);
+        completeBlock(object, [object[@"photo_id"] intValue]);
     }];
+    return request;
+}
+
+- (XBCacheRequest *)uploadImages:(NSArray *)images withCompletion:(XBGMultipleImageUploaded)completeBlock
+{
+    NSMutableArray *arrayImage = [@[] mutableCopy];
+    for (UIImage *img in images)
+    {
+        [arrayImage addObject:[@{@"image": img} mutableCopy]];
+    }
+    [self uploadImageOneByOne:arrayImage withComplete:completeBlock];
+}
+
+- (void)uploadImageOneByOne:(NSMutableArray *)arrayImage withComplete:(XBGMultipleImageUploaded)completeBlock
+{
+    BOOL found = NO;
+    for (NSMutableDictionary *information in arrayImage)
+    {
+        if (information[@"id"])
+        {
+            continue;
+        }
+        else
+        {
+            [self uploadImage:information[@"image"] withCompletion:^(NSDictionary *responseData, int photoid) {
+                information[@"id"] = @(photoid);
+                [self uploadImageOneByOne:arrayImage withComplete:completeBlock];
+            }];
+            found = YES;
+            break;
+        }
+    }
+    if (!found)
+    {
+        completeBlock([arrayImage valueForKey:@"id"]);
+    }
 }
 
 - (NSURL *)urlForID:(int)imageid isThumbnail:(BOOL)isThumbnail

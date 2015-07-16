@@ -13,4 +13,9 @@
 - (void)loadImage:(int)imageId;
 - (void)loadImage:(int)imageId withIndicatorStyle:(UIActivityIndicatorViewStyle)style;
 
+- (void)loadImageNumber:(id)imageID;
+- (void)loadImageNumberWithGrayIndicator:(id)imageID;
+- (void)loadImageNumberWithWhiteIndicator:(id)imageID;
+- (void)loadImageNumberWithLargeWhiteIndicator:(id)imageID;
+
 @end

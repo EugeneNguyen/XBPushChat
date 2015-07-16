@@ -13,5 +13,6 @@
 
 - (UIImage *)fixOrientation;
 - (UIImage *)resized;
+- (UIImage *)resizeTo:(CGSize)newSize;
 
 @end

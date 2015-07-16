@@ -35,10 +35,13 @@
 @synthesize dataListSource;
 @synthesize searchField;
 @synthesize XBID;
+@synthesize plistData;
+@synthesize plist;
 
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    [self loadInformationFromPlist:self.plist];
     [self loadFromXBID];
 }
 
@@ -181,11 +184,21 @@
 }
 
 - (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell {
+    NSLog(@"%@", sizingCell.contentView.constraints);
+    for (NSLayoutConstraint *constraint in sizingCell.contentView.constraints)
+    {
+        if (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.secondAttribute == NSLayoutAttributeWidth)
+        {
+            [sizingCell.contentView removeConstraint:constraint];
+        }
+    }
+    [sizingCell.contentView addConstraint:[NSLayoutConstraint constraintWithItem:sizingCell.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:self.contentSize.width]];
+    
     [sizingCell setNeedsLayout];
     [sizingCell layoutIfNeeded];
     
     CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    return size.height;
+    return size.height + 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

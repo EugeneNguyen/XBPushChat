@@ -1,11 +1,11 @@
 PODS:
   - AFNetworking (2.5.4):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-    - AFNetworking/UIKit
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
   - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
@@ -23,58 +23,65 @@ PODS:
   - AVHexColor (2.0.0)
   - CHTCollectionViewWaterfallLayout (0.9.1)
   - CocoaLumberjack (1.6.5.1):
-    - CocoaLumberjack/Core
-    - CocoaLumberjack/Extensions
+    - CocoaLumberjack/Core (= 1.6.5.1)
+    - CocoaLumberjack/Extensions (= 1.6.5.1)
   - CocoaLumberjack/Core (1.6.5.1)
   - CocoaLumberjack/Extensions (1.6.5.1):
     - CocoaLumberjack/Core
   - DACircularProgress (2.3.1)
-  - FBSnapshotTestCase (1.8.1)
+  - FBSnapshotTestCase (2.0.2):
+    - FBSnapshotTestCase/SwiftSupport (= 2.0.2)
+  - FBSnapshotTestCase/Core (2.0.2)
+  - FBSnapshotTestCase/SwiftSupport (2.0.2):
+    - FBSnapshotTestCase/Core
   - IDMPhotoBrowser (1.6.2):
     - AFNetworking
     - DACircularProgress
     - pop
   - JSONKit-NoWarning (1.2)
-  - JSQMessagesViewController (7.0.2):
+  - JSQMessagesViewController (7.1.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - MBProgressHUD (0.9.1)
   - NSDate+TimeAgo (1.0.3)
   - pop (1.0.7)
-  - SDWebImage (3.7.2):
-    - SDWebImage/Core
-  - SDWebImage/Core (3.7.2)
+  - SDWebImage (3.7.3):
+    - SDWebImage/Core (= 3.7.3)
+  - SDWebImage/Core (3.7.3)
+  - TPKeyboardAvoiding (1.2.8)
   - UIActivityIndicator-for-SDWebImage (1.2):
     - SDWebImage (~> 3.7)
   - UIImage+ImageCompress (0.0.1)
   - UIImage-Helpers (0.0.3)
-  - XBCacheRequest (0.5.3):
+  - XBCacheRequest (0.5.3.2):
     - AFNetworking
     - JSONKit-NoWarning
     - MBProgressHUD
-  - XBExtension (0.2.2):
+  - XBExtension (0.3.3):
     - AVHexColor
     - MBProgressHUD
-  - XBGallery (0.4):
+  - XBGallery (0.4.3):
     - SDWebImage
     - XBCacheRequest
-  - XBLanguage (0.5.1.1):
+  - XBLanguage (1.0):
     - JSONKit-NoWarning
     - XBCacheRequest
-  - XBMobile (0.6.5.1):
+    - XBExtension
+  - XBMobile (0.6.6.2):
     - AVHexColor
     - CHTCollectionViewWaterfallLayout
     - CocoaLumberjack (~> 1.6.2)
     - JSONKit-NoWarning
     - MBProgressHUD
     - NSDate+TimeAgo
+    - TPKeyboardAvoiding
     - UIActivityIndicator-for-SDWebImage
     - UIImage-Helpers
     - XBCacheRequest
     - XBExtension
     - XBLanguage
     - XMLDictionary
-  - XBPushChat (0.5.2.7):
+  - XBPushChat (0.5.3.2):
     - IDMPhotoBrowser
     - JSQMessagesViewController
     - UIImage+ImageCompress
@@ -97,24 +104,25 @@ SPEC CHECKSUMS:
   CHTCollectionViewWaterfallLayout: 1a8da4fc662702cbddda8926ced266036a829f84
   CocoaLumberjack: 5e26ebef5a48962d1713ae6cb01da30384f3f14e
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
-  FBSnapshotTestCase: 3dc3899168747a0319c5278f5b3445c13a6532dd
+  FBSnapshotTestCase: fd500d5b282c4ec60215d26d0b58b0cf271dd0d6
   IDMPhotoBrowser: ebbfa6690456b72dd92d93b7bc11d71519f4d06d
   JSONKit-NoWarning: 3d27e6f9e6846ecf741e8c64dcadd7d5aa7193cb
-  JSQMessagesViewController: bb6649691182b1899dc52b42266ad69efc473510
+  JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   NSDate+TimeAgo: 416f55d2696d3744c313091c5a9280d47f8238fe
   pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
-  SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
+  SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
+  TPKeyboardAvoiding: f1ef0028fe9ba98ef2871cf55b4bbc39cae0267b
   UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
   UIImage+ImageCompress: 6b38489f38075d569d9f25d72af7ecf5c84c1057
   UIImage-Helpers: 06b04a42bdd222844035602e87e936765c80f620
-  XBCacheRequest: 66a9da85583a4ce9cf3f5c44aab67685690364d3
-  XBExtension: 9d28c62dbfd425abaae4ffcb0ca92fb461acc89f
-  XBGallery: 2dd82d4326a88b4d0278e40de68cee16f32f966e
-  XBLanguage: c8e16472e267593e491ef656cd7931ea3a538d87
-  XBMobile: 87b346ff7acbbcb5e4f44fefe3e1cf833184d437
-  XBPushChat: fb4e38a6d76232d68ec4b789cbf67e3f8181e19d
+  XBCacheRequest: 3286896ee72d8812cbb82aa21f87805dde263d56
+  XBExtension: 8563ed37ff57109246e212234e7a7cc94f345913
+  XBGallery: 56f9227fde14c2d06728db06a9bca2545e856eb4
+  XBLanguage: 3de1d7ddbaa57cfea8468eb980566a4adddcb13e
+  XBMobile: 775ab0725b2a91272504a0256c7c117f54da1a30
+  XBPushChat: 5538061b315413ccf66c0e83e0197abc0163b7a1
   XMLDictionary: f9f51601ba76678b594ab485f2b00ec1fed23724
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0

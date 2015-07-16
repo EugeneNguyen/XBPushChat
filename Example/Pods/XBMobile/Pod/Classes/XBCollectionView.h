@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "NSObject+XBDataList.h"
+#import "TPKeyboardAvoidingCollectionView.h"
 
 @class XBCollectionView;
 @class XBDataFetching;
@@ -28,6 +29,8 @@
 }
 
 @property (nonatomic, retain) IBOutlet id <XBCollectionViewDelegate> xbDelegate;
+
+@property (nonatomic, assign) IBOutlet id <XBDataListSource> dataListSource;
 @property (nonatomic, assign) IBOutlet id xbTarget;
 @property (nonatomic, assign) IBOutlet UIPageControl *pageControl;
 

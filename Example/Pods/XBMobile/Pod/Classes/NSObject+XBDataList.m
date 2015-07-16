@@ -20,19 +20,17 @@
 @dynamic refreshControl;
 @dynamic dataListSource;
 @dynamic XBID;
+@dynamic plist;
+@dynamic plistData;
+@dynamic searchField;
 
 #pragma mark - Loading Information
 
 - (void)cleanup
 {
-    [self loadData:@[]];
-    [self loadInformations:@{}];
+    [self loadData:nil];
+    [self loadInformations:nil];
     [self reloadData];
-}
-
-- (void)setPlist:(NSString *)plist
-{
-    [self loadInformationFromPlist:plist];
 }
 
 - (void)loadFromXBID
@@ -51,6 +49,7 @@
         NSString *path = [NSString stringWithFormat:@"servicemanagement/download_service_xml?table=%@", self.XBID];
         XBCacheRequest *request = XBCacheRequest(path);
         request.responseType = XBCacheRequestTypePlain;
+        request.disableCache = YES;
         [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
             NSMutableDictionary *item =[NSPropertyListSerialization propertyListFromData:[request.responseString dataUsingEncoding:NSUTF8StringEncoding]
                                                                         mutabilityOption:NSPropertyListMutableContainersAndLeaves
@@ -71,13 +70,26 @@
 
 - (void)loadInformationFromPlist:(NSString *)plist
 {
+    if (!plist || self.informations)
+    {
+        return;
+    }
     NSString *path = [[NSBundle mainBundle] pathForResource:plist ofType:@"plist"];
     NSMutableDictionary *info = [NSMutableDictionary dictionaryWithContentsOfFile:path];
     [self loadInformations:info];
+    [self addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context{
 }
 
 - (void)loadData:(NSArray *)data
 {
+    if (!data)
+    {
+        self.datalist = [@[] mutableCopy];
+        return;
+    }
     if (self.isMultipleSection)
     {
         self.datalist = [data mutableCopy];
@@ -96,17 +108,15 @@
 
 - (void)loadInformations:(NSDictionary *)info withReload:(BOOL)withReload
 {
-    [self setupDelegate];
-    
     self.informations = info;
     
-    self.isMultipleSection = [info[@"section"] boolValue];
-    
-    if ([self respondsToSelector:@selector(setupWaterFall)] && [self.informations[@"waterfall"][@"enable"] boolValue])
+    if (!info)
     {
-        [self setupWaterFall];
+        return;
     }
-    [self requestDataWithReload:withReload];
+    [self setupDelegate];
+    
+    self.isMultipleSection = [info[@"section"] boolValue];
     for (NSDictionary *item in self.informations[@"cells"])
     {
         UINib *nib = [UINib loadResourceWithInformation:item];
@@ -127,7 +137,13 @@
     {
         [self registerNib:[UINib nibWithNibName:self.informations[@"NoDataCell"][@"xibname"] bundle:nil] forCellReuseIdentifier:self.informations[@"NoDataCell"][@"cellIdentify"]];
     }
+    
+    if ([self respondsToSelector:@selector(setupWaterFall)] && [self.informations[@"waterfall"][@"enable"] boolValue])
+    {
+        [self setupWaterFall];
+    }
     [self reloadData];
+    [self requestDataWithReload:withReload];
 }
 
 - (void)initRefreshControl
@@ -219,6 +235,10 @@
     }
     else
     {
+        if (self.dataListSource && [self.dataListSource respondsToSelector:@selector(xbDataListRequestData)])
+        {
+            [self.dataListSource xbDataListRequestData];
+        }
         [self reloadData];
         [self configHeightAfterFillData];
     }

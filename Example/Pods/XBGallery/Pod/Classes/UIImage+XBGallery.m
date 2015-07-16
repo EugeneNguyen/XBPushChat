@@ -15,6 +15,13 @@
     return [[XBGImageResizer sharedInstance] resizeImage:self];
 }
 
+- (UIImage *)resizeTo:(CGSize)newSize
+{
+    [[XBGImageResizer sharedInstance] setMaxWidth:newSize.width];
+    [[XBGImageResizer sharedInstance] setMaxHeight:newSize.height];
+    return [[XBGImageResizer sharedInstance] resizeImage:self];
+}
+
 - (UIImage *)fixOrientation
 {
     UIImage *image = self;

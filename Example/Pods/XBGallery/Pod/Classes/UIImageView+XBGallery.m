@@ -8,6 +8,7 @@
 
 #import "UIImageView+XBGallery.h"
 #import "XBGallery.h"
+#import "UIImageView+WebCache.h"
 
 @implementation UIImageView (XBGallery)
 
@@ -31,6 +32,26 @@
     UIView *indicator = [self viewWithTag:999999];
     [indicator removeFromSuperview];
     [self setImage:img];
+}
+
+- (void)loadImageNumber:(id)imageID
+{
+    [self loadImage:[imageID intValue]];
+}
+
+- (void)loadImageNumberWithGrayIndicator:(id)imageID
+{
+    [self loadImage:[imageID intValue] withIndicatorStyle:UIActivityIndicatorViewStyleGray];
+}
+
+- (void)loadImageNumberWithWhiteIndicator:(id)imageID
+{
+    [self loadImage:[imageID intValue] withIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+}
+
+- (void)loadImageNumberWithLargeWhiteIndicator:(id)imageID
+{
+    [self loadImage:[imageID intValue] withIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 }
 
 @end

@@ -89,9 +89,21 @@
 
 // FBSnapshotTestCase
 #define COCOAPODS_POD_AVAILABLE_FBSnapshotTestCase
-#define COCOAPODS_VERSION_MAJOR_FBSnapshotTestCase 1
-#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase 8
-#define COCOAPODS_VERSION_PATCH_FBSnapshotTestCase 1
+#define COCOAPODS_VERSION_MAJOR_FBSnapshotTestCase 2
+#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase 0
+#define COCOAPODS_VERSION_PATCH_FBSnapshotTestCase 2
+
+// FBSnapshotTestCase/Core
+#define COCOAPODS_POD_AVAILABLE_FBSnapshotTestCase_Core
+#define COCOAPODS_VERSION_MAJOR_FBSnapshotTestCase_Core 2
+#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase_Core 0
+#define COCOAPODS_VERSION_PATCH_FBSnapshotTestCase_Core 2
+
+// FBSnapshotTestCase/SwiftSupport
+#define COCOAPODS_POD_AVAILABLE_FBSnapshotTestCase_SwiftSupport
+#define COCOAPODS_VERSION_MAJOR_FBSnapshotTestCase_SwiftSupport 2
+#define COCOAPODS_VERSION_MINOR_FBSnapshotTestCase_SwiftSupport 0
+#define COCOAPODS_VERSION_PATCH_FBSnapshotTestCase_SwiftSupport 2
 
 // IDMPhotoBrowser
 #define COCOAPODS_POD_AVAILABLE_IDMPhotoBrowser
@@ -108,8 +120,8 @@
 // JSQMessagesViewController
 #define COCOAPODS_POD_AVAILABLE_JSQMessagesViewController
 #define COCOAPODS_VERSION_MAJOR_JSQMessagesViewController 7
-#define COCOAPODS_VERSION_MINOR_JSQMessagesViewController 0
-#define COCOAPODS_VERSION_PATCH_JSQMessagesViewController 2
+#define COCOAPODS_VERSION_MINOR_JSQMessagesViewController 1
+#define COCOAPODS_VERSION_PATCH_JSQMessagesViewController 0
 
 // JSQSystemSoundPlayer
 #define COCOAPODS_POD_AVAILABLE_JSQSystemSoundPlayer
@@ -133,13 +145,19 @@
 #define COCOAPODS_POD_AVAILABLE_SDWebImage
 #define COCOAPODS_VERSION_MAJOR_SDWebImage 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage 7
-#define COCOAPODS_VERSION_PATCH_SDWebImage 2
+#define COCOAPODS_VERSION_PATCH_SDWebImage 3
 
 // SDWebImage/Core
 #define COCOAPODS_POD_AVAILABLE_SDWebImage_Core
 #define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
-#define COCOAPODS_VERSION_PATCH_SDWebImage_Core 2
+#define COCOAPODS_VERSION_PATCH_SDWebImage_Core 3
+
+// TPKeyboardAvoiding
+#define COCOAPODS_POD_AVAILABLE_TPKeyboardAvoiding
+#define COCOAPODS_VERSION_MAJOR_TPKeyboardAvoiding 1
+#define COCOAPODS_VERSION_MINOR_TPKeyboardAvoiding 2
+#define COCOAPODS_VERSION_PATCH_TPKeyboardAvoiding 8
 
 // UIActivityIndicator-for-SDWebImage
 #define COCOAPODS_POD_AVAILABLE_UIActivityIndicator_for_SDWebImage
@@ -161,42 +179,42 @@
 
 // XBCacheRequest
 #define COCOAPODS_POD_AVAILABLE_XBCacheRequest
-#define COCOAPODS_VERSION_MAJOR_XBCacheRequest 0
-#define COCOAPODS_VERSION_MINOR_XBCacheRequest 5
-#define COCOAPODS_VERSION_PATCH_XBCacheRequest 3
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.5.3.2.
 
 // XBExtension
 #define COCOAPODS_POD_AVAILABLE_XBExtension
 #define COCOAPODS_VERSION_MAJOR_XBExtension 0
-#define COCOAPODS_VERSION_MINOR_XBExtension 2
-#define COCOAPODS_VERSION_PATCH_XBExtension 2
+#define COCOAPODS_VERSION_MINOR_XBExtension 3
+#define COCOAPODS_VERSION_PATCH_XBExtension 3
 
 // XBGallery
 #define COCOAPODS_POD_AVAILABLE_XBGallery
 #define COCOAPODS_VERSION_MAJOR_XBGallery 0
 #define COCOAPODS_VERSION_MINOR_XBGallery 4
-#define COCOAPODS_VERSION_PATCH_XBGallery 0
+#define COCOAPODS_VERSION_PATCH_XBGallery 3
 
 // XBLanguage
 #define COCOAPODS_POD_AVAILABLE_XBLanguage
-// This library does not follow semantic-versioning,
-// so we were not able to define version macros.
-// Please contact the author.
-// Version: 0.5.1.1.
+#define COCOAPODS_VERSION_MAJOR_XBLanguage 1
+#define COCOAPODS_VERSION_MINOR_XBLanguage 0
+#define COCOAPODS_VERSION_PATCH_XBLanguage 0
 
 // XBMobile
 #define COCOAPODS_POD_AVAILABLE_XBMobile
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.6.5.1.
+// Version: 0.6.6.2.
 
 // XBPushChat
 #define COCOAPODS_POD_AVAILABLE_XBPushChat
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.5.2.7.
+// Version: 0.5.3.2.
 
 // XMLDictionary
 #define COCOAPODS_POD_AVAILABLE_XMLDictionary
