@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "58DE96183B85A69AED4FC561"
+               BlueprintIdentifier = "F62B060BF896BA1634EDAF14"
                BuildableName = "libPods-XBPushChat-AVHexColor.a"
                BlueprintName = "Pods-XBPushChat-AVHexColor"
                ReferencedContainer = "container:Pods.xcodeproj">

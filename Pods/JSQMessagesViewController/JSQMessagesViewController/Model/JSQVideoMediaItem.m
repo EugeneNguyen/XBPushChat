@@ -52,6 +52,12 @@
     _cachedVideoImageView = nil;
 }
 
+- (void)clearCachedMediaViews
+{
+    [super clearCachedMediaViews];
+    _cachedVideoImageView = nil;
+}
+
 #pragma mark - Setters
 
 - (void)setFileURL:(NSURL *)fileURL
@@ -96,6 +102,11 @@
     return self.cachedVideoImageView;
 }
 
+- (NSUInteger)mediaHash
+{
+    return self.hash;
+}
+
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(id)object
@@ -112,7 +123,7 @@
 
 - (NSUInteger)hash
 {
-    return self.fileURL.hash;
+    return super.hash ^ self.fileURL.hash;
 }
 
 - (NSString *)description

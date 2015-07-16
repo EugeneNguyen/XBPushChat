@@ -7,7 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 #import "XBDataFetching.h"
+
+@protocol XBDataList;
+
+@protocol XBDataListSource <NSObject>
+
+@optional
+- (id)modifiedDataFor:(id <XBDataList>)view andSource:(id)data;
+- (void)xbDataListRequestData;
+
+@end
 
 @protocol XBDataList
 
@@ -23,6 +34,19 @@
 
 @property (nonatomic, retain) UIRefreshControl *refreshControl;
 
+@property (nonatomic, assign) IBOutlet id <XBDataListSource> dataListSource;
+
+@property (nonatomic, retain) IBOutlet UITextField *searchField;
+
+@property (nonatomic, retain) NSString * XBID;
+
+@property (nonatomic, retain) NSString *plist;
+@property (nonatomic, retain) NSString *plistData;
+
+- (void)loadFromXBID;
+
+- (void)cleanup;
+
 - (void)loadInformationFromPlist:(NSString *)plist;
 
 - (void)loadData:(NSArray *)data;
@@ -37,7 +61,21 @@
 
 - (void)applySearch:(NSString *)searchKey;
 
+- (int)totalRows;
+
+- (BOOL)ableToShowNoData;
+
+- (void)scrolledToBottom;
+
+- (void)setScrollEnabled:(BOOL)scrollable;
+
+// no data cell
+
+- (void)setEnableNoDataCell:(BOOL)isNoData;
+
 @optional
+
+- (IBAction)searchFieldDidChange:(UITextField *)_searchField;
 
 @property (nonatomic, retain) NSMutableArray *backupWhenSearch;
 

@@ -55,6 +55,12 @@
     _cachedMapImageView = nil;
 }
 
+- (void)clearCachedMediaViews
+{
+    [super clearCachedMediaViews];
+    _cachedMapImageView = nil;
+}
+
 #pragma mark - Setters
 
 - (void)setLocation:(CLLocation *)location
@@ -155,6 +161,11 @@
     return self.cachedMapImageView;
 }
 
+- (NSUInteger)mediaHash
+{
+    return self.hash;
+}
+
 #pragma mark - NSObject
 
 - (BOOL)isEqual:(id)object
@@ -170,7 +181,7 @@
 
 - (NSUInteger)hash
 {
-    return self.location.hash;
+    return super.hash ^ self.location.hash;
 }
 
 - (NSString *)description

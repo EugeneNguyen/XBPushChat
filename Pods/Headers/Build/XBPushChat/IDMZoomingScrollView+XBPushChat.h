@@ -1,0 +1,1 @@
+../../../../../Pod/Classes/IDMZoomingScrollView+XBPushChat.h

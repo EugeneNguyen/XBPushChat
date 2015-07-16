@@ -14,8 +14,12 @@
 #import <AVHexColor.h>
 #import <UIImage-Helpers.h>
 #import "XBMobile.h"
+#import <NSDate+TimeAgo.h>
+#import <XBExtension.h>
 
 @implementation UIView (extension)
+@dynamic bottomMargin;
+@dynamic originalHeight;
 
 - (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info
 {
@@ -24,20 +28,24 @@
 
 - (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target
 {
+    [self applyTemplate:temp andInformation:info withTarget:target listTarget:nil];
+}
+
+- (void)applyTemplate:(NSArray *)temp andInformation:(NSDictionary *)info withTarget:(id)target listTarget:(id)listTarget
+{
     if ([self isKindOfClass:[UITableViewCell class]])
     {
-        [(UITableViewCell *)self contentView].bounds = CGRectMake(0, 0, 99999, 99999);
+//        [(UITableViewCell *)self contentView].bounds = CGRectMake(0, 0, 99999, 99999);
     }
     for (NSDictionary *element in temp)
     {
         UIView *v = [self viewWithTag:[element[@"tag"] intValue]];
-        
         if (element[@"backgroundColor"])
         {
             NSString *backgroundColorString = [info objectForPath:element[@"backgroundColor"]];
             if (backgroundColorString && [backgroundColorString length] >= 6)
             {
-                v.backgroundColor = [AVHexColor colorWithHexString:backgroundColorString];
+                v.backgroundColor = XBHexColor(backgroundColorString);
             }
         }
         
@@ -63,9 +71,50 @@
                 }
             }
         }
-        if ([v isKindOfClass:[UILabel class]] || [v isKindOfClass:[UITextView class]])
+        
+        if (element[@"screen"])
         {
-            [(UILabel *)v setText:data];
+            data = XBText(data, element[@"screen"]);
+        }
+        
+        if (element[@"dateFormat"])
+        {
+            NSDate *date;
+            if ([data isKindOfClass:[NSDate class]])
+            {
+                date = data;
+            }
+            else
+            {
+                date = [data mysqlDate];
+            }
+            
+            if ([element[@"dateFormat"] isEqualToString:@"fuzzy"])
+            {
+                data = [date timeAgoWithLimit:5184000];
+            }
+            else
+            {
+                NSDateFormatter *df = [[NSDateFormatter alloc] init];
+                [df setDateFormat:element[@"dateFormat"]];
+                data = [df stringFromDate:date];
+            }
+        }
+        
+        if (element[@"setter"])
+        {
+            [v performSelector:NSSelectorFromString(element[@"setter"]) withObject:data];
+        }
+        else if ([v isKindOfClass:[UILabel class]] || [v isKindOfClass:[UITextView class]])
+        {
+            if ([data respondsToSelector:@selector(stringValue)])
+            {
+                [(UILabel *)v setText:[data stringValue]];
+            }
+            else if ([data isKindOfClass:[NSString class]])
+            {
+                [(UILabel *)v setText:data];
+            }
         }
         else if ([v isKindOfClass:[UIImageView class]])
         {
@@ -85,11 +134,11 @@
                 SDWebImageOptions option;
                 if ([element[@"disableCache"] boolValue])
                 {
-                    option = SDWebImageRefreshCached;
+                    option = SDWebImageCacheMemoryOnly;
                 }
                 else
                 {
-                    option = 0;
+                    option = SDWebImageContinueInBackground;
                 }
                 
                 UIImage *placeHolderImage = nil;
@@ -99,22 +148,34 @@
                     float h = [[info objectForPath:element[@"heightPath"]] floatValue];
                     float w = [[info objectForPath:element[@"widthPath"]] floatValue];
                     
-                    float scale = w / h;
-                    
-                    w = v.frame.size.width;
-                    h = w / scale;
-                    
-                    CGRect rect = CGRectMake(0, 0, w, h);
-                    UIGraphicsBeginImageContext(rect.size);
-                    CGContextRef context = UIGraphicsGetCurrentContext();
-                    
-                    CGContextSetFillColorWithColor(context, [[UIColor clearColor] CGColor]);
-                    CGContextFillRect(context, rect);
-                    
-                    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-                    
-                    placeHolderImage = image;
+                    if (h != 0 && w != 0)
+                    {
+                        for (NSLayoutConstraint *constraint in v.constraints)
+                        {
+                            if (constraint.firstAttribute == NSLayoutAttributeWidth || constraint.firstAttribute == NSLayoutAttributeHeight)
+                            {
+                                [v removeConstraint:constraint];
+                            }
+                        }
+                        float scale = w / h;
+                        
+                        w = v.frame.size.width;
+                        h = w / scale;
+                        [v addConstraint:[NSLayoutConstraint constraintWithItem:v
+                                                                      attribute:NSLayoutAttributeHeight
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:nil
+                                                                      attribute:NSLayoutAttributeNotAnAttribute
+                                                                     multiplier:1.0
+                                                                       constant:h]];
+                        [v addConstraint:[NSLayoutConstraint constraintWithItem:v
+                                                                      attribute:NSLayoutAttributeWidth
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:nil
+                                                                      attribute:NSLayoutAttributeNotAnAttribute
+                                                                     multiplier:1.0
+                                                                       constant:w]];
+                    }
                     
                     [self layoutSubviews];
                 }
@@ -122,6 +183,7 @@
                 __block BOOL noPrevImage = [(UIImageView *)v image] == NULL;
                 [imgView sd_setImageWithURL:[NSURL URLWithString:data] placeholderImage:placeHolderImage options:option completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                     
+                    if (error) return;
                     if (noPrevImage && [element[@"fadein"] boolValue])
                     {
                         [UIView transitionWithView:imgView
@@ -134,7 +196,7 @@
                     }
                     else
                     {
-                        imgView.image = image;
+                        [imgView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:YES];
                     }
                     
                     if ([element[@"autoHeight"] boolValue] && !(element[@"widthPath"] && element[@"heightPath"]))
@@ -143,8 +205,7 @@
                         CGSize s = image.size;
                         f.size.height = f.size.width / s.width * s.height;
                         v.frame = f;
-                        
-                        [self layoutSubviews];
+                        [self layoutIfNeeded];
                     }
                 }];
             }
@@ -154,19 +215,20 @@
             UIButton *btn = (UIButton *)v;
             if (element[@"path"] || element[@"format"])
             {
-                [btn setTitle:data forState:UIControlStateNormal];
+                if (element[@"screen"])
+                {
+                    [btn setTitle:XBText(data, element[@"screen"]) forState:UIControlStateNormal];
+                }
+                else
+                {
+                    [btn setTitle:data forState:UIControlStateNormal];
+                }
             }
             
-            if (element[@"selector"] && [target respondsToSelector:NSSelectorFromString(element[@"selector"])])
+            if ([listTarget respondsToSelector:NSSelectorFromString(@"didPressButton:")])
             {
-                [btn removeTarget:target action:NSSelectorFromString(element[@"selector"]) forControlEvents:UIControlEventTouchUpInside];
-                [btn addTarget:target action:NSSelectorFromString(element[@"selector"]) forControlEvents:UIControlEventTouchUpInside];
-            }
-            
-            if ([target respondsToSelector:NSSelectorFromString(@"didPressButton:")])
-            {
-                [btn removeTarget:target action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
-                [btn addTarget:target action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
+                [btn removeTarget:listTarget action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
+                [btn addTarget:listTarget action:NSSelectorFromString(@"didPressButton:") forControlEvents:UIControlEventTouchUpInside];
             }
         }
         else if ([v isKindOfClass:[XBTableView class]])
@@ -181,6 +243,11 @@
             [tableview loadData:data];
             [tableview loadInformations:element withReload:YES];
         }
+        
+//        if (element[@"selector"] && [target respondsToSelector:NSSelectorFromString(element[@"selector"])])
+//        {
+//            [v addTapTarget:target action:NSSelectorFromString(element[@"selector"])];
+//        }
     }
     
     [self layoutSubviews];
@@ -222,9 +289,12 @@
         UIView *view = [[UIView alloc] initWithFrame:self.frame];
         view.tag = 999;
         view.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
-        view.userInteractionEnabled = NO;
+        view.userInteractionEnabled = YES;
         view.alpha = 0;
         [self.superview addSubview:view];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapDim)];
+        [view addGestureRecognizer:tapGesture];
         
         [UIView animateKeyframesWithDuration:0.3 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
             view.alpha = 1;
@@ -234,12 +304,17 @@
     }
 }
 
+- (void)didTapDim
+{
+    [self undim];
+    [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
+}
+
 - (void)undim
 {
     UIView *view = [self.superview viewWithTag:999];
     if (view)
     {
-        
         [UIView animateKeyframesWithDuration:0.3 delay:0 options:UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
             view.alpha = 0;
         } completion:^(BOOL finished) {
@@ -261,6 +336,40 @@
         return [nextResponder traverseResponderChainForUIViewController];
     } else {
         return nil;
+    }
+}
+
+- (UITableViewCell *)firstAvailabelTableViewCell
+{
+    UIView *view = self.superview;
+    if (!view)
+    {
+        return nil;
+    }
+    if ([view isKindOfClass:[UITableViewCell class]])
+    {
+        return (UITableViewCell *)view;
+    }
+    else
+    {
+        return [view firstAvailabelTableViewCell];
+    }
+}
+
+- (UICollectionViewCell *)firstAvailabelCollectionViewCell
+{
+    UIView *view = self.superview;
+    if (!view)
+    {
+        return nil;
+    }
+    if ([view isKindOfClass:[UICollectionViewCell class]])
+    {
+        return (UICollectionViewCell *)view;
+    }
+    else
+    {
+        return [view firstAvailabelCollectionViewCell];
     }
 }
 

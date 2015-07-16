@@ -1,0 +1,1 @@
+../../../XBMobile/Pod/Classes/Library/XBManager.h

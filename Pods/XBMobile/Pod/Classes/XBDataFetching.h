@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "XBExtension.h"
+#import "XBCacheRequest.h"
 
 @class XBDataFetching;
 @class ASIFormDataRequest;
@@ -20,21 +22,34 @@
 
 @interface XBDataFetching : NSObject
 {
-
+    
 }
 
-@property (nonatomic, assign) id datalist;
+@property (nonatomic, retain) id datalist;
 
 @property (nonatomic, retain) NSDictionary *info;
 
 @property (nonatomic, retain) NSDictionary *postParams;
 
-@property (nonatomic, retain) ASIFormDataRequest *request;
-
 @property (nonatomic, retain) id <XBDataFetchingDelegate> delegate;
 
 @property (nonatomic, assign) BOOL isMultipleSection;
 
+@property (nonatomic, retain) XBCacheRequest *cacheRequest;
+
+@property (nonatomic, assign) BOOL disableCache;
+
+@property (nonatomic, assign) int resultCount;
+
+@property (nonatomic, assign) BOOL isEndOfData;
+
+@property (nonatomic, retain) NSDate *startDate;
+
 - (void)startFetchingData;
+- (void)fetchMore;
+- (void)requestDataWithMore:(BOOL)isMore;
+
+- (void)reloadData;
+- (void)loadMore;
 
 @end

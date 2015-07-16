@@ -9,28 +9,26 @@
 #import "NSString+extension.h"
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "NSObject+extension.h"
 
 @implementation NSString (extension)
 
 - (NSString *)applyData:(NSDictionary *)data
 {
-    NSString *result = [self copy];
-    if ([data isKindOfClass:[NSDictionary class]])
+    NSString *resultString = [self copy];
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\{[^\\{\\}]*\\}" options:NSRegularExpressionAnchorsMatchLines error:&error];
+    NSArray *keys = [regex matchesInString:self options:NSMatchingReportCompletion range:NSMakeRange(0, [self length])];
+    
+    for (NSTextCheckingResult *result in keys)
     {
-        for (NSString *s in [data allKeys])
-        {
-            result = [result stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"{%@}", s] withString:[NSString stringWithFormat:@"%@", data[s]]];
-        }
+        NSString *s = [self substringWithRange:result.range];
+        s = [s substringWithRange:NSMakeRange(1, [s length] - 2)];
+        
+        NSString *key = [data objectForPath:s];
+        resultString = [resultString stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"{%@}", s] withString:[NSString stringWithFormat:@"%@", key]];
     }
-    else if ([data isKindOfClass:[NSManagedObject class]])
-    {
-        NSManagedObject *obj = (NSManagedObject *)data;
-        for (NSString *s in [[obj.entity attributesByName] allKeys])
-        {
-            result = [result stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"{%@}", s] withString:[NSString stringWithFormat:@"%@", [obj valueForKey:s]]];
-        }
-    }
-    return result;
+    return resultString;
 }
 
 - (BOOL)validateEmail
@@ -41,6 +39,37 @@
     NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
     NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
     return [emailTest evaluateWithObject:self];
+}
+
+- (NSDate *)mysqlDate
+{
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    return [df dateFromString:self];
+}
+
++ (NSString *)uuidString {
+    // Returns a UUID
+    
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *uuidString = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+    CFRelease(uuid);
+    
+    return uuidString;
+}
+
+- (NSString *)emojiEncode
+{
+    NSString *uniText = [NSString stringWithUTF8String:[self UTF8String]];
+    NSData *msgData = [uniText dataUsingEncoding:NSNonLossyASCIIStringEncoding];
+    return [[NSString alloc] initWithData:msgData encoding:NSUTF8StringEncoding] ;
+}
+
+- (NSString *)emojiDecode
+{
+    const char *jsonString = [self UTF8String];
+    NSData *jsonData = [NSData dataWithBytes:jsonString length:strlen(jsonString)];
+    return [[NSString alloc] initWithData:jsonData encoding:NSNonLossyASCIIStringEncoding];
 }
 
 @end

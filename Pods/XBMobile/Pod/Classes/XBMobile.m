@@ -22,14 +22,20 @@ static XBMobile *__sharedXBMobileInstance = nil;
 @end
 
 @implementation XBMobile
+@synthesize host = _host;
 
-+ (id)sharedInstance
++ (XBMobile *)sharedInstance
 {
     if (!__sharedXBMobileInstance)
     {
         __sharedXBMobileInstance = [[XBMobile alloc] init];
     }
     return __sharedXBMobileInstance;
+}
+
+- (void)setHost:(NSString *)host
+{
+    _host = host;
 }
 
 - (void)activeLog
@@ -56,6 +62,20 @@ static XBMobile *__sharedXBMobileInstance = nil;
 - (void)initRootViewController
 {
     
+}
+
++ (void)registerPush
+{
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+    {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+    }
+    else
+    {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+         (UIUserNotificationTypeBadge | UIUserNotificationTypeSound | UIUserNotificationTypeAlert)];
+    }
 }
 
 @end

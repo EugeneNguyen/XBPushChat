@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "FC636404166020811ACE1FA4"
+               BlueprintIdentifier = "33EB98B009AE3F37F1AD00EC"
                BuildableName = "libPods-XBPushChat-MBProgressHUD.a"
                BlueprintName = "Pods-XBPushChat-MBProgressHUD"
                ReferencedContainer = "container:Pods.xcodeproj">

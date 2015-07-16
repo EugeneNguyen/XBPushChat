@@ -15,4 +15,12 @@
 
 - (BOOL)validateEmail;
 
+- (NSDate *)mysqlDate;
+
++ (NSString *)uuidString;
+
+- (NSString *)emojiEncode;
+
+- (NSString *)emojiDecode;
+
 @end

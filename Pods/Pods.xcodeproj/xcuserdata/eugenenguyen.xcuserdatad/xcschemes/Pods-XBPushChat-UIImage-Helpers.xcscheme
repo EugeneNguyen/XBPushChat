@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8F744B97263A25C85F831424"
+               BlueprintIdentifier = "5AEB829101AE60B0FE888EC7"
                BuildableName = "libPods-XBPushChat-UIImage-Helpers.a"
                BlueprintName = "Pods-XBPushChat-UIImage-Helpers"
                ReferencedContainer = "container:Pods.xcodeproj">

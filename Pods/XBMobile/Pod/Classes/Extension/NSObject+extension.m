@@ -8,29 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "NSObject+extension.h"
-#import "MBProgressHUD.h"
 #import <CoreData/CoreData.h>
 
 @implementation NSObject (extension)
-
-- (void)alert:(NSString *)title message:(NSString *)message
-{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"Close" otherButtonTitles: nil];
-    [alert show];
-}
-
-- (void)showHUD:(NSString *)string
-{
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:window animated:YES];
-    hud.labelText = string;
-}
-
-- (void)hideHUD
-{
-    UIWindow *window = [[[UIApplication sharedApplication] delegate] window];
-    [MBProgressHUD hideAllHUDsForView:window animated:YES];
-}
 
 - (id)objectForPath:(NSString *)string
 {
@@ -38,16 +18,28 @@
     id obj = self;
     for (NSString *s in array)
     {
-        if ([obj isKindOfClass:[NSDictionary class]])
+        SEL selector = NSSelectorFromString(s);
+        if ([s length] == 0)
         {
-            obj = obj[s];
+            obj = obj;
+        }
+        else if ([obj isKindOfClass:[NSDictionary class]])
+        {
+            if (obj[s])
+            {
+                obj = obj[s];
+            }
+            else
+            {
+                return nil;
+            }
         }
         else if ([obj isKindOfClass:[NSArray class]])
         {
             NSArray *array = (NSArray *)obj;
             if ([s intValue] < 0 || [s intValue] >= [array count])
             {
-                return @"";
+                return nil;
             }
             else
             {
@@ -64,51 +56,21 @@
             {
                 obj = [(NSManagedObject *)obj valueForKey:s];
             }
+            else if ([obj respondsToSelector:selector])
+            {
+                obj = [obj performSelector:selector];
+            }
             else
             {
-                return @"";
+                return nil;
             }
         }
-        else if ([s length] == 0)
+        else if ([obj respondsToSelector:selector])
         {
-            obj = obj;
+            obj = [obj performSelector:selector];
         }
     }
     return obj;
-}
-
-@end
-
-@implementation NSArray (loadPlist)
-
-+ (NSArray *)arrayWithContentsOfPlist:(NSString *)plistname
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:plistname ofType:@"plist"];
-    return [NSArray arrayWithContentsOfFile:path];
-}
-
-+ (NSArray *)arrayWithContentsOfPlist:(NSString *)plistname bundleName:(NSString *)name
-{
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:name ofType:@"bundle"]];
-    NSString *path = [bundle pathForResource:plistname ofType:@"plist"];
-    return [NSArray arrayWithContentsOfFile:path];
-}
-
-@end
-
-@implementation NSDictionary (loadPlist)
-
-+ (NSDictionary *)dictionaryWithContentsOfPlist:(NSString *)plistname
-{
-    NSString *path = [[NSBundle mainBundle] pathForResource:plistname ofType:@"plist"];
-    return [NSDictionary dictionaryWithContentsOfFile:path];
-}
-
-+ (NSDictionary *)dictionaryWithContentsOfPlist:(NSString *)plistname bundleName:(NSString *)name
-{
-    NSBundle *bundle = [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:name ofType:@"bundle"]];
-    NSString *path = [bundle pathForResource:plistname ofType:@"plist"];
-    return [NSDictionary dictionaryWithContentsOfFile:path];
 }
 
 @end
