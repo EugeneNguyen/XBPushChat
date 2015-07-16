@@ -171,12 +171,12 @@ static XBPushChat *__sharedPushChat = nil;
                                       @"message": message,
                                       @"room" : room}];
     
-    [[XBGallery sharedInstance] uploadImage:image withCompletion:^(NSDictionary *responseData) {
+    [[XBGallery sharedInstance] uploadImage:image withCompletion:^(NSDictionary *responseData, int photoid) {
         
         XBCacheRequest *request = XBCacheRequest(@"pushchatplus/send_message");
         request.dataPost = [@{@"user_id": @(self.sender_id),
                               @"send_to": @(jid),
-                              @"message": [NSString stringWithFormat:@"New image message (%@)", responseData[@"photo_id"]],
+                              @"message": [NSString stringWithFormat:@"New image message (%d)", photoid],
                               @"random": uuid,
                               @"room": room} mutableCopy];
         [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *result, BOOL fromCache, NSError *error, id object) {
