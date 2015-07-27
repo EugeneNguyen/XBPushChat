@@ -310,7 +310,7 @@ static XBPushChat *__sharedPushChat = nil;
         
     }];
     
-    conversation.hidden = @(YES);
+    conversation.hiddendate = [NSDate date];
     [[XBPushChat sharedInstance] saveContext];
 }
 
@@ -321,13 +321,6 @@ static XBPushChat *__sharedPushChat = nil;
     request.disableIndicator = YES;
     request.dataPost = [@{@"id": @(self.sender_id)} mutableCopy];
     [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
-        NSLog(@"%@", result);
-        NSArray *allConversation = [XBPC_storageConversation getAll];
-        for (XBPC_storageConversation *conversation in allConversation)
-        {
-            conversation.hidden = @(NO);
-        }
-        [[XBPushChat sharedInstance] saveContext];
         if (([result[@"code"] intValue] == 200) && (result[@"data"]))
         {
             for (NSDictionary *item in result[@"data"])
@@ -336,7 +329,7 @@ static XBPushChat *__sharedPushChat = nil;
                 if ([array count] > 0)
                 {
                     XBPC_storageConversation *conversation = [array lastObject];
-                    conversation.hidden = @(YES);
+                    conversation.hiddendate = [item[@"createtime"] mysqlDate];
                 }
             }
         }

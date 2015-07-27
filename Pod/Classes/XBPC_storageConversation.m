@@ -18,6 +18,23 @@
 @dynamic lastmessage;
 @dynamic lastvisit;
 @dynamic hidden;
+@dynamic hiddendate;
+
+- (void)setHidden:(NSNumber *)hidden
+{
+    
+}
+
+- (NSNumber *)hidden
+{
+    NSDate *hiddenDate = self.hiddendate;
+    if (hiddenDate == nil)
+    {
+        return @(NO);
+    }
+    NSArray *newMessage = [XBPC_storageMessage getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@ and createtime > %@" argument:@[self.sender, self.receiver, self.receiver, self.sender, self.room, hiddenDate]];
+    return @([newMessage count] == 0);
+}
 
 + (void)addConversation:(NSDictionary *)item
 {
