@@ -325,6 +325,11 @@ static XBPushChat *__sharedPushChat = nil;
         {
             for (NSDictionary *item in result[@"data"])
             {
+                NSString *room = @"";
+                if ([item[@"room"] intValue] != 0)
+                {
+                    item[@"room"]
+                }
                 NSArray *array = [XBPC_storageConversation getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[item[@"sender"], item[@"receiver"], item[@"room"]]];
                 if ([array count] > 0)
                 {
