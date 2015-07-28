@@ -323,12 +323,12 @@ static XBPushChat *__sharedPushChat = nil;
     [request startAsynchronousWithCallback:^(XBCacheRequest *request, NSString *resultString, BOOL fromCache, NSError *error, id result) {
         if (([result[@"code"] intValue] == 200) && (result[@"data"]))
         {
-            for (NSDictionary *item in result[@"data"])
+            for (NSMutableDictionary *item in result[@"data"])
             {
                 NSString *room = @"";
                 if ([item[@"room"] intValue] != 0)
                 {
-                    item[@"room"]
+                    item[@"room"] = @"0";
                 }
                 NSArray *array = [XBPC_storageConversation getFormat:@"sender=%@ and receiver=%@ and room=%@" argument:@[item[@"sender"], item[@"receiver"], item[@"room"]]];
                 if ([array count] > 0)
