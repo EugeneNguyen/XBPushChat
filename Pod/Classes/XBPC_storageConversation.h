@@ -17,7 +17,6 @@
 @property (nonatomic, retain) NSNumber * receiver;
 @property (nonatomic, retain) NSNumber * hidden;
 @property (nonatomic, retain) NSString * lastmessage;
-@property (nonatomic, retain) NSDate * hiddendate;
 @property (nonatomic, retain) NSDate * lasttime;
 @property (nonatomic, retain) NSDate * lastvisit;
 
