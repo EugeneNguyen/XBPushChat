@@ -46,7 +46,7 @@
     {
         conversation = [NSEntityDescription insertNewObjectForEntityForName:@"XBPC_storageConversation" inManagedObjectContext:[[XBPushChat sharedInstance] managedObjectContext]];
     }
-    conversation.room = item[@"room"];
+    conversation.room = [@([item[@"room"] intValue]) stringValue];
     conversation.sender = @([item[@"sender"] intValue]);
     conversation.receiver = @([item[@"receiver"] intValue]);
     if (!conversation.lasttime || [conversation.lasttime timeIntervalSinceDate:item[@"lasttime"]] < 0)
@@ -87,8 +87,8 @@
     NSPredicate *p1 = [NSPredicate predicateWithFormat:format argumentArray:argument];
     [fr setPredicate:p1];
     
-    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"lasttime" ascending:NO];
-    [fr setSortDescriptors:@[sd]];
+//    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"lasttime" ascending:NO];
+//    [fr setSortDescriptors:@[sd]];
     
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     return result;
