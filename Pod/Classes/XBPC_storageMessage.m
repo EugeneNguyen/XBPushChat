@@ -68,7 +68,10 @@
     //    }
     
     XBPC_storageMessage *message = nil;
-    NSArray * matched = [XBPC_storageMessage getFormat:@"room=%@" argument:@[item[@"room"]]];
+    // anh viết cái gì đây????
+//    NSArray * matched = [XBPC_storageMessage getFormat:@"room=%@" argument:@[item[@"room"]]];
+    
+    NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
     
     if ([matched count] > 0)
     {

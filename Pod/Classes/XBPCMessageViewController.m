@@ -12,7 +12,7 @@
 #import "XBPCAvatarInformation.h"
 #import "XBPC_storageMessage.h"
 #import "XBPC_storageConversation.h"
-#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+#import <UIImageView+UIActivityIndicatorForSDWebImage.h>
 #import "IDMPhotoBrowser.h"
 
 @interface XBPCMessageViewController () <NSFetchedResultsControllerDelegate, UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIViewControllerTransitioningDelegate>
