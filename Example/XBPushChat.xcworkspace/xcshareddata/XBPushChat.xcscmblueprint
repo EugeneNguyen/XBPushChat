@@ -1,0 +1,86 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "DF6148BD5624217A6BBB34931A9C62824EEA610C+++A69794A",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "81E929544F305C80861B99A409B26ED430EAA917+++FDF7CD3" : 0,
+    "DF6148BD5624217A6BBB34931A9C62824EEA610C+++A69794A" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++8BD1186" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++8FAC77B" : 0,
+    "0150ed9b-fc8f-4ec8-97ee-24be316e0ef3+++9A46B23" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++2BF7525" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++2266DBF" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++E84025E" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++F4FD819" : 0,
+    "81E929544F305C80861B99A409B26ED430EAA917+++2B9DC0F" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "6AA1DD6D-E25B-4433-9BFF-3D4C94D3C5AB",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "81E929544F305C80861B99A409B26ED430EAA917+++FDF7CD3" : "",
+    "DF6148BD5624217A6BBB34931A9C62824EEA610C+++A69794A" : "Example",
+    "81E929544F305C80861B99A409B26ED430EAA917+++8BD1186" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++8FAC77B" : "",
+    "0150ed9b-fc8f-4ec8-97ee-24be316e0ef3+++9A46B23" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++2BF7525" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++2266DBF" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++E84025E" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++F4FD819" : "",
+    "81E929544F305C80861B99A409B26ED430EAA917+++2B9DC0F" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "XBPushChat",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "XBPushChat.xcworkspace",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "0150ed9b-fc8f-4ec8-97ee-24be316e0ef3+++9A46B23"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++2266DBF"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++2B9DC0F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++2BF7525"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++8BD1186"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++8FAC77B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++E84025E"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++F4FD819"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "svn:\/\/libre.com.vn\/localproject",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "81E929544F305C80861B99A409B26ED430EAA917+++FDF7CD3"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/EugeneNguyen\/XBPushChat.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "DF6148BD5624217A6BBB34931A9C62824EEA610C+++A69794A"
+    }
+  ]
+}

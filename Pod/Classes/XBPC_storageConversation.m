@@ -24,15 +24,20 @@
     [XBPC_storageConversation addConversation:item save:YES];
 }
 
+/* thay doi ham addConversation
+ edit line  39 ,  add line 34
+ */
+
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save
 {
     NSMutableDictionary *mutableItem = [item mutableCopy];
     NSNumber *sender = mutableItem[@"sender"];
+    NSNumber *receiver = mutableItem[@"receiver"];
     
     if ([sender intValue] != [[XBPushChat sharedInstance] sender_id])
     {
-        mutableItem[@"receiver"] = mutableItem[@"sender"];
-        mutableItem[@"sender"] = @([[XBPushChat sharedInstance] sender_id]);
+        mutableItem[@"receiver"] = sender;
+        mutableItem[@"sender"] = receiver;
         item = mutableItem;
     }
     
@@ -72,11 +77,12 @@
     }
 }
 
-+ (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room
-{
-    NSInteger sender = [[XBPushChat sharedInstance] sender_id];
-    return [[XBPC_storageConversation getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[@(receiver_id), @(sender), @(sender), @(receiver_id), room]] lastObject];
+// thay doi ham conversationWith
+
++ (XBPC_storageConversation *)conversationWith:(int)receiver_id senderValue:(int)senderId andRoom:(NSString *)roomstring{
+    return [[XBPC_storageConversation getFormat:@"((receiver=%@ and sender=%@) or (receiver=%@ and sender=%@)) and room=%@" argument:@[@(receiver_id), @(senderId), @(senderId), @(receiver_id), roomstring]] lastObject];
 }
+
 
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument
 {
@@ -87,8 +93,8 @@
     NSPredicate *p1 = [NSPredicate predicateWithFormat:format argumentArray:argument];
     [fr setPredicate:p1];
     
-//    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"lasttime" ascending:NO];
-//    [fr setSortDescriptors:@[sd]];
+    //    NSSortDescriptor *sd = [[NSSortDescriptor alloc] initWithKey:@"lasttime" ascending:NO];
+    //    [fr setSortDescriptors:@[sd]];
     
     NSArray *result = [[[XBPushChat sharedInstance] managedObjectContext] executeFetchRequest:fr error:nil];
     return result;

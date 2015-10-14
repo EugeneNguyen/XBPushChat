@@ -24,7 +24,10 @@
 + (void)addConversation:(NSDictionary *)item save:(BOOL)save;
 + (NSArray *)getFormat:(NSString *)format argument:(NSArray *)argument;
 + (NSArray *)getAll;
-+ (XBPC_storageConversation *)conversationWith:(int)receiver_id andRoom:(NSString *)room;
+
+// thay doi ham conversationWith
++ (XBPC_storageConversation *)conversationWith:(int)receiver_id senderValue :(int)senderId andRoom:(NSString *)roomstring;
+
 + (void)clear;
 
 - (void)visit;

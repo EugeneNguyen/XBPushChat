@@ -25,7 +25,7 @@
 @end
 
 @implementation XBPCMessageViewController
-@synthesize receiver_id, sender_id = _sender_id, receiverDisplayName, room;
+@synthesize receiver_id, sender_id = _sender_id, receiverDisplayName, room = _room;
 @synthesize items;
 
 - (void)setSender_id:(NSInteger)sender_id
@@ -38,7 +38,6 @@
 {
     [super viewDidLoad];
     bubbleFactory = [[JSQMessagesBubbleImageFactory alloc] init];
-    [self loadDataToTable];
     
     if (self.receiver_id == [[XBPushChat sharedInstance] sender_id])
     {
@@ -46,18 +45,27 @@
         self.sender_id = [[XBPushChat sharedInstance] sender_id];
     }
     
+    
     self.senderId = [@(self.sender_id) stringValue];
     self.senderDisplayName = self.senderId;
     self.receiverDisplayName = [@(self.receiver_id) stringValue];
+    [self loadDataToTable];
     
-    [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
+    // thay doi ham conversationWith
+    
+    [[XBPC_storageConversation conversationWith:(int)self.receiver_id senderValue:(int)self.sender_id andRoom:self.room]visit];
+    
     [[XBPushChat sharedInstance] fetchRequestWith:self.receiver_id newOnly:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[XBPC_storageConversation conversationWith:(int)receiver_id andRoom:room] visit];
+    
+    // thay doi ham conversationWith
+    
+    [[XBPC_storageConversation conversationWith:(int)self.receiver_id senderValue:(int)self.sender_id andRoom:self.room] visit];
+    
 }
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -113,6 +121,7 @@
             [items addObject:item];
         }
     }
+    
     [self finishReceivingMessage];
 }
 

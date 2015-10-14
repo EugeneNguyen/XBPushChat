@@ -46,23 +46,29 @@
 {
     [XBPC_storageMessage addMessage:item save:YES];
 }
+/*
+ edit method addMessage
+ comment line 59 - 66
+ edit line  70 ,
+ */
 
 + (void)addMessage:(NSDictionary *)item save:(BOOL)save
 {
     long deviceSender = [XBPushChat sharedInstance].sender_id;
     long sender = [item[@"user_id"] integerValue];
     long receiver = [item[@"send_to"] integerValue];
-    if ((sender == deviceSender && receiver != deviceSender) || (sender != deviceSender && receiver == deviceSender))
-    {
-        
-    }
-    else
-    {
-        return;
-    }
+    
+    //    if ((sender == deviceSender && receiver != deviceSender) || (sender != deviceSender && receiver == deviceSender))
+    //    {
+    //
+    //    }
+    //    else
+    //    {
+    //        return;
+    //    }
     
     XBPC_storageMessage *message = nil;
-    NSArray * matched = [XBPC_storageMessage getFormat:@"random=%@" argument:@[item[@"random"]]];
+    NSArray * matched = [XBPC_storageMessage getFormat:@"room=%@" argument:@[item[@"room"]]];
     
     if ([matched count] > 0)
     {
