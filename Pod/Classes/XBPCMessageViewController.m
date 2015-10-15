@@ -144,6 +144,7 @@
 
 - (void)didPressAccessoryButton:(UIButton *)sender
 {
+    [self.view endEditing:YES];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Attach photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take a photo", @"Select from gallery", nil];
     [actionSheet showInView:self.view];
 }
