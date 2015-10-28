@@ -34,7 +34,7 @@
 @property (nonatomic, retain) NSString * deviceToken;
 @property (nonatomic, retain) NSString * token;
 @property (nonatomic, retain) NSString * host;
-@property (nonatomic, assign) NSUInteger sender_id;
+@property (nonatomic, assign) NSInteger sender_id;
 @property (nonatomic, retain) NSString * avatarFormat;
 @property (nonatomic, retain) UIImage * avatarPlaceHolder;
 

@@ -35,6 +35,7 @@ static XBPushChat *__sharedPushChat = nil;
 @synthesize deviceToken;
 @synthesize host = _host, token;
 @synthesize avatarFormat, avatarPlaceHolder;
+@synthesize sender_id = _sender_id;
 
 + (XBPushChat *)sharedInstance
 {
